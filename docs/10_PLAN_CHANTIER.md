@@ -169,7 +169,12 @@ l'export et la carte.
 `drillmaster_v3/core/geometrie/` (déjà écrit et testé : 63 tests verts).
 La coupe et la 3D ne peuvent plus diverger.
 
-### Chantier 4 — Les messages
+### Chantier 4 — Les messages — ✅ **contenu livré (30/30)**
+
+`core/bandeau.py` + `core/messages_plugin/` : 30 messages à 5 champs, un par
+fenêtre du plugin, identifiés par `fichier:ligne`. 23 tests. Reste la
+conversion des 30 appels dans `DrillMaster/ui/` (mécanique).
+Preuve : `python3 tools/demo_messages.py`.
 
 - Supprimer les 29 modales d'information → bandeau à 5 champs (R-20).
 - 4 textes techniques réécrits en mots simples.

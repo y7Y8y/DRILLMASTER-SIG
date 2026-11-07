@@ -356,3 +356,51 @@ En écrivant ce chantier, j'avais codé `width` entre **4 et 64** et `side` en
 « gauche/droite ». Le contrat dit **4 à 120** et `left/right/overlay`. Sans le
 test, j'aurais livré une contrainte inventée — exactement le défaut que la
 flotte reproche au plugin.
+
+## 14. Chantier 4 livré — le bandeau remplace 30 fenêtres
+
+Le défaut mesuré (M-01) : **29 fenêtres modales** (30 appels `QMessageBox`
+réels) interrompent le travail. Voici ce qui les remplace, et ce qui le prouve.
+
+### Les deux pièces
+
+| Fichier | Rôle |
+|---|---|
+| `core/bandeau.py` | la zone d'annonce : empile, trie, résume, ne bloque pas le clic |
+| `core/messages_plugin/catalogue.py` | **30 messages à 5 champs, un par fenêtre**, identifiés par `fichier:ligne` |
+
+Le bandeau **n'accepte que** des messages à 5 champs. On ne peut pas y écrire
+une chaîne libre : `test_on_n_ecrit_pas_dans_le_bandeau_autre_chose_qu_un_message`.
+
+### Ce qui est garanti par les tests
+
+| Garantie | Test |
+|---|---|
+| aucune fenêtre oubliée | `test_aucune_fenetre_n_est_oubliee` |
+| aucun message inventé (l'identifiant cite un appel réel) | `test_chaque_identifiant_correspond_a_un_appel_reel` |
+| un blocage propose au moins 2 sorties | `test_un_blocage_propose_au_moins_deux_sorties` |
+| **aucun mot interdit** dans les 30 messages | `test_aucun_mot_interdit` |
+| une réussite ne mérite pas de message | `test_aucune_information_ne_dit_simplement_que_ca_a_reussi` |
+| même contenu en Guidé et en Expert | `test_deux_voix_meme_contenu` |
+| la couleur vient du thème, pas d'une maquette | `test_la_couleur_vient_du_theme` |
+
+### La règle qui en découle
+
+**R-46 · Une réussite ne fait pas de message.** Si l'action a marché, l'écran
+le montre (la ligne apparaît, le fichier est listé). Un message ne sert qu'à
+annoncer *ce que l'utilisateur ne peut pas voir* : ce qui manque, ce qui
+bloque, ce qui demande une décision. Constat d'origine : trois exports
+annonçaient leur succès par une fenêtre.
+
+### L'état exact du chantier
+
+| | |
+|---|---|
+| Messages écrits | **30 / 30** |
+| Fenêtres encore dans le code | **30** — la conversion des appels est le prochain geste |
+| Démonstration | `python3 tools/demo_messages.py` |
+
+Le contenu est prêt ; il reste à remplacer les appels dans `DrillMaster/ui/`
+par `bandeau.ajoute(par_id("fichier.py:ligne"))`. C'est un remplacement
+mécanique, vérifiable ligne à ligne — et le test de comptabilité refusera
+toute fenêtre laissée sans message.
