@@ -29,6 +29,7 @@
 | **D-011** | **Parité 3D obligatoire sur les 9 domaines** du contrat avant toute suppression. | 3D | **entérinée** | 06 B2 |
 | **D-012** | Les noms de domaines **ne sont plus testés dans la vue** : le contrat fournit le domaine, la vue l'affiche par généricité. | 3D | **entérinée** | 06 B3 |
 | **D-013** | Le modèle de scène 3D porte le style (opacité, largeur, côté, visibilité, ordre). | 3D, data | **entérinée** | 06 B4 |
+| **D-016** | **Navigation = onglets horizontaux** (variante A) : 7 modules `Projet · Données · Géométrie · Coupe 2D · Vue 3D · Analyses · Export` + `Référentiel` et `Mode Guidé` en accès secondaire. Appliquée dans les maquettes parce qu'un rail vertical mange le canevas dans un dock QGIS. **Révisable** : si tu préfères la variante B, seule la barre change. | UX | **appliquée, révisable** | maquettes |
 
 ---
 
@@ -50,4 +51,5 @@ le nom exact des 8 modules dans l'interface, et le choix typographique final (de
 
 | Date | Événement |
 |---|---|
+| J1 | **Jeu complet de maquettes** (9 écrans + 2 variantes sombres + planche contact) : `maquettes/*.png`, D-016 appliquée. |
 | J0 | Audit d'apparence produit (doc 01), contrat de piste proposé (02), arborescence (03), états (04), organisation (05). 15 décisions proposées. |
