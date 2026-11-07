@@ -225,3 +225,28 @@ Une tâche est terminée quand **les sept** sont vrais :
 | Date | Règle | Pourquoi |
 |---|---|---|
 | J3 | R-01 → R-31 | traduction du principe directeur en contraintes vérifiables : les développeurs reçoivent des ordres et des valeurs, pas des intentions |
+
+---
+
+## 10 · État d'avancement des règles (mis à jour à chaque ticket)
+
+| Règle | Sujet | État | Preuve |
+|---|---|---|---|
+| R-01 | mots issus du lexique | **en vigueur** | `lexique.py` + `spec_check` R-17 |
+| R-02 → R-10 | contrat de piste, 5 lecteurs | **en vigueur** | `tracks.py`, 10 tests |
+| R-11 | panneau de coupe maigre | à faire (T-05) | maquette 04 |
+| R-12 → R-15 | 3 rangs de données | **spécifié** | `lexique.json`, `spec_check` R-12/R-15 |
+| R-16 → R-19 | vocabulaire, 5 états | **en vigueur** | `messages.py`, 8 tests |
+| R-20 → R-23 | message complet, 3 sorties | **en vigueur** | `messages.py`, 5 tests |
+| R-24 → R-27 | complexité progressive | **en vigueur** | `visibilite.py`, 6 tests |
+| R-28 → R-31 | 17 cas, définition de « terminé » | à faire (T-09) | maquette 16 |
+
+**Chiffres du jour** : 62 vérifications de spécification, **32 tests**, 0 écart,
+2 écrans produits **par le contrat** (Guidé / Expert) sans une seule piste codée en dur.
+
+### Deux fautes attrapées par les gardes, et corrigées dans la spécification
+
+1. **Le garde des 6 réglages** a refusé ma propre spécification : Teneurs en montrait 7,
+   RQD en montrait 7. `ramp` et `range` sont passés en « avancé » — pas la règle.
+2. **Le test « aucune piste codée en dur »** a trouvé `detail="assays"` dans l'écran.
+   La piste de détail est maintenant choisie par `cat.par_famille(...)[0]["id"]`.
