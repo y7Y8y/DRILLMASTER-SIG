@@ -296,3 +296,26 @@ voyagent avec le projet. Constat d'origine : 26 accès à des réglages de poste
 ### R-39 · Une infobulle par contrôle, qui dit quoi et où
 Ce que ça change, et sur quoi ça s'applique (coupe, 3D, légende, export,
 carte). Constat d'origine : 102 infobulles pour 235 contrôles (agent N-06).
+
+## 12. Les règles d'architecture (chantier 9)
+
+Le département Architecture a mesuré le code, pas l'écran. Quatre règles en
+découlent, toutes vérifiables par un agent.
+
+### R-40 · Le noyau ne connaît pas l'interface
+`core/` ne doit jamais importer `ui/`. Aujourd'hui c'est vrai (0 import) :
+c'est ce qui permet de calculer et d'exporter sans QGIS. **À conserver, pas à
+reconstruire.**
+
+### R-41 · Une classe d'affichage ne calcule pas
+`SectionWidget` fait 5 295 lignes et 45 opérations de calcul. Un widget
+affiche ; le calcul appartient au noyau (A-02).
+
+### R-42 · Un seul point d'entrée par geste
+Une seule lecture de fichier, une seule gestion d'erreur, un seul chargement
+de projet. Aujourd'hui : 13 lectures dans 5 fichiers, 15 affichages d'erreur
+sans point central (A-05, A-07).
+
+### R-43 · Ajouter un domaine = ajouter une ligne
+Un type de données est aujourd'hui cité dans 30 fichiers en moyenne. Il doit
+être lu dans la table des domaines (`lexique.json`), jamais recopié (A-06).

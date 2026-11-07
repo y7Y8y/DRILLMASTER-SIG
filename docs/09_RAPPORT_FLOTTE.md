@@ -11,31 +11,35 @@
 | Périmètre | `DrillMaster/` — le plugin complet |
 | Fichiers | **105** fichiers Python |
 | Lignes | **56,577** |
-| Agents | 50 répartis en 9 départements |
-| Constats | **86** |
+| Agents | 67 répartis en 13 départements |
+| Constats | **108** |
 
 ## Verdict en une ligne
 
 | Gravité | Nombre | Ce que ça veut dire |
 |---|---|---|
 | **Bloquant** | 10 | empêche de promettre « simple et fiable » |
-| **Majeur** | 46 | se voit à l'usage et fait perdre du temps |
-| **Mineur** | 30 | donne l'impression de bricolage |
-| **Note** | 0 | occasion manquée, pas un défaut |
+| **Majeur** | 55 | se voit à l'usage et fait perdre du temps |
+| **Mineur** | 40 | donne l'impression de bricolage |
+| **Note** | 3 | occasion manquée, pas un défaut |
 
 ## Les départements
 
 | Département | Ce qu'il possède | Agents | Bloquant | Majeur |
 |---|---|---|---|---|
-| **Direction artistique** | couleur, typographie, espace, icônes | 6 | 0 | 3 |
-| **Disposition** | rangement, hiérarchie, densité, alignement | 6 | 0 | 19 |
-| **Réglages et partage** | un réglage = un propriétaire ; aucune copie dans une vue | 6 | 4 | 3 |
+| **Couleurs et typographie** | couleur, typographie, espace, icônes | 6 | 0 | 3 |
+| **Rangement des écrans** | rangement, hiérarchie, densité, alignement | 6 | 0 | 19 |
+| **Options et partage** | un réglage = un propriétaire ; aucune copie dans une vue | 6 | 4 | 3 |
 | **Messages et blocages** | 5 champs par message : ce qui s'est passé, pourquoi, qui est concerné, comment sortir, où | 7 | 1 | 7 |
-| **Boutons et actions** | un bouton = un verbe ; une action destructrice = une confirmation | 4 | 4 | 2 |
-| **Qualité et dette** | tests, duplication, fichiers monolithes, dépendances | 5 | 0 | 6 |
+| **Boutons et gestes** | un bouton = un verbe ; une action destructrice = une confirmation | 4 | 4 | 2 |
+| **Qualité du code** | tests, duplication, fichiers monolithes, dépendances | 5 | 0 | 6 |
 | **Données et vues** | une donnée, cinq vues ; aucun calcul dupliqué | 5 | 1 | 1 |
-| **Cohérence et doctrine** | un mot = une chose ; une règle = un seul endroit | 3 | 0 | 0 |
+| **Cohérence des mots et des règles** | un mot = une chose ; une règle = un seul endroit | 3 | 0 | 0 |
 | **Navigation et options cachées** | tout réglage est atteignable en 1 clic, aucun onglet muet | 8 | 0 | 5 |
+| **Architecture du code** | couches, frontières, noms, état partagé, extensibilité | 8 | 0 | 5 |
+| **Vocabulaire** | des mots que le métier reconnaît, partout les mêmes | 3 | 0 | 1 |
+| **Vitesse et robustesse** | rapide sur 500 forages, jamais bloquant | 3 | 0 | 2 |
+| **Installation dans QGIS** | installable, compatible, désinstallable proprement | 3 | 0 | 1 |
 
 ---
 
@@ -147,7 +151,7 @@ Ce sont les seuls à traiter avant toute nouvelle maquette.
 
 ## Détail par département
 
-### Direction artistique — couleur, typographie, espace, icônes
+### Couleurs et typographie — couleur, typographie, espace, icônes
 
 | Agent | Constat | Gravité | Mesure |
 |---|---|---|---|
@@ -162,7 +166,7 @@ Ce sont les seuls à traiter avant toute nouvelle maquette.
 | DA-04 | Marges et espacements improvisés | Mineur | 40 combinaisons de marges/espacements |
 | DA-05 | Icônes et symboles textuels mélangés | Mineur | 29 caractères utilisés comme icônes |
 
-### Disposition — rangement, hiérarchie, densité, alignement
+### Rangement des écrans — rangement, hiérarchie, densité, alignement
 
 | Agent | Constat | Gravité | Mesure |
 |---|---|---|---|
@@ -199,7 +203,7 @@ Ce sont les seuls à traiter avant toute nouvelle maquette.
 | D-05 | Libellés dupliqués d'un écran à l'autre | Mineur | « Imagerie » apparaît 9 fois dans 5 fichiers |
 | D-05 | Libellés dupliqués d'un écran à l'autre | Mineur | « DrillMaster » apparaît 8 fois dans 6 fichiers |
 
-### Réglages et partage — un réglage = un propriétaire ; aucune copie dans une vue
+### Options et partage — un réglage = un propriétaire ; aucune copie dans une vue
 
 | Agent | Constat | Gravité | Mesure |
 |---|---|---|---|
@@ -226,7 +230,7 @@ Ce sont les seuls à traiter avant toute nouvelle maquette.
 | M-04 | États absents non annoncés (le silence) | Mineur | 212 mentions d'absence pour 1458 mentions de domaines |
 | M-06 | Aucun moyen de copier le détail d'un problème | Mineur | aucune action de copie trouvée |
 
-### Boutons et actions — un bouton = un verbe ; une action destructrice = une confirmation
+### Boutons et gestes — un bouton = un verbe ; une action destructrice = une confirmation
 
 | Agent | Constat | Gravité | Mesure |
 |---|---|---|---|
@@ -237,7 +241,7 @@ Ce sont les seuls à traiter avant toute nouvelle maquette.
 | B-01 | Boutons sans rôle : tous dessinés pareil | Majeur | 10 boutons, 3 rôles nommés · `step2_import.py` |
 | B-03 | Boutons muets : aucun retour après le clic | Majeur | `self.btn_set` n'est relié à aucune action · `view_3d_v2.py` |
 
-### Qualité et dette — tests, duplication, fichiers monolithes, dépendances
+### Qualité du code — tests, duplication, fichiers monolithes, dépendances
 
 | Agent | Constat | Gravité | Mesure |
 |---|---|---|---|
@@ -256,7 +260,7 @@ Ce sont les seuls à traiter avant toute nouvelle maquette.
 | T-01 | Géométrie recalculée dans les vues | Bloquant | trigonométrie présente dans 8 fichiers de vue (23 lignes) |
 | T-02 | Trois moteurs de rendu pour la même 3D | Majeur | 21 fichiers pour la vue 3D : camera3d.py, __init__.py, adapter.py, camera.py, geometry.py, model.py |
 
-### Cohérence et doctrine — un mot = une chose ; une règle = un seul endroit
+### Cohérence des mots et des règles — un mot = une chose ; une règle = un seul endroit
 
 | Agent | Constat | Gravité | Mesure |
 |---|---|---|---|
@@ -277,6 +281,48 @@ Ce sont les seuls à traiter avant toute nouvelle maquette.
 | N-04 | Réglages conservés sur le poste, invisibles dans le projet | Majeur | 26 accès à des réglages de poste, 8 clés nommées |
 | N-05 | Trop de fichiers d'interface pour un seul produit | Majeur | 39 fichiers d'interface : 3d 11, autres 9, section 9, dialog 6, step 4 |
 | N-06 | Aucune aide contextuelle : tout dépend de la documentation | Mineur | 102 infobulles pour 235 contrôles (43 %) |
+
+### Architecture du code — couches, frontières, noms, état partagé, extensibilité
+
+| Agent | Constat | Gravité | Mesure |
+|---|---|---|---|
+| A-02 | Classes qui mélangent calcul et affichage | Majeur | `SectionWidget` : 5295 lignes, 172 méthodes, 45 opérations de calcul · `section_dock.py` |
+| A-04 | Aucun état global nommé : les infos se passent de main en main | Majeur | 2 attributs de données partagés dans 3 fichiers ou plus (ex. `project` dans 3 fichiers) |
+| A-05 | Pas de gestion globale : chacun fait son propre filet | Majeur | 15 affichages d'erreur dispersés, 0 point(s) central(s) |
+| A-06 | Une extension obligerait à modifier 5 fichiers | Majeur | chaque domaine est cité dans 30 fichiers en moyenne (« structure » : 42 fichiers) |
+| A-07 | Pas de point d'entrée unique pour charger un projet | Majeur | 13 lectures de fichier dans 5 fichiers |
+| A-03 | Noms abrégés ou illisibles | Mineur | 39 fonctions portent un nom de 1 à 4 lettres (67 occurrences) |
+| A-08 | Duplication de constantes métier | Mineur | 4 constantes redéfinies dans plusieurs fichiers (ex. PROFILES, MAX_ASSAY_ELEMENTS, SCENE_PX_MM, UNIT_FACTOR) |
+| A-01 | Le noyau dépend de l'interface | Note | aucun import de l'interface depuis le noyau |
+
+### Vocabulaire — des mots que le métier reconnaît, partout les mêmes
+
+| Agent | Constat | Gravité | Mesure |
+|---|---|---|---|
+| V-02 | Le lexique existe mais le code ne le lit pas | Majeur | 18 mots interdits et 5 niveaux définis, 0 fichier du plugin ne les lit |
+| V-01 | Les mots de l'écran ne sont pas ceux du métier | Mineur | « track » 126× et « piste » 271× |
+| V-01 | Les mots de l'écran ne sont pas ceux du métier | Mineur | « assay » 471× et « teneur » 232× |
+| V-01 | Les mots de l'écran ne sont pas ceux du métier | Mineur | « hole » 914× et « forage » 377× |
+| V-01 | Les mots de l'écran ne sont pas ceux du métier | Mineur | « section » 804× et « coupe » 575× |
+| V-01 | Les mots de l'écran ne sont pas ceux du métier | Mineur | « dip » 320× et « pendage » 44× |
+| V-01 | Les mots de l'écran ne sont pas ceux du métier | Mineur | « azimuth » 107× et « azimut » 143× |
+| V-01 | Les mots de l'écran ne sont pas ceux du métier | Mineur | « collar » 662× et « collet » 248× |
+| V-03 | Textes trop longs pour un panneau | Mineur | 2907 textes de plus de 140 caractères dans un panneau · `about_dialog.py` |
+
+### Vitesse et robustesse — rapide sur 500 forages, jamais bloquant
+
+| Agent | Constat | Gravité | Mesure |
+|---|---|---|---|
+| P-02 | Travail long sur le fil d'affichage | Majeur | 196 boucles de calcul dans un fichier sans thread ni tâche de fond · `section_dock.py` |
+| P-02 | Travail long sur le fil d'affichage | Majeur | 58 boucles de calcul dans un fichier sans thread ni tâche de fond · `step2_import.py` |
+| P-01 | Pas de mesure de performance | Note | 3 module(s) de mesure |
+
+### Installation dans QGIS — installable, compatible, désinstallable proprement
+
+| Agent | Constat | Gravité | Mesure |
+|---|---|---|---|
+| E-01 | Métadonnées d'installation incomplètes | Majeur | 1 champ(s) manquant(s) : email · `metadata.txt` |
+| E-03 | Compatibilité QGIS non bornée | Note | maximum déclaré : 3.99 (QGIS 3.x) · `metadata.txt` |
 
 ---
 

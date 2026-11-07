@@ -1,15 +1,15 @@
 # 10 — Le chantier, dans l'ordre
 
 > La flotte (42 agents, 8 départements) a rendu son rapport : `09_RAPPORT_FLOTTE.md`.
-> **86 constats**, dont 10 bloquants. Voici ce qu'on fait, et dans quel ordre.
+> **108 constats**, dont 10 bloquants. Voici ce qu'on fait, et dans quel ordre.
 
 ## Où on en est
 
 | | |
 |---|---|
 | Plugin lu | **105 fichiers**, 56 577 lignes |
-| Agents | 50, dans 9 départements |
-| Constats | 86 — 10 bloquants · 46 majeurs · 30 mineurs |
+| Agents | 67, dans 13 départements |
+| Constats | 108 — 10 bloquants · 55 majeurs · 40 mineurs · 3 notes |
 | Maquettes | 22 planches, dont **4 écrans neufs** et **1 charte** |
 | Tests | **63 tests**, 62 vérifications de spec, 0 écart |
 
@@ -30,7 +30,7 @@
 
 ## Le plan : 2 programmes, 7 chantiers
 
-Les 86 constats sont tous affectés, aucun orphelin.
+Les 108 constats sont tous affectés, aucun orphelin.
 
 ### Programme A — Rendre le socle cohérent (chantiers 1 à 3)
 Rien de nouveau à l'écran. On supprime les doublons : 12 propriétaires pour une
@@ -52,8 +52,11 @@ Messages, boutons, rangements, écrans neufs. C'est ce que l'utilisateur voit.
 | 6 · Les rangements | **38** | 0 |
 | 7 · Écrans neufs | 7 | 0 |
 | **8 · Navigation et options cachées** | **7** | **1** |
-| Continu · qualité et doctrine | — | — |
-| **Total** | **86** | **10** |
+| **9 · Architecture du code** | **8** | 0 |
+| **10 · Vocabulaire** | **4** | 0 |
+| **11 · Vitesse et robustesse** | **9** | 0 |
+| **12 · Installation dans QGIS** | **2** | 0 |
+| **Total** | **108** | **10** |
 
 ## Chantier 8 — Navigation et options cachées (nouveau)
 
@@ -87,6 +90,52 @@ Ce que la flotte recommande pour rendre les options **optimales** :
 4. **Onglets assumés ou supprimés.** Pas de barre masquée : soit un panneau
    unique, soit des onglets nommés et visibles.
 5. **100 % d'infobulles utiles** : ce que ça change + où ça s'applique.
+
+## Chantier 9 — Architecture du code (nouveau)
+
+C'est le département que tu as demandé : celui qui juge le **code**, pas
+l'écran. Huit agents, huit réponses.
+
+| Constat | Mesure | Ce que ça veut dire |
+|---|---|---|
+| **A-01** Le noyau dépend-il de l'interface ? | **non, 0 import** | bonne nouvelle : le calcul peut vivre sans QGIS |
+| **A-02** Calcul mélangé à l'affichage | `SectionWidget` : **5 295 lignes, 172 méthodes, 45 calculs** | la moitié du plugin tient dans une classe |
+| **A-04** Infos partagées | attributs recopiés dans 3+ fichiers | deux vues peuvent avoir deux versions |
+| **A-05** Gestion des erreurs | **15 affichages dispersés, 0 point central** | le même incident donne 3 messages |
+| **A-06** Coût d'une extension | un domaine est cité dans **30 fichiers en moyenne** (« structure » : 42) | ajouter un type de données = une semaine |
+| **A-07** Chargement des fichiers | **13 lectures dans 5 fichiers** | deux imports du même fichier, deux résultats |
+| **A-03** Noms | **39 fonctions de 1 à 4 lettres** (`mk`, `n`, `run`) | le prochain développeur relit tout |
+| **A-08** Constantes | 4 redéfinies (`PROFILES`, `MAX_ASSAY_ELEMENTS`…) | une correction n'atteint qu'une copie |
+
+**La réponse à ta question sur les extensions** : aujourd'hui, ajouter un
+domaine de données coûte cher — non pas parce que le calcul est difficile, mais
+parce que son nom est écrit dans **30 fichiers**. La correction ne demande pas
+de réécrire : elle demande de faire lire au code la table des domaines qui
+existe déjà (`specs/data/lexique.json`).
+
+## Chantier 10 — Vocabulaire
+
+| Constat | Mesure |
+|---|---|
+| V-01 Deux noms pour le même objet | `hole` 790× / `forage` 326× · `assay` 413× / `teneur` 170× |
+| V-02 Le lexique existe, le code ne le lit pas | **0 fichier** du plugin importe `lexique.json` |
+| V-03 Textes trop longs | paragraphes de plus de 140 caractères dans des panneaux de 300 px |
+
+## Chantier 11 — Vitesse et robustesse
+
+| Constat | Mesure |
+|---|---|
+| P-01 Mesure de temps | 3 modules de mesure existent — mais rien n'est publié |
+| P-02 Calcul sur le fil d'affichage | `section_dock.py` : **196 boucles** sans tâche de fond |
+| P-03 Garde-fou sur les gros fichiers | présent (2 seuils) — rien à faire |
+
+## Chantier 12 — Installation dans QGIS
+
+| Constat | Mesure |
+|---|---|
+| E-01 Fiche d'installation incomplète | le champ `email` manque dans `metadata.txt` |
+| E-03 Compatibilité | maximum déclaré `3.99` — QGIS 4 / Qt 6 non couvert |
+| E-02 Désinstallation | **propre** : `unload()` retire le dock et les actions |
 
 ## Le détail des chantiers
 

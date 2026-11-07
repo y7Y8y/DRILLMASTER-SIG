@@ -20,11 +20,30 @@ import noyau                                    # noqa: E402
 import agents_da, agents_ui, agents_fonctionnel  # noqa: E402,F401
 import agents_messages, agents_qualite, agents_donnees  # noqa: E402,F401
 import agents_navigation                               # noqa: E402,F401
+import agents_architecture                             # noqa: E402,F401
+import agents_metier                                   # noqa: E402,F401
 from noyau import ORDRE, Contexte                # noqa: E402
 
 SORTIE = noyau.RACINE / "docs" / "09_RAPPORT_FLOTTE.md"
 LIBELLE = {"bloquant": "Bloquant", "majeur": "Majeur",
            "mineur": "Mineur", "note": "Note"}
+
+# les noms affichés sont en mots simples, pas en jargon
+NOM_SIMPLE = {
+    "Direction artistique": "Couleurs et typographie",
+    "Disposition": "Rangement des écrans",
+    "Réglages et partage": "Options et partage",
+    "Messages et blocages": "Messages et blocages",
+    "Boutons et actions": "Boutons et gestes",
+    "Qualité et dette": "Qualité du code",
+    "Données et vues": "Données et vues",
+    "Cohérence et doctrine": "Cohérence des mots et des règles",
+    "Navigation et options cachées": "Navigation et options cachées",
+    "Architecture et code": "Architecture du code",
+    "Vocabulaire et lisibilité": "Vocabulaire",
+    "Performance et robustesse": "Vitesse et robustesse",
+    "Empaquetage QGIS": "Installation dans QGIS",
+}
 
 
 def execute():
@@ -95,7 +114,8 @@ def ecrit(ctx, constats):
         ses = par_dep[d.nom]
         n_b = sum(1 for c in ses if c.gravite == "bloquant")
         n_m = sum(1 for c in ses if c.gravite == "majeur")
-        out.append(f"| **{d.nom}** | {d.chef} | {len(d.agents)} | {n_b} | {n_m} |")
+        out.append(f"| **{NOM_SIMPLE.get(d.nom, d.nom)}** | {d.chef} | "
+                   f"{len(d.agents)} | {n_b} | {n_m} |")
 
     out.append("""
 ---
@@ -128,7 +148,7 @@ Ce sont les seuls à traiter avant toute nouvelle maquette.""")
         ses = par_dep[d.nom]
         if not ses:
             continue
-        out.append(f"\n### {d.nom} — {d.chef}\n")
+        out.append(f"\n### {NOM_SIMPLE.get(d.nom, d.nom)} — {d.chef}\n")
         out.append("| Agent | Constat | Gravité | Mesure |")
         out.append("|---|---|---|---|")
         for c in ses:
