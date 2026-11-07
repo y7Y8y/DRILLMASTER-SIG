@@ -1,0 +1,12 @@
+{
+  "agent": "D12.2",
+  "direction": "Données de référence",
+  "question": "Les palettes sont-elles cohérentes entre les sources ?",
+  "score": 10,
+  "metrics": {
+    "litho": 30,
+    "alteration": 27,
+    "hex_partages": 0
+  },
+  "findings": []
+}

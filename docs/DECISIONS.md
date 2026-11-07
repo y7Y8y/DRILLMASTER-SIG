@@ -5,35 +5,41 @@
 
 | # | Décision | Portée | Statut | Source |
 |---|---|---|---|---|
-| **D-001** | Une seule arborescence de modules (8), deux modes de navigation (Guidé / Expert). L'assistant 4 étapes est conservé comme mode Guidé. | UX, navigation | proposée | [03](03_ARBORESCENCE.md) |
-| **D-001.1** | Mode mémorisé par projet, bascule sans perte d'état. | UX | proposée | 03 |
-| **D-002** | **Contrat de Piste** : 3 étages (global projet / contrat commun 14 emplacements / spécifique déclaré), héritage Projet → Type → Piste. | Data, 2D, 3D, export | proposée | [02](02_CONTRAT_PISTE.md) |
-| **D-002.1** | Les pistes géotechniques (RQD, récupération, densité) rejoignent le magasin commun. | Data | proposée | 02 §6 |
-| **D-002.2** | La 3D lit les **mêmes** réglages que la 2D. | 3D | proposée | 02 §6 |
-| **D-002.3** | Seules exceptions 2D/3D : `side` (3D tourne) et `width` (px écran vs rayon monde) → champs distincts, **pas** deux magasins. | 3D | proposée | 02 §6 |
-| **D-002.4** | Réglages 3D **par projet**. Le global ne garde que caméra et thème. | 3D, data | proposée | 02 §6 |
-| **D-002.6** | Une piste non affichable dans une vue est **annoncée**, jamais silencieuse. | UX, 3D | proposée | 02 §6 |
-| **D-003** | **5 niveaux d'état** (information, attention, question, blocage métier, **erreur technique**). | Validation, UX | proposée | [04](04_ETATS.md) |
-| **D-003.1** | Tout message porte 5 champs obligatoires : niveau, pourquoi, concerné, résoudre, portée. Un message sans « pourquoi » ou « résoudre » est invalide. | Validation | proposée | 04 §2 |
-| **D-003.2** | Aucune `QMessageBox` pour une validation : panneau de détail, jamais de popup. | UX | proposée | 04 §3 |
-| **D-004** | **Filet de test obligatoire avant les maquettes** : harnais `core/`, projet de référence ivoirien figé, 3 coupes témoins. | Qualité | proposée | [05](05_ORGANISATION.md) |
-| **D-005** | **Suppression du code mort** au livrable : vue 3D legacy (9 fichiers), `mesh_builder`, `camera3d`, `benchmark`, `ui_audit`, `geo_style`, `pattern_paint`, `drillmaster_fr.ts`. −7 778 lignes. | Architecture | proposée | 01, 05 |
-| **D-006** | **Un seul moteur de motifs** (chemin actif actuel), les deux moteurs DEPRECATED disparaissent. | 2D, données | proposée | 01 |
-| **D-007** | Le **mode sombre** est conçu à partir des mêmes tokens que le clair (pas une inversion). | DA | proposée | 05 |
-| **D-008** | Les **4 couleurs sémantiques** sont réservées aux états ; l'accent de marque n'exprime jamais un état. | DA | proposée | 04 §3 |
-| **D-009** | **Décalage de phases corrigé** : contrat de paramètres (1) et filet de test (2) **avant** maquettes (4). | Pilotage | proposée | 05 §4 |
+| **D-001** | **Plugin QGIS obligatoire** — jamais d'application autonome. Le châssis se conçoit dans les contraintes QGIS (docks autour du canevas, menu, barres). | Châssis | **entérinée** | ta réponse |
+| **D-001.1** | Une seule arborescence de modules (8), **deux modes** : Guidé (assistant 4 étapes conservé) + Expert. Même code, seul le conteneur change. | UX | **entérinée** | 03 |
+| **D-002** | **Contrat de Piste** : 3 étages (global projet / commun 14 emplacements / spécifique), héritage Projet → Type → Piste. | Data, 2D, 3D, export | **entérinée** | [02](02_CONTRAT_PISTE.md) |
+| **D-002.1** | Les pistes géotechniques rejoignent le magasin commun. | Data | **entérinée** | 02 §6 |
+| **D-002.2** | La 3D lit les **mêmes** réglages que la 2D. | 3D | **entérinée** | 02 §6 |
+| **D-002.3** | Seules exceptions 2D/3D : `side` et `width` → champs distincts, **pas** deux magasins. | 3D | **entérinée** | 02 §6 |
+| **D-002.4** | Réglages 3D **par projet** ; le global ne garde que caméra et thème. | 3D, data | **entérinée** | 02 §6 |
+| **D-002.6** | Une piste non affichable dans une vue est **annoncée**, jamais silencieuse. | UX, 3D | **entérinée** | 02 §6 |
+| **D-003** | **5 niveaux d'état**, dont **erreur technique**. | Validation, UX | **entérinée** | [04](04_ETATS.md) |
+| **D-003.1** | Tout message porte 5 champs : niveau, pourquoi, concerné, résoudre, portée. | Validation | **entérinée** | 04 §2 |
+| **D-003.2** | Aucune `QMessageBox` pour une validation : panneau de détail. | UX | **entérinée** | 04 §3 |
+| **D-004** | **Filet de test obligatoire avant les maquettes** : harnais `core/`, projet de référence figé, coupes témoins. | Qualité | **entérinée** | [05](05_ORGANISATION.md) |
+| **D-005** | Suppression du code inatteignable — **mais seulement après portage** (voir D-010). | Architecture | **révisée** | [06](06_RAPPORT_AGENTS.md) |
+| **D-006** | **Un seul moteur de motifs**, les deux DEPRECATED disparaissent. | 2D, données | **entérinée** | 01 |
+| **D-007** | **Mode sombre** conçu sur les mêmes tokens, pas une inversion. | DA | **entérinée** | 05 |
+| **D-008** | **4 couleurs sémantiques réservées aux états** ; l'accent de marque n'exprime jamais un état. | DA | **entérinée** | 04 §3 |
+| **D-009** | Logique de spécification : fiche à 9 rubriques, critère d'acceptation obligatoire. | Pilotage | **entérinée** | 05 §5 |
+| **D-010** | **Ne pas supprimer la 3D legacy avant portage.** La 3D v2 a perdu : surface MNT, plan de coupe, structures, imagerie, géotechnique, gizmo. L'ancienne vue reste la référence fonctionnelle jusqu'à parité. | 3D | **entérinée** | 06 B1 |
+| **D-011** | **Parité 3D obligatoire sur les 9 domaines** du contrat avant toute suppression. | 3D | **entérinée** | 06 B2 |
+| **D-012** | Les noms de domaines **ne sont plus testés dans la vue** : le contrat fournit le domaine, la vue l'affiche par généricité. | 3D | **entérinée** | 06 B3 |
+| **D-013** | Le modèle de scène 3D porte le style (opacité, largeur, côté, visibilité, ordre). | 3D, data | **entérinée** | 06 B4 |
 
 ---
 
-## Décisions à trancher en priorité (bloquantes pour la suite)
+## Questions restantes
 
-| # | Question | Pourquoi c'est bloquant |
-|---|---|---|
-| **Q1** | D-002 : le contrat de piste (14 emplacements, héritage à 3 niveaux) est-il la bonne forme ? | Décide la forme de **toutes** les maquettes de panneaux |
-| **Q2** | D-001 : Guidé + Expert, ou Expert seul ? | Décide la navigation entière |
-| **Q3** | D-004 : acceptes-tu la porte « tests avant maquettes » (2 à 3 jours de travail non visible) ? | Sans filet, chaque maquette devient une régression invisible |
-| **Q4** | Périmètre 3D : les 9 pistes doivent-elles **toutes** être affichables en 3D, ou certaines restent-elles 2D par nature ? | Décide l'effort D6 (×3 si tout doit passer) |
-| **Q5** | Le plugin doit-il rester un **plugin QGIS** (docks autour du canevas) ou devenir une **application autonome** lisant les formats QGIS ? | Décide tout le châssis de fenêtres — la plus lourde des cinq |
+**Aucune bloquante.** Les 5 questions précédentes sont tranchées :
+1. Contrat de piste (D-002) → **adopté**, c'est la forme validée.
+2. Guidé + Expert (D-001.1) → **adopté** : on garde le parcours qui fonctionne.
+3. Tests avant maquettes (D-004) → **adopté** : le filet est construit en phase 2.
+4. Périmètre 3D (D-011) → **parité complète** sur les 9 domaines. Une seule vue 3D, pas deux.
+5. Châssis (D-001) → **plugin QGIS**, verrouillé.
+
+**Seules questions qui resteront ouvertes** (elles se poseront en phase 4, pas maintenant) :
+le nom exact des 8 modules dans l'interface, et le choix typographique final (deux familles candidates, présentées avec des rendus).
 
 ---
 

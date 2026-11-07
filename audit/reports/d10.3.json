@@ -1,0 +1,37 @@
+{
+  "agent": "D10.3",
+  "direction": "Qualité",
+  "question": "L'internationalisation est-elle complète ?",
+  "score": 9.2,
+  "metrics": {
+    "drillmaster_en.ts": {
+      "messages": 2489,
+      "traduits": 2487,
+      "non_finies": 0
+    },
+    "drillmaster_fr.ts": {
+      "messages": 0,
+      "traduits": 0,
+      "non_finies": 0
+    },
+    "taux_en_pct": 99.9
+  },
+  "findings": [
+    {
+      "severite": "mineur",
+      "categorie": "i18n",
+      "titre": "anglais traduit à 99.9 %",
+      "preuve": "i18n/drillmaster_en.ts",
+      "detail": "2 messages restants.",
+      "correction": "Compléter avant livraison."
+    },
+    {
+      "severite": "mineur",
+      "categorie": "i18n",
+      "titre": "drillmaster_fr.ts vide — mais documenté comme volontaire",
+      "preuve": "i18n/drillmaster_fr.ts",
+      "detail": "Le fichier explique que le français est la langue source.",
+      "correction": "Aucune action ; ne pas le signaler comme un défaut."
+    }
+  ]
+}

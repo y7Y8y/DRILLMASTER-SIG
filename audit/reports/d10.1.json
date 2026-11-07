@@ -1,0 +1,54 @@
+{
+  "agent": "D10.1",
+  "direction": "Qualité",
+  "question": "Existe-t-il des tests exécutables ?",
+  "score": 0,
+  "metrics": {
+    "scripts": 7,
+    "lignes": 363,
+    "chemins_absolus": 4,
+    "vrais_tests": 0
+  },
+  "findings": [
+    {
+      "severite": "majeur",
+      "categorie": "tests",
+      "titre": "chemin absolu en dur : tools/test_common_scale.py",
+      "preuve": "tools/test_common_scale.py",
+      "detail": "Le script ne peut pas tourner hors de la machine d'origine.",
+      "correction": "Réécrire en pytest, chemins relatifs."
+    },
+    {
+      "severite": "majeur",
+      "categorie": "tests",
+      "titre": "chemin absolu en dur : tools/test_default_scale.py",
+      "preuve": "tools/test_default_scale.py",
+      "detail": "Le script ne peut pas tourner hors de la machine d'origine.",
+      "correction": "Réécrire en pytest, chemins relatifs."
+    },
+    {
+      "severite": "majeur",
+      "categorie": "tests",
+      "titre": "chemin absolu en dur : tools/test_elev_window.py",
+      "preuve": "tools/test_elev_window.py",
+      "detail": "Le script ne peut pas tourner hors de la machine d'origine.",
+      "correction": "Réécrire en pytest, chemins relatifs."
+    },
+    {
+      "severite": "majeur",
+      "categorie": "tests",
+      "titre": "chemin absolu en dur : tools/test_window_room.py",
+      "preuve": "tools/test_window_room.py",
+      "detail": "Le script ne peut pas tourner hors de la machine d'origine.",
+      "correction": "Réécrire en pytest, chemins relatifs."
+    },
+    {
+      "severite": "bloquant",
+      "categorie": "tests",
+      "titre": "aucun test automatisable",
+      "preuve": "tools/",
+      "detail": "7 scripts de démonstration, 0 test exécutable en CI, sur 56 577 lignes.",
+      "correction": "Harnais pytest + projet de référence (D-004)."
+    }
+  ]
+}

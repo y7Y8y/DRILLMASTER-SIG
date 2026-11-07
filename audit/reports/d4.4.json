@@ -1,0 +1,36 @@
+{
+  "agent": "D4.4",
+  "direction": "Paramètres",
+  "question": "Les réglages de la 3D sont-ils partagés avec la 2D ?",
+  "score": 2,
+  "metrics": {
+    "reglages_3d_persistes": 7,
+    "constantes_figees": 2
+  },
+  "findings": [
+    {
+      "severite": "bloquant",
+      "categorie": "3D",
+      "titre": "largeur figée : LANES = {\"Lithologie\": (0.0, 1.1), \"Altération\": (-2.6, 0.8)}",
+      "preuve": "ui/view_3d_v2.py:31",
+      "detail": "La largeur d'une bande 3D n'est pas réglable.",
+      "correction": "Lire le contrat de piste."
+    },
+    {
+      "severite": "bloquant",
+      "categorie": "3D",
+      "titre": "largeur figée : ASSAY_LANES = ((2.6, 0.8), (4.4, 0.8), (6.2, 0.8))",
+      "preuve": "ui/view_3d_v2.py:31",
+      "detail": "La largeur d'une bande 3D n'est pas réglable.",
+      "correction": "Lire le contrat de piste."
+    },
+    {
+      "severite": "majeur",
+      "categorie": "3D",
+      "titre": "7 réglages 3D en QSettings global",
+      "preuve": "ui/view_3d_v2.py:348",
+      "detail": "Non partagés avec la 2D, non portés par le projet.",
+      "correction": "Stocker dans config.json au niveau piste."
+    }
+  ]
+}

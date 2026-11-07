@@ -1,0 +1,20 @@
+{
+  "agent": "D7.3",
+  "direction": "Validation",
+  "question": "Les erreurs techniques peuvent-elles disparaître en silence ?",
+  "score": 8,
+  "metrics": {
+    "except_total": 377,
+    "except_silencieux": 5
+  },
+  "findings": [
+    {
+      "severite": "majeur",
+      "categorie": "silence",
+      "titre": "5 exceptions totalement silencieuses sur 377",
+      "preuve": "global",
+      "detail": "Un échec devient un état vide, indiscernable d'une absence de donnée.",
+      "correction": "Interdire `except: pass` ; niveau 5 obligatoire (doc 04)."
+    }
+  ]
+}

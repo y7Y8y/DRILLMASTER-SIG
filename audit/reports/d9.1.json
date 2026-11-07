@@ -1,0 +1,19 @@
+{
+  "agent": "D9.1",
+  "direction": "Export",
+  "question": "Les paramètres d'export sont-ils retrouvables ?",
+  "score": 9,
+  "metrics": {
+    "options_export": 55
+  },
+  "findings": [
+    {
+      "severite": "moyen",
+      "categorie": "export",
+      "titre": "Paramètres d'export dispersés sur 2 modules + 1 dialogue",
+      "preuve": "ui/section_export.py + section_export_scaled.py",
+      "detail": "Aucune notion de profil d'export réutilisable.",
+      "correction": "Module 7 Export + profils enregistrés."
+    }
+  ]
+}

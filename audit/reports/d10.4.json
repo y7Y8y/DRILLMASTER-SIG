@@ -1,0 +1,21 @@
+{
+  "agent": "D10.4",
+  "direction": "Qualité",
+  "question": "Les versions et dépendances sont-elles déclarées ?",
+  "score": 9,
+  "metrics": {
+    "requirements_txt": false,
+    "numpy_utilise": 9,
+    "declare": false
+  },
+  "findings": [
+    {
+      "severite": "moyen",
+      "categorie": "packaging",
+      "titre": "numpy utilisé mais non déclaré",
+      "preuve": "core/scene3d/*",
+      "detail": "Aucun requirements.txt ni pyproject.toml.",
+      "correction": "Déclarer les dépendances."
+    }
+  ]
+}

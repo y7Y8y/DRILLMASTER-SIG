@@ -1,0 +1,20 @@
+{
+  "agent": "D12.1",
+  "direction": "Données de référence",
+  "question": "Les bibliothèques métier sont-elles structurées ?",
+  "score": 9,
+  "metrics": {
+    "bibliotheque_lithologie.csv": 30,
+    "bibliotheque_alteration.csv": 35
+  },
+  "findings": [
+    {
+      "severite": "moyen",
+      "categorie": "référentiel",
+      "titre": "bibliothèques embarquées dans le paquet du plugin",
+      "preuve": "bibliotheques/*.csv",
+      "detail": "Modifier une couleur = publier une version.",
+      "correction": "Référentiel versionné, externe au paquet."
+    }
+  ]
+}
