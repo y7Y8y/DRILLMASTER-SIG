@@ -6,7 +6,7 @@
 | # | Décision | Portée | Statut | Source |
 |---|---|---|---|---|
 | **D-001** | **Plugin QGIS obligatoire** — jamais d'application autonome. Le châssis se conçoit dans les contraintes QGIS (docks autour du canevas, menu, barres). | Châssis | **entérinée** | ta réponse |
-| **D-001.1** | Une seule arborescence de modules (8), **deux modes** : Guidé (assistant 4 étapes conservé) + Expert. Même code, seul le conteneur change. | UX | **entérinée** | 03 |
+| **D-001.1** | ~~Guidé + Expert~~ → **remplacée par D-014**. Je n'aurais pas dû imposer ce choix seul : c'est une décision **produit**. | UX | **remplacée** | ta remarque |
 | **D-002** | **Contrat de Piste** : 3 étages (global projet / commun 14 emplacements / spécifique), héritage Projet → Type → Piste. | Data, 2D, 3D, export | **entérinée** | [02](02_CONTRAT_PISTE.md) |
 | **D-002.1** | Les pistes géotechniques rejoignent le magasin commun. | Data | **entérinée** | 02 §6 |
 | **D-002.2** | La 3D lit les **mêmes** réglages que la 2D. | 3D | **entérinée** | 02 §6 |
@@ -22,7 +22,10 @@
 | **D-007** | **Mode sombre** conçu sur les mêmes tokens, pas une inversion. | DA | **entérinée** | 05 |
 | **D-008** | **4 couleurs sémantiques réservées aux états** ; l'accent de marque n'exprime jamais un état. | DA | **entérinée** | 04 §3 |
 | **D-009** | Logique de spécification : fiche à 9 rubriques, critère d'acceptation obligatoire. | Pilotage | **entérinée** | 05 §5 |
-| **D-010** | **Ne pas supprimer la 3D legacy avant portage.** La 3D v2 a perdu : surface MNT, plan de coupe, structures, imagerie, géotechnique, gizmo. L'ancienne vue reste la référence fonctionnelle jusqu'à parité. | 3D | **entérinée** | 06 B1 |
+| **D-010** | **La 3D legacy n'est PAS conservée.** Elle est un **donneur temporaire** : on en extrait les capacités manquantes (surface MNT, corridor, structures, imagerie, géotechnique), on les réécrit dans `core/scene3d`, puis **on la supprime**. Aucune ligne de son rendu ni de son panneau ne survit. | 3D | **révisée** | ta remarque |
+| **D-010.1** | **L'esthétique de la 3D legacy est rejetée** : ni son panneau de `QGroupBox` à cases empilées, ni son rendu. Seules ses **algorithmes métier** sont récupérés. | 3D, DA | **entérinée** | ta remarque |
+| **D-014** | **Navigation = décision produit, pas technique.** Deux options présentées en images (A : onglets horizontaux / B : rail vertical). Le choix t'appartient ; l'implémentation suit, quel qu'il soit. | UX | **à trancher par toi** | maquettes ci-jointes |
+| **D-015** | **Panneau de calques de la 3D** : la 3D adopte un **arbre de jeux de données** (groupes + cases à cocher + pastille de couleur), comme la référence ArcGIS — pas une pile de cases. | 3D, UX | **entérinée** | ta référence |
 | **D-011** | **Parité 3D obligatoire sur les 9 domaines** du contrat avant toute suppression. | 3D | **entérinée** | 06 B2 |
 | **D-012** | Les noms de domaines **ne sont plus testés dans la vue** : le contrat fournit le domaine, la vue l'affiche par généricité. | 3D | **entérinée** | 06 B3 |
 | **D-013** | Le modèle de scène 3D porte le style (opacité, largeur, côté, visibilité, ordre). | 3D, data | **entérinée** | 06 B4 |
