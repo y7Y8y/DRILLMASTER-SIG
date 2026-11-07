@@ -54,52 +54,51 @@ def coupe_2d(path, dark=False):
     c.slider(PX + 16, y + 20, PW - 90, 0.42, "50 m")
     y += 52
 
-    # PISTES — vue d'ensemble : c'est la réponse au problème
+    # ── TROIS FAMILLES, PAS DOUZE LIGNES À ÉGALITÉ
     c.l(PX, y, PX + PW, y, fill=t.border)
-    c.section_label(PX + 16, y + 16, "Pistes — vue d'ensemble")
-    c.txt(PX + PW - 16, y + 16, "10", size=9, bold=True, anchor="rs")
-    y += 26
-    rows = [
-        ("Profondeurs", "●", t.ink_3, True, "12"),
-        ("Trajectoire", "●", "#344054", True, "—"),
-        ("Lithologie", "●", "#8FA85A", True, "6"),
-        ("Teneurs", "●", "#3B8BEA", True, "Au"),
-        ("Intercepts", "○", "#00E5FF", False, "—"),
-        ("Altérations", "●", "#D9C6E8", True, "4"),
-        ("Minéralisations", "●", "#5D6D7E", True, "3"),
-        ("Structures", "●", "#B54708", True, "212"),
-        ("Imagerie", "●", "#7F56D9", True, "18"),
-        ("RQD", "●", t.ok, True, "88"),
-        ("Récupération", "○", t.warn, False, "—"),
-        ("Densité", "○", "#7F56D9", False, "—"),
-    ]
-    for i, (name, mark, col, on, val) in enumerate(rows):
-        ry = y + i * 22
-        if i == 2:
-            c.r(PX + 8, ry - 4, PW - 16, 22, fill=t.accent_soft, rx=5)
-            c.r(PX + 8, ry - 4, 3, 22, fill=t.accent)
-        c.txt(PX + 18, ry + 8, mark, size=8)
-        c.c(PX + 32, ry + 5, 0.1, col)
-        c.txt(PX + 34, ry + 8, name, size=10)
-        c.txt(PX + PW - 60, ry + 8, val, size=9, bold=False, anchor="rs")
-        # largeur éditable directement dans le tableau (le contrat)
-        if on:
-            c.r(PX + PW - 54, ry + 1, 38, 9, fill=t.surface_3, rx=4)
-            wfrac = 0.25 + (i % 5) * 0.16
-            c.r(PX + PW - 54, ry + 1, 38 * wfrac, 9, fill=t.accent_line, rx=4)
-    y += len(rows) * 22 + 8
+    c.txt(PX + 16, y + 20, "Pistes", size=10.4, bold=True)
+    c.txt(PX + PW - 16, y + 20, "10 déclarées · 0 dupliquée", size=8.6,
+          fill=t.ink_3, anchor="rs")
+    y += 34
 
-    c.txt(PX + 16, y + 8, "Largeur · opacité · côté — sur chaque ligne", size=8.8)
-    y += 26
+    familles = [
+        ("STRUCTURELLES", "3", [("Profondeurs", True), ("Trajectoire", True),
+                                ("Intercepts", False)]),
+        ("CATÉGORIELLES", "4", [("Lithologie", True), ("Altérations", True),
+                                ("Minéralisations", True), ("Structures", True)]),
+        ("QUANTITATIVES", "4", [("Teneurs", True), ("RQD", True),
+                                ("Récupération", False), ("Densité", False)]),
+    ]
+    for fname, n, items in familles:
+        c.r(PX + 12, y, PW - 24, 20, fill=t.surface_3, rx=5)
+        c.txt(PX + 20, y + 14, fname, size=8.2, fill=t.ink_2, bold=True,
+              anchor="ls")
+        c.txt(PX + 20 + c.tw(fname, 8.2, True) + 8, y + 14,
+              "· même réglage pour les " + n, size=8, fill=t.ink_3, anchor="ls")
+        y += 24
+        for name, on in items:
+            c.dot(PX + 22, y + 8, "ok" if on else "off")
+            c.txt(PX + 34, y + 4, name, size=9.8,
+                  fill=t.ink if on else t.ink_3)
+            c.txt(PX + PW - 18, y + 4, "›" if on else "non fourni", size=9,
+                  fill=t.ink_3, anchor="rs")
+            y += 21
+        y += 6
+
+    c.txt(PX + 16, y + 10, "Une piste ouvre ses réglages propres · "
+          "le reste est hérité du type", size=8.2, fill=t.ink_3, anchor="ls")
+    y += 22
     c.l(PX, y, PX + PW, y, fill=t.border)
-    # replis
-    for lbl, n in (("Cadre & axes", ""), ("Topographie", ""), ("Légendes", "6"),
-                   ("Historique", "12 coupes")):
-        y += 26
-        c.txt(PX + 18, y, "▸", size=8.5)
-        c.txt(PX + 32, y, lbl, size=10.2)
+    c.txt(PX + 16, y + 22, "Réglages de la coupe", size=8.6, fill=t.ink_3,
+          bold=True, anchor="ls")
+    y += 32
+    for lbl, n in (("Cadre & axes", ""), ("Topographie", ""),
+                   ("Légende & cartouche", "6"), ("Coupes enregistrées", "12")):
+        c.txt(PX + 18, y, "▸", size=8.5, fill=t.ink_3)
+        c.txt(PX + 32, y, lbl, size=10, fill=t.ink_2)
         if n:
-            c.txt(PX + PW - 16, y, n, size=9, bold=False, anchor="rs")
+            c.txt(PX + PW - 16, y, n, size=8.8, fill=t.ink_3, anchor="rs")
+        y += 24
 
     # ── scène de coupe
     c.r(SX, PY, SW, SH, fill=t.surface, stroke=t.border, rx=10)

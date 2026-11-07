@@ -40,3 +40,29 @@ Format **1600 × 1000**, pensé pour un dock QGIS : la barre d'onglets fait 54 p
 d'état 32 px ; tout le reste va au canevas. Navigation = **onglets horizontaux**
 (7 modules : Projet · Données · Géométrie · Coupe 2D · Vue 3D · Analyses · Export),
 décision produit révisable — c'est la variante A des deux proposées.
+
+---
+
+# Corrections (J2) — après ta remarque
+
+Tu as dit : mêmes problèmes, mauvaises catégories, éléments qui ne se partagent pas,
+attributions fausses, plugin compliqué, termes incompréhensibles, pas de tests.
+Chaque reproche a un écran :
+
+| Reproche | Écran | Ce qui change |
+|---|---|---|
+| « mêmes trucs, mêmes problèmes » | `11_pistes.png` | la coupe n'a plus une liste plate de 12 lignes : **12 pistes en 4 familles**, une déclaration chacune |
+| « les éléments qui se partagent pas » | `12_partages.png` | **un réglage, cinq lecteurs** (2D, 3D, légende, export, carte) ; chaque réglage a **un propriétaire** et aucune vue n'en garde une copie |
+| « les mauvaises catégories / attributions » | `13_donnees_rangs.png` | 12 types en **3 rangs** ; les catégories (Saprolite, Latérite…) restent **avec leur type**, l'imagerie et les intercepts ne sont plus mélangés aux données |
+| « on comprend pas les termes » | `14_message.png` + `15_etats.png` | une erreur racontée en trois phrases, avec **trois sorties** ; 5 états avec « ce qu'il veut dire » et « la suite », en voix Guidée et Experte |
+| « pas eu des tests pour plusieurs cas » | `16_validation.png` | **17 cas d'usage** rejoués : projet vide, doublons, point-virgule, décimale, latin-1, forage horizontal, CRS, 500 forages, A1, sombre, zoom, contraste |
+
+`10_planche_corrections.png` = les 6 écrans + la coupe corrigée sur une page.
+Régénérer : `python3 maquettes/screens_v3.py` puis `python3 maquettes/planche_v3.py`.
+
+## Ce qui a été supprimé de l'interface
+
+* la liste plate des 10 pistes dans le panneau de coupe ;
+* les doublons « largeur / opacité / côté » saisis piste par piste ;
+* « Cellule à 2 codes litho », « Signature des entrées », « cache JSON », « a7f3c9… » et tout autre terme d'ingénieur ;
+* les réglages 2D qui apparaissaient aussi dans les réglages 3D.

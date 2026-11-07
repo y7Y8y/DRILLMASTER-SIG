@@ -31,6 +31,12 @@
 | **D-013** | Le modèle de scène 3D porte le style (opacité, largeur, côté, visibilité, ordre). | 3D, data | **entérinée** | 06 B4 |
 | **D-016** | **Navigation = onglets horizontaux** (variante A) : 7 modules `Projet · Données · Géométrie · Coupe 2D · Vue 3D · Analyses · Export` + `Référentiel` et `Mode Guidé` en accès secondaire. Appliquée dans les maquettes parce qu'un rail vertical mange le canevas dans un dock QGIS. **Révisable** : si tu préfères la variante B, seule la barre change. | UX | **appliquée, révisable** | maquettes |
 
+| **D-017** | **Le contrat de piste remplace la liste plate.** Les pistes sont rangées en **4 familles** — *structurelles* (Profondeurs, Trajectoire, Intercepts), *catégorielles* (Lithologie, Altérations, Minéralisations, Structures), *quantitatives* (Teneurs, RQD, Récupération, Densité), *médias* (Imagerie). La famille porte les valeurs ; la piste les hérite et peut les forcer. **Fini les 10 lignes à égalité** et les réglages répétés. | Paramètres, 2D | **entérinée** | maquette 11 | 
+| **D-018** | **Trois rangs de données, et des catégories qui restent à leur type.** Rang 1 *socle* (collets, déviations, topographie, profils d'ouvrage) — lu, jamais recalculé. Rang 2 *observé* (lithologie, altérations, minéralisations, structures, teneurs, imagerie) — les catégories sont nommées par l'utilisateur et vivent au Référentiel de **leur** type. Rang 3 *calculé* (RQD, récupération) — déduit, jamais importé en direct. **Intercepts, RQD, récupération, densité, imagerie ne sont plus des « types de données » mélangés aux autres : ce sont des pistes ou des calculs.** | Données, paramètres | **entérinée** | maquettes 13 et 11 |
+| **D-019** | **Un seul jeu de mots pour tout le monde.** Chaque état dit : *ce qui se passe*, *ce que vous pouvez faire*, *si la suite continue*. Deux voix (Guidée = phrases courtes, Experte = détail) partagent **exactement le même vocabulaire de niveau** (Information · Avertissement · Question · Blocage · Erreur technique). Aucun jargon d'ingénieur dans l'interface : ni « clé », ni « signature », ni « contrat ». | UX, langue | **entérinée** | maquettes 14 et 15 |
+| **D-020** | **17 cas d'usage rejoués à chaque modification** (projet vide, projet complet, types manquants, doublons, séparateur, décimale, encodage, forages inclinés et horizontaux, pendage inversé, CRS du MNT, MNT absent, 500 forages, export A1, sombre, zoom 400 %, contraste). Un cas qui ne passe pas bloque la livraison. | Qualité | **entérinée** | maquette 16 |
+| **D-021** | **Écran « Pistes » dédié** (Coupe 2D → Pistes) : la liste des 12 pistes avec visibilité, largeur, opacité, côté ; le détail d'une piste montre *commune à toutes / propre à sa famille / où le réglage s'applique*. Le panneau de la coupe ne contient plus que 3 familles + 4 réglages de coupe. | 2D, UX | **appliquée** | maquettes 11 et 7 |
+
 ---
 
 ## Questions restantes
@@ -51,5 +57,6 @@ le nom exact des 8 modules dans l'interface, et le choix typographique final (de
 
 | Date | Événement |
 |---|---|
+| J2 | **Corrections après ta remarque** : contrat en 4 familles, rangs de données, message explicable, 2 voix d'états, 17 cas de validation. `maquettes/10_planche_corrections.png`. |
 | J1 | **Jeu complet de maquettes** (9 écrans + 2 variantes sombres + planche contact) : `maquettes/*.png`, D-016 appliquée. |
 | J0 | Audit d'apparence produit (doc 01), contrat de piste proposé (02), arborescence (03), états (04), organisation (05). 15 décisions proposées. |

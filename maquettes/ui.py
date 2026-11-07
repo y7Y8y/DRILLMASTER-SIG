@@ -331,3 +331,13 @@ class C:
                     self.txt(cx + ww - 10, ry + row_h / 2 + 3.6, str(cell), bold=False, anchor="rs")
                 cx += ww
         return y + head_h + len(rows) * row_h
+
+
+def switch(c, x, y, on, w=34, h=19):
+    """Interrupteur — préféré à la case quand il n'y a qu'un seul choix."""
+    t = c.th
+    c.r(x, y, w, h, fill=t.accent if on else t.surface_3, rx=h / 2)
+    if not on:
+        c.r(x, y, w, h, fill=None, stroke=t.border_strong, sw=1, rx=h / 2)
+    c.c(x + (w - h / 2 - 2) if on else (x + h / 2 + 2), y + h / 2, h / 2 - 2.5,
+        "#FFFFFF")
