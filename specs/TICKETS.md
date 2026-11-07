@@ -87,9 +87,31 @@ doit faire échouer `spec_check`.
 **Fichiers autorisés.** `drillmaster_v3/ui/page_pistes.py`.
 **Interdit.** Un réglage de piste dans le panneau de la coupe ;
 un libellé qui ne vient pas du lexique.
-**Preuve.** Revue visuelle contre la maquette + `TrackCatalog` branché (aucune
-valeur codée en dur dans l'écran).
+**Preuve.** `specs/tests/test_ecran_pistes.py` (4 tests) : aucune piste ni libellé
+codé en dur, les 4 familles viennent du lexique, le maximum de 6 est appliqué par
+le garde, les deux modes sont produits. **Fait** — `drillmaster_v3/ui/page_pistes.py`.
 **Règles.** R-05 → R-11, R-24, R-27.
+
+---
+
+## T-04 bis · Décision produit : le mode se choisit-il tout seul ?
+
+**Tranché le J3, appliqué, révisable.**
+
+Le mode **s'active automatiquement, sans jamais s'imposer** :
+
+| Situation | Mode effectif | Ce que voit l'utilisateur |
+|---|---|---|
+| projet neuf, aucun réglage modifié | **Guidé** | 6 réglages max, le reste derrière « Avancé » |
+| l'utilisateur clique sur « Afficher les réglages avancés » | **Expert** pour cette piste seule | les réglages de plus apparaissent, rien d'autre ne bouge |
+| l'utilisateur choisit « Expert » en haut de l'écran | **Expert** partout, mémorisé par projet | idem |
+| il revient en « Guidé » | **Guidé** | les valeurs restent identiques (R-25) |
+
+Le mode n'est **jamais** imposé par le logiciel : aucune montée en Expert décidée
+sans un geste de l'utilisateur. Aucune fonction n'est perdue en Guidé (R-26).
+
+**Preuve.** `test_R25_changer_de_mode_ne_change_aucune_valeur` ; maquettes
+`17_pistes_genere.png` et `17_pistes_genere_expert.png` produites par le même code.
 
 ---
 

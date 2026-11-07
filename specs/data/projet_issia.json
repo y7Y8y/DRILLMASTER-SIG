@@ -1,0 +1,58 @@
+{
+  "$comment": "Jeu de données de démonstration du projet de référence. Séparé de la spécification : ce sont des chiffres, pas des règles.",
+  "projet": "Issia",
+  "coupe": "004",
+  "orientation": "N045°",
+  "longueur_m": 195,
+  "forages": 64,
+  "par_piste": {
+    "depths": {
+      "quantite": "graduations 20 m",
+      "etat": "ok"
+    },
+    "trajectory": {
+      "quantite": "64 forages",
+      "etat": "ok"
+    },
+    "intercepts": {
+      "quantite": "25 intercepts",
+      "etat": "ok"
+    },
+    "lithology": {
+      "quantite": "2 410 int.",
+      "etat": "ok"
+    },
+    "alterations": {
+      "quantite": "1 902 int.",
+      "etat": "ok"
+    },
+    "mineralizations": {
+      "quantite": "742 points",
+      "etat": "ok"
+    },
+    "structures": {
+      "quantite": "212 mesures",
+      "etat": "warn"
+    },
+    "assays": {
+      "quantite": "3 180 analyses",
+      "etat": "ok"
+    },
+    "rqd": {
+      "quantite": "88 mesures",
+      "etat": "ok"
+    },
+    "recovery": {
+      "quantite": "non fourni",
+      "etat": "info"
+    },
+    "density": {
+      "quantite": "non fourni",
+      "etat": "info"
+    },
+    "imagery": {
+      "quantite": "18 clichés",
+      "etat": "ok"
+    }
+  }
+}

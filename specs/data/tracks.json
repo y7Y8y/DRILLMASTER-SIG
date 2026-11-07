@@ -460,5 +460,54 @@
         "alt_text": ""
       }
     }
-  ]
+  ],
+  "reglages_visibles": {
+    "$comment": "R-24 : au plus 6 réglages visibles par piste. R-25 : le mode Guidé ne montre que 'essentiel'. 'systeme' = jamais réglable à la main.",
+    "communs": {
+      "id": "systeme",
+      "label": "systeme",
+      "visible": "essentiel",
+      "width": "essentiel",
+      "opacity": "essentiel",
+      "side": "essentiel",
+      "order": "avance",
+      "gap": "avance",
+      "fill": "avance",
+      "stroke": "avance",
+      "label_text": "avance",
+      "tooltip": "avance",
+      "filter": "avance",
+      "export": "avance"
+    },
+    "propres": {
+      "structurelle": {
+        "tick_step": "essentiel",
+        "label_every": "avance",
+        "line_style": "avance",
+        "dash": "avance",
+        "rule_ids": "essentiel",
+        "label_position": "avance"
+      },
+      "categorielle": {
+        "pattern": "avance",
+        "legend_order": "avance",
+        "hatch_scale": "avance"
+      },
+      "quantitative": {
+        "method": "essentiel",
+        "n_classes": "essentiel",
+        "breaks": "avance",
+        "ramp": "avance",
+        "range": "avance",
+        "scale_scope": "avance",
+        "unit": "avance"
+      },
+      "media": {
+        "thumb_size": "essentiel",
+        "resolution": "avance",
+        "alt_text": "avance"
+      }
+    },
+    "max_essentiels": 6
+  }
 }

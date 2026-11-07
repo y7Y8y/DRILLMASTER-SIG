@@ -49,6 +49,7 @@ class TrackCatalog:
         data = json.loads(Path(chemin).read_text(encoding="utf-8"))
         self.contrat = data["contrat"]["champs"]
         self.familles = data["familles"]
+        self.spec_reglages = data.get("reglages_visibles", {})
         self._pistes = {p["id"]: p for p in data["pistes"]}
         if len(self._pistes) != 12:
             raise ValueError("le catalogue doit déclarer exactement 12 pistes")
