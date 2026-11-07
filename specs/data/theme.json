@@ -91,6 +91,38 @@
       "opacite": 96,
       "cote": 110,
       "etat": 150
+    },
+    "ecran_pistes": {
+      "$comment": "mesuré dans maquettes/17_pistes_genere.png — la maquette est la référence",
+      "titre_y": 82,
+      "barre_mode_y": 132,
+      "zone_travail_y": 172,
+      "liste": {
+        "x": 24,
+        "y": 172,
+        "w": 1010,
+        "h": 792
+      },
+      "detail": {
+        "x": 1050,
+        "y": 172,
+        "w": 526,
+        "h": 792
+      },
+      "ligne_piste": 42,
+      "entete_famille": 34,
+      "colonnes": {
+        "visible": 20,
+        "piste": 96,
+        "largeur": 386,
+        "opacite": 482,
+        "cote": 578,
+        "etat": 706
+      },
+      "apercu": {
+        "y_depuis_detail": 560,
+        "h": 150
+      }
     }
   }
 }

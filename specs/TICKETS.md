@@ -115,6 +115,32 @@ sans un geste de l'utilisateur. Aucune fonction n'est perdue en Guidé (R-26).
 
 ---
 
+## T-10 · Brancher la maquette validée dans QGIS (Qt)
+
+**Principe : on ne redessine rien.** Le plugin Qt reprend **la maquette validée**,
+au pixel, à partir des fichiers de valeurs :
+
+| Ce que Qt doit afficher | D'où il le lit | Preuve exigée |
+|---|---|---|
+| couleurs, typo, rayons | `specs/data/theme.json` → `theme.qss()` | 0 hexadécimal dans le code Qt |
+| libellés, niveaux, rangs | `specs/data/lexique.json` | 0 chaîne hors lexique |
+| 12 pistes, 4 familles, 6 réglages | `specs/data/tracks.json` | 0 nom de piste codé en dur |
+| positions (x, y, largeur, hauteur) | `theme.json → disposition.ecran_pistes` | 0 coordonnée en dur |
+| comportement (lecture, géométrie, coupe) | `drillmaster_v3/core/` | les 59 tests passent |
+
+**Contrainte d'environnement, dite franchement.** Qt **ne démarre pas** dans le bac à
+sable de développement (il manque la bibliothèque système `libGL.so.1`, et l'installation
+exige les droits administrateur). Deux conséquences :
+
+1. le code Qt sera écrit et **relu**, mais pas lancé ici ;
+2. l'écart visuel sera mesuré **au pixel** en comparant le rendu Qt (capturé chez toi)
+   à `maquettes/17_pistes_genere.png` — c'est le test prévu, `T-10.pixel`.
+
+**Interdit.** Redessiner, « améliorer » une couleur au passage, changer un libellé,
+ajouter un réglage. Si la maquette ne dit rien, on demande.
+
+---
+
 ## T-05 · Coupe 2D — le panneau maigre
 
 **But.** La coupe ne contient plus de réglages de piste.

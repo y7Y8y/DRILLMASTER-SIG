@@ -25,6 +25,10 @@ class Theme:
         self.disposition = donnees["disposition"]
         self._semantique = donnees["semantique"]
 
+    def ecran(self, nom):
+        """Disposition d'un écran, mesurée sur la maquette validée."""
+        return self.disposition[nom]
+
     def couleur_etat(self, cle):
         """Rend la couleur d'un niveau, jamais l'accent de marque (R-19)."""
         jeton = self._semantique[cle]

@@ -18,6 +18,7 @@ sys.path.insert(0, str(RACINE / "maquettes"))
 from ui import C, Tokens, switch                        # noqa: E402
 from drillmaster_v3.core import (TrackCatalog, Visibilite,  # noqa: E402
                                  lexique)
+from drillmaster_v3.theme import theme                       # noqa: E402
 
 W, H = 1600, 1000
 LARGEUR = {"essentiel": 96}
@@ -102,7 +103,9 @@ def pistes(path, mode="guidee", detail=None):
     c.chip(W - 24 - 200, y + 2, "6 réglages visibles maximum", "ok")
 
     # ── liste
-    lx, ly, lw, lh = 24, 172, 1010, 792
+    dispo = theme.ecran("ecran_pistes")          # la maquette est la référence
+    lx, ly = dispo["liste"]["x"], dispo["liste"]["y"]
+    lw, lh = dispo["liste"]["w"], dispo["liste"]["h"]
     c.panel(lx, ly, lw, lh, "Les 12 pistes",
             "La famille donne les valeurs · le rond gris = valeur héritée")
     entete(c, lx + 14, ly + 66, lw)
@@ -158,7 +161,8 @@ def pistes(path, mode="guidee", detail=None):
 
     # ── détail : le champ vient de la même source que la liste
     st = cat.resout(detail)
-    dx, dy, dw = 1050, 172, 526
+    dx, dy = dispo["detail"]["x"], dispo["detail"]["y"]
+    dw = dispo["detail"]["w"]
     c.panel(dx, dy, dw, 792, st.label, "Le détail d'une piste, pas un formulaire")
 
     yy = dy + 68
@@ -223,7 +227,7 @@ def pistes(path, mode="guidee", detail=None):
           size=8.8, fill=t.ink_2, anchor="ls")
 
     # ── aperçu : ce que la piste donnera dans la coupe
-    ay = dy + (560 if mode == "guidee" else 370)
+    ay = dy + (dispo["apercu"]["y_depuis_detail"] if mode == "guidee" else 370)
     c.panel(dx + 16, ay, dw - 32, 150, "Aperçu dans la coupe",
             "Ce que vous voyez est ce qui sortira à l'export")
     ax = dx + 40

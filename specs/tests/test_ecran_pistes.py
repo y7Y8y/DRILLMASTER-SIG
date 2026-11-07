@@ -34,6 +34,13 @@ class EcranProduitParLeContrat(unittest.TestCase):
             vis.verifie_affichage(pid, vis.essentiels(pid))
         self.assertIn("verifie_affichage", SOURCE) if "verifie_affichage" in SOURCE else None
 
+    def test_aucune_coordonnee_en_dur_dans_l_ecran(self):
+        """La disposition vient du thème, pas du code de l'écran."""
+        import re
+        coordonnees = re.findall(r"=\s*\d+,\s*\d+,\s*\d+,\s*\d+", SOURCE)
+        self.assertEqual(coordonnees, [],
+                         f"coordonnées en dur : {coordonnees}")
+
     def test_les_deux_modes_sont_produits(self):
         for nom in ("17_pistes_genere.png", "17_pistes_genere_expert.png"):
             self.assertTrue((RACINE / "maquettes" / nom).exists(), nom)
