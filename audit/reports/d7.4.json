@@ -1,0 +1,23 @@
+{
+  "agent": "D7.4",
+  "direction": "Validation",
+  "question": "Les 12 types de données sont-ils tous adressables ?",
+  "score": 9,
+  "metrics": {
+    "types": 42,
+    "onglets": 11,
+    "sans_onglet": [
+      "topography"
+    ]
+  },
+  "findings": [
+    {
+      "severite": "moyen",
+      "categorie": "couverture",
+      "titre": "topographie : 12ᵉ type sans onglet dédié",
+      "preuve": "ui/step2_import.py:78",
+      "detail": "Alimente la ligne de sol mais n'a pas d'onglet.",
+      "correction": "Onglet ou groupe explicite."
+    }
+  ]
+}

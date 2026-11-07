@@ -1,0 +1,57 @@
+{
+  "agent": "D2.4",
+  "direction": "Architecture",
+  "question": "Le découpage de section_dock est-il viable ?",
+  "score": 4,
+  "metrics": {
+    "fichier_lignes": 11529,
+    "classes": {
+      "CollapsibleGroup": [
+        2,
+        60
+      ],
+      "_PatternPolygonItem": [
+        1,
+        13
+      ],
+      "_ClippedStrokeItem": [
+        2,
+        37
+      ],
+      "_ClippedFillItem": [
+        2,
+        26
+      ],
+      "_StyledFillItem": [
+        2,
+        44
+      ],
+      "SectionCanvas": [
+        122,
+        5040
+      ],
+      "SectionWidget": [
+        172,
+        5295
+      ]
+    }
+  },
+  "findings": [
+    {
+      "severite": "bloquant",
+      "categorie": "monolithe",
+      "titre": "SectionCanvas : 122 méthodes / 5040 lignes",
+      "preuve": "ui/section_dock.py",
+      "detail": "Une classe ne peut pas être testée ni relue.",
+      "correction": "Découpage par domaine : canvas / rendu litho / rendu teneurs / panneau."
+    },
+    {
+      "severite": "bloquant",
+      "categorie": "monolithe",
+      "titre": "SectionWidget : 172 méthodes / 5295 lignes",
+      "preuve": "ui/section_dock.py",
+      "detail": "Une classe ne peut pas être testée ni relue.",
+      "correction": "Découpage par domaine : canvas / rendu litho / rendu teneurs / panneau."
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "agent": "D5.3",
+  "direction": "Coupe 2D",
+  "question": "Les réglages sont-ils accessibles en une seule fois ?",
+  "score": 8,
+  "metrics": {
+    "pistes": 8,
+    "vue_ensemble_du_tableau": 0
+  },
+  "findings": [
+    {
+      "severite": "majeur",
+      "categorie": "ergonomie",
+      "titre": "Aucune vue d'ensemble des pistes",
+      "preuve": "ui/section_dock.py:6425",
+      "detail": "Une seule piste affichée à la fois ; comparer 3 largeurs = 3 clics + mémoire.",
+      "correction": "Tableau 10 lignes × 14 colonnes (doc 02 §2)."
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "agent": "D8.3",
+  "direction": "Interactions",
+  "question": "Les popups bloquent-elles le travail ?",
+  "score": 9,
+  "metrics": {
+    "messageboxes": 31
+  },
+  "findings": [
+    {
+      "severite": "moyen",
+      "categorie": "modales",
+      "titre": "31 boîtes de dialogue bloquantes",
+      "preuve": "ui/*",
+      "detail": "Cache le contexte, interrompt le travail.",
+      "correction": "Panneau de détail inline."
+    }
+  ]
+}

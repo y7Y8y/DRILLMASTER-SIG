@@ -1,0 +1,513 @@
+{
+  "$comment": "Source de vérité des pistes. Toute piste absente d'ici n'existe pas. Toute clé absente du contrat est refusée.",
+  "contrat": {
+    "version": "1.0",
+    "champs": {
+      "id": {
+        "type": "slug",
+        "defaut": null,
+        "herite": false,
+        "note": "stable, jamais traduit, jamais renommé"
+      },
+      "label": {
+        "type": "string",
+        "defaut": null,
+        "herite": false,
+        "note": "vient du lexique FR, jamais saisi librement"
+      },
+      "family": {
+        "type": "enum",
+        "valeurs": [
+          "structurelle",
+          "categorielle",
+          "quantitative",
+          "media"
+        ],
+        "defaut": null,
+        "herite": false
+      },
+      "visible": {
+        "type": "bool",
+        "defaut": true,
+        "herite": true,
+        "note": "hérité de la famille"
+      },
+      "order": {
+        "type": "int",
+        "defaut": null,
+        "herite": false,
+        "note": "entier unique par coupe, 10, 20, 30…"
+      },
+      "side": {
+        "type": "enum",
+        "valeurs": [
+          "left",
+          "right",
+          "overlay"
+        ],
+        "defaut": "left",
+        "herite": true
+      },
+      "width": {
+        "type": "int",
+        "min": 4,
+        "max": 120,
+        "unite": "px",
+        "defaut": 12,
+        "herite": true
+      },
+      "gap": {
+        "type": "int",
+        "min": 0,
+        "max": 40,
+        "unite": "px",
+        "defaut": 4,
+        "herite": true
+      },
+      "opacity": {
+        "type": "int",
+        "min": 0,
+        "max": 100,
+        "unite": "%",
+        "defaut": 100,
+        "herite": true
+      },
+      "fill": {
+        "type": "enum",
+        "valeurs": [
+          "reference",
+          "scale",
+          "fixed"
+        ],
+        "defaut": "reference",
+        "herite": true,
+        "note": "reference = lit le Référentiel, scale = rampe calculée"
+      },
+      "stroke": {
+        "type": "enum",
+        "valeurs": [
+          "auto",
+          "fixed"
+        ],
+        "defaut": "auto",
+        "herite": true
+      },
+      "label_text": {
+        "type": "obj",
+        "cles": [
+          "size",
+          "color",
+          "position",
+          "offset"
+        ],
+        "defaut": {
+          "size": 9,
+          "color": "ink_2",
+          "position": "outer",
+          "offset": 6
+        },
+        "herite": true
+      },
+      "tooltip": {
+        "type": "obj",
+        "cles": [
+          "fields"
+        ],
+        "defaut": {
+          "fields": []
+        },
+        "herite": true
+      },
+      "filter": {
+        "type": "expr",
+        "defaut": null,
+        "herite": true,
+        "note": "expression de domaine, jamais du code"
+      },
+      "export": {
+        "type": "enum",
+        "valeurs": [
+          "visible",
+          "hidden",
+          "simplified"
+        ],
+        "defaut": "visible",
+        "herite": true
+      }
+    },
+    "regles": [
+      "15 champs communs, exactement (14 emplacements d'origine + family, décision D-017). Aucun champ en plus.",
+      "Un champ commun ne peut jamais être redéclaré dans specific.",
+      "Les valeurs de type enum sont fermées : toute autre valeur est un bug.",
+      "width/opacity/side/gap/export sont hértiables ; id/label/order/family ne le sont pas.",
+      "La résolution se fait famille -> piste ; une piste sans valeur explicite prend celle de la famille.",
+      "Aucune vue ne stocke de copie : 2D, 3D, légende, export et carte lisent le même objet résolu."
+    ]
+  },
+  "familles": {
+    "structurelle": {
+      "specific_autorise": [
+        "tick_step",
+        "label_every",
+        "line_style",
+        "dash",
+        "rule_ids",
+        "label_position"
+      ],
+      "defauts": {
+        "side": "left",
+        "width": 20,
+        "opacity": 100,
+        "gap": 4,
+        "visible": true,
+        "fill": "fixed",
+        "stroke": "auto",
+        "export": "visible",
+        "filter": null,
+        "tooltip": {
+          "fields": []
+        },
+        "label_text": {
+          "size": 9,
+          "color": "ink_2",
+          "position": "outer",
+          "offset": 6
+        }
+      }
+    },
+    "categorielle": {
+      "specific_autorise": [
+        "pattern",
+        "legend_order",
+        "hatch_scale"
+      ],
+      "defauts": {
+        "side": "left",
+        "width": 14,
+        "opacity": 100,
+        "gap": 4,
+        "visible": true,
+        "fill": "reference",
+        "stroke": "auto",
+        "export": "visible",
+        "filter": null,
+        "tooltip": {
+          "fields": []
+        },
+        "label_text": {
+          "size": 9,
+          "color": "ink_2",
+          "position": "outer",
+          "offset": 6
+        }
+      }
+    },
+    "quantitative": {
+      "specific_autorise": [
+        "method",
+        "n_classes",
+        "breaks",
+        "ramp",
+        "scale_scope",
+        "range",
+        "unit"
+      ],
+      "defauts": {
+        "side": "right",
+        "width": 13,
+        "opacity": 100,
+        "gap": 4,
+        "visible": true,
+        "fill": "scale",
+        "stroke": "auto",
+        "export": "visible",
+        "filter": null,
+        "tooltip": {
+          "fields": []
+        },
+        "label_text": {
+          "size": 9,
+          "color": "ink_2",
+          "position": "outer",
+          "offset": 6
+        }
+      }
+    },
+    "media": {
+      "specific_autorise": [
+        "thumb_size",
+        "resolution",
+        "alt_text"
+      ],
+      "defauts": {
+        "side": "right",
+        "width": 16,
+        "opacity": 100,
+        "gap": 4,
+        "visible": true,
+        "fill": "fixed",
+        "stroke": "auto",
+        "export": "visible",
+        "filter": null,
+        "tooltip": {
+          "fields": []
+        },
+        "label_text": {
+          "size": 9,
+          "color": "ink_2",
+          "position": "outer",
+          "offset": 6
+        }
+      }
+    }
+  },
+  "pistes": [
+    {
+      "id": "depths",
+      "label": "Profondeurs",
+      "family": "structurelle",
+      "order": 10,
+      "side": "left",
+      "width": 22,
+      "visible": true,
+      "owner": "coupe2d.pistes",
+      "specific": {
+        "tick_step": 20,
+        "label_every": 20
+      }
+    },
+    {
+      "id": "trajectory",
+      "label": "Trajectoire",
+      "family": "structurelle",
+      "order": 20,
+      "side": "left",
+      "width": 20,
+      "visible": true,
+      "owner": "coupe2d.pistes",
+      "specific": {
+        "line_style": "solid",
+        "dash": [
+          4,
+          3
+        ]
+      }
+    },
+    {
+      "id": "intercepts",
+      "label": "Intercepts",
+      "family": "structurelle",
+      "order": 30,
+      "side": "left",
+      "width": 14,
+      "visible": true,
+      "owner": "coupe2d.pistes",
+      "specific": {
+        "rule_ids": [
+          "au_1",
+          "au_5",
+          "li_500",
+          "au_cu"
+        ],
+        "label_position": "outer"
+      }
+    },
+    {
+      "id": "lithology",
+      "label": "Lithologie",
+      "family": "categorielle",
+      "order": 40,
+      "side": "left",
+      "width": 18,
+      "visible": true,
+      "owner": "coupe2d.pistes",
+      "specific": {
+        "pattern": "reference",
+        "legend_order": "usage"
+      }
+    },
+    {
+      "id": "alterations",
+      "label": "Altérations",
+      "family": "categorielle",
+      "order": 50,
+      "side": "left",
+      "width": 12,
+      "visible": true,
+      "owner": "coupe2d.pistes",
+      "specific": {
+        "pattern": "reference",
+        "legend_order": "intensity"
+      }
+    },
+    {
+      "id": "mineralizations",
+      "label": "Minéralisations",
+      "family": "categorielle",
+      "order": 60,
+      "side": "left",
+      "width": 10,
+      "visible": true,
+      "owner": "coupe2d.pistes",
+      "specific": {
+        "pattern": "reference",
+        "legend_order": "usage"
+      }
+    },
+    {
+      "id": "structures",
+      "label": "Structures",
+      "family": "categorielle",
+      "order": 70,
+      "side": "left",
+      "width": 10,
+      "visible": true,
+      "owner": "coupe2d.pistes",
+      "specific": {
+        "pattern": "reference",
+        "hatch_scale": 1.0
+      }
+    },
+    {
+      "id": "assays",
+      "label": "Teneurs",
+      "family": "quantitative",
+      "order": 80,
+      "side": "right",
+      "width": 15,
+      "visible": true,
+      "opacity": 90,
+      "owner": "coupe2d.pistes",
+      "specific": {
+        "method": "quantiles",
+        "n_classes": 5,
+        "ramp": "ylgnbu",
+        "breaks": [
+          0.1,
+          1.0,
+          5.0
+        ],
+        "scale_scope": "project",
+        "unit": "ppm"
+      }
+    },
+    {
+      "id": "rqd",
+      "label": "RQD",
+      "family": "quantitative",
+      "order": 90,
+      "side": "right",
+      "width": 13,
+      "visible": true,
+      "owner": "coupe2d.pistes",
+      "specific": {
+        "method": "linear",
+        "n_classes": 5,
+        "ramp": "greens",
+        "range": [
+          0,
+          100
+        ],
+        "unit": "%"
+      }
+    },
+    {
+      "id": "recovery",
+      "label": "Récupération",
+      "family": "quantitative",
+      "order": 100,
+      "side": "right",
+      "width": 13,
+      "visible": false,
+      "owner": "coupe2d.pistes",
+      "specific": {
+        "method": "linear",
+        "ramp": "greens",
+        "range": [
+          0,
+          100
+        ],
+        "unit": "%"
+      }
+    },
+    {
+      "id": "density",
+      "label": "Densité",
+      "family": "quantitative",
+      "order": 110,
+      "side": "right",
+      "width": 13,
+      "visible": false,
+      "owner": "coupe2d.pistes",
+      "specific": {
+        "method": "linear",
+        "ramp": "oranges",
+        "unit": "t/m³"
+      }
+    },
+    {
+      "id": "imagery",
+      "label": "Imagerie",
+      "family": "media",
+      "order": 120,
+      "side": "right",
+      "width": 16,
+      "visible": true,
+      "owner": "coupe2d.pistes",
+      "specific": {
+        "thumb_size": 48,
+        "resolution": "medium",
+        "alt_text": ""
+      }
+    }
+  ],
+  "reglages_visibles": {
+    "$comment": "R-24 : au plus 6 réglages visibles par piste. R-25 : le mode Guidé ne montre que 'essentiel'. 'systeme' = jamais réglable à la main.",
+    "communs": {
+      "id": "systeme",
+      "label": "systeme",
+      "visible": "essentiel",
+      "width": "essentiel",
+      "opacity": "essentiel",
+      "side": "essentiel",
+      "order": "avance",
+      "gap": "avance",
+      "fill": "avance",
+      "stroke": "avance",
+      "label_text": "avance",
+      "tooltip": "avance",
+      "filter": "avance",
+      "export": "avance"
+    },
+    "propres": {
+      "structurelle": {
+        "tick_step": "essentiel",
+        "label_every": "avance",
+        "line_style": "avance",
+        "dash": "avance",
+        "rule_ids": "essentiel",
+        "label_position": "avance"
+      },
+      "categorielle": {
+        "pattern": "avance",
+        "legend_order": "avance",
+        "hatch_scale": "avance"
+      },
+      "quantitative": {
+        "method": "essentiel",
+        "n_classes": "essentiel",
+        "breaks": "avance",
+        "ramp": "avance",
+        "range": "avance",
+        "scale_scope": "avance",
+        "unit": "avance"
+      },
+      "media": {
+        "thumb_size": "essentiel",
+        "resolution": "avance",
+        "alt_text": "avance"
+      }
+    },
+    "max_essentiels": 6
+  }
+}

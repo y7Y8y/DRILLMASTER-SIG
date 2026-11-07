@@ -1,0 +1,28 @@
+{
+  "$comment": "Couleurs de données — source unique. Ni la charte ni le plugin ne les réécrivent.",
+  "lithologie": {
+    "LAT": "#C99A5B",
+    "SAP": "#E0B56B",
+    "SPR": "#8FA85A",
+    "MTZ": "#5E8C4A",
+    "PEG": "#E86A5E",
+    "QTZ": "#E8E1C8",
+    "MIS": "#9B79E3",
+    "GRA": "#B58463",
+    "SDS": "#A9A9A9"
+  },
+  "teneur": [
+    "#D6D3F8",
+    "#A99BF2",
+    "#7B61FF",
+    "#5B3FD9",
+    "#3B2A9E"
+  ],
+  "teneur_legacy": [
+    "#7B61FF",
+    "#3B8BEA",
+    "#1FA97A",
+    "#F5B335",
+    "#E8623D"
+  ]
+}

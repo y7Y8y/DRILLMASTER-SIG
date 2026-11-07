@@ -28,33 +28,7 @@
 | M-01 | Modales bloquantes | 29 fenêtres | on clique « OK » sans lire |
 | M-04 | Absences non annoncées | 212 mentions pour 1 458 | un panneau vide laisse croire « rien à voir » |
 
-## Le plan : 2 programmes, 7 chantiers
-
-Les 80 constats sont tous affectés (vérifié : **80/80**, aucun orphelin).
-
-### Programme A — Rendre le socle cohérent (chantiers 1 à 3)
-Rien de nouveau à l'écran. On supprime les doublons : 12 propriétaires pour une
-largeur deviennent 1, 8 calculs de géométrie deviennent 1, 655 couleurs
-deviennent 21 jetons.
-
-### Programme B — Rendre l'interface utilisable (chantiers 4 à 7)
-Messages, boutons, rangements, écrans neufs. C'est ce que l'utilisateur voit.
-
-### Répartition des 80 constats
-
-| Chantier | Constats | dont bloquants |
-|---|---|---|
-| 1 · Socle visuel | 10 | 0 |
-| 2 · Un réglage, un propriétaire | 7 | **4** |
-| 3 · Un seul calcul de géométrie | 2 | 1 |
-| 4 · Les messages | 10 | 1 |
-| 5 · Boutons et gestes | 6 | **4** |
-| 6 · Les rangements | **38** | 0 |
-| 7 · Écrans neufs | 7 | 0 |
-| Continu · qualité et doctrine | — | — |
-| **Total** | **80** | **10** |
-
-## Le détail des chantiers
+## Le plan, en 7 chantiers
 
 ### Chantier 1 — Le socle visuel (1 passage, mécanique)
 

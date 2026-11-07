@@ -1,0 +1,17 @@
+[general]
+name=DrillMaster
+qgisMinimumVersion=3.28
+qgisMaximumVersion=3.99
+description=Modélisation et visualisation de forages miniers/géotechniques
+about=DrillMaster importe et valide les données de forage, calcule les trajectoires 3D et produit des coupes géologiques 2D. Le Référentiel du projet partage les libellés et symboles entre QGIS et les vues sans modifier les données sources.
+version=2.9.394
+author=Yann BONFUL
+tracker=https://github.com/y7Y8y/DrillMaster/issues
+repository=https://github.com/y7Y8y/DrillMaster
+homepage=https://github.com/y7Y8y/DrillMaster
+category=Plugins
+icon=icon.png
+experimental=False
+deprecated=False
+hasProcessingProvider=False
+tags=mining,drillhole,collar,survey,lithology,assay,alteration,geology,3d,cross-section,geometallurgy
