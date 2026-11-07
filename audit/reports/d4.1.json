@@ -1,0 +1,46 @@
+{
+  "agent": "D4.1",
+  "direction": "Paramètres",
+  "question": "Les 8 pistes partagent-elles le même jeu d'attributs ?",
+  "score": 2,
+  "metrics": {
+    "pistes": 8,
+    "contrat_complet": 4,
+    "contrat_partiel": 4,
+    "couverture_pct": 75
+  },
+  "findings": [
+    {
+      "severite": "majeur",
+      "categorie": "contrat",
+      "titre": "trajectory : opacity, side absent(s)",
+      "preuve": "core/project.py",
+      "detail": "Cette piste n'a pas le réglage commun correspondant.",
+      "correction": "Étage 2 du contrat de piste (doc 02)."
+    },
+    {
+      "severite": "majeur",
+      "categorie": "contrat",
+      "titre": "depth : width absent(s)",
+      "preuve": "core/project.py",
+      "detail": "Cette piste n'a pas le réglage commun correspondant.",
+      "correction": "Étage 2 du contrat de piste (doc 02)."
+    },
+    {
+      "severite": "majeur",
+      "categorie": "contrat",
+      "titre": "litho : side absent(s)",
+      "preuve": "core/project.py",
+      "detail": "Cette piste n'a pas le réglage commun correspondant.",
+      "correction": "Étage 2 du contrat de piste (doc 02)."
+    },
+    {
+      "severite": "majeur",
+      "categorie": "contrat",
+      "titre": "assays : width, opacity absent(s)",
+      "preuve": "core/project.py",
+      "detail": "Cette piste n'a pas le réglage commun correspondant.",
+      "correction": "Étage 2 du contrat de piste (doc 02)."
+    }
+  ]
+}

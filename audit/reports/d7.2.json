@@ -1,0 +1,19 @@
+{
+  "agent": "D7.2",
+  "direction": "Validation",
+  "question": "Les messages expliquent-ils pourquoi et comment résoudre ?",
+  "score": 8,
+  "metrics": {
+    "messages": 98
+  },
+  "findings": [
+    {
+      "severite": "majeur",
+      "categorie": "messages",
+      "titre": "98 messages sans champ structuré pourquoi/résoudre",
+      "preuve": "core/validation.py",
+      "detail": "Texte libre concaténé.",
+      "correction": "Contrat de message à 5 champs (doc 04 §2)."
+    }
+  ]
+}

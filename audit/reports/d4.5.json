@@ -1,0 +1,61 @@
+{
+  "agent": "D4.5",
+  "direction": "Paramètres",
+  "question": "Les 3 pistes géotechniques sont-elles dans le modèle commun ?",
+  "score": 0,
+  "metrics": {
+    "attendus": 6,
+    "absents_du_modele": 6,
+    "present_dans_geotech": 6
+  },
+  "findings": [
+    {
+      "severite": "majeur",
+      "categorie": "paramètres",
+      "titre": "show_rqd hors du modèle de projet",
+      "preuve": "ui/section_geotech.py:380",
+      "detail": "Réglé dans un magasin séparé : introuvable pour l'utilisateur.",
+      "correction": "Intégrer au contrat de piste (type quantitative)."
+    },
+    {
+      "severite": "majeur",
+      "categorie": "paramètres",
+      "titre": "show_recovery hors du modèle de projet",
+      "preuve": "ui/section_geotech.py:380",
+      "detail": "Réglé dans un magasin séparé : introuvable pour l'utilisateur.",
+      "correction": "Intégrer au contrat de piste (type quantitative)."
+    },
+    {
+      "severite": "majeur",
+      "categorie": "paramètres",
+      "titre": "show_density hors du modèle de projet",
+      "preuve": "ui/section_geotech.py:380",
+      "detail": "Réglé dans un magasin séparé : introuvable pour l'utilisateur.",
+      "correction": "Intégrer au contrat de piste (type quantitative)."
+    },
+    {
+      "severite": "majeur",
+      "categorie": "paramètres",
+      "titre": "rqd_width hors du modèle de projet",
+      "preuve": "ui/section_geotech.py:380",
+      "detail": "Réglé dans un magasin séparé : introuvable pour l'utilisateur.",
+      "correction": "Intégrer au contrat de piste (type quantitative)."
+    },
+    {
+      "severite": "majeur",
+      "categorie": "paramètres",
+      "titre": "recovery_width hors du modèle de projet",
+      "preuve": "ui/section_geotech.py:380",
+      "detail": "Réglé dans un magasin séparé : introuvable pour l'utilisateur.",
+      "correction": "Intégrer au contrat de piste (type quantitative)."
+    },
+    {
+      "severite": "majeur",
+      "categorie": "paramètres",
+      "titre": "density_width hors du modèle de projet",
+      "preuve": "ui/section_geotech.py:380",
+      "detail": "Réglé dans un magasin séparé : introuvable pour l'utilisateur.",
+      "correction": "Intégrer au contrat de piste (type quantitative)."
+    }
+  ]
+}

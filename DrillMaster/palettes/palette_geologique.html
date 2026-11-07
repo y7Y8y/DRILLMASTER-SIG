@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Palette LCH — Référentiel géologique</title>
+<style>
+  :root {
+    --paper: #EDEEE6;
+    --paper-2: #E4E6DC;
+    --ink: #1C201B;
+    --ink-soft: #55594F;
+    --line: #C9CBBD;
+    --accent: #3C5B4E;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: Charter, "Iowan Old Style", Georgia, serif;
+    line-height: 1.5;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 56px 32px 96px; }
+  header { border-bottom: 2px solid var(--ink); padding-bottom: 20px; margin-bottom: 40px; }
+  header .kicker {
+    font-family: ui-monospace, "SF Mono", Consolas, monospace;
+    font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent); margin: 0 0 8px;
+  }
+  header h1 { font-size: 30px; margin: 0 0 10px; font-weight: 600; }
+  header p { color: var(--ink-soft); max-width: 720px; margin: 0; font-size: 15px; }
+
+  section.table-block { margin-bottom: 56px; }
+  section.table-block > h2 {
+    font-family: ui-monospace, "SF Mono", Consolas, monospace;
+    font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--ink); background: var(--paper-2);
+    display: inline-block; padding: 6px 14px; border: 1px solid var(--line);
+    margin-bottom: 20px;
+  }
+
+  .cluster { margin-bottom: 28px; padding-left: 16px; border-left: 3px solid var(--line); }
+  .cluster h3 {
+    font-size: 15px; font-weight: 600; margin: 0 0 12px;
+    display: flex; align-items: baseline; gap: 10px;
+  }
+  .cluster h3 .sub { font-weight: 400; color: var(--ink-soft); font-size: 13px; }
+  .cluster h3 .count {
+    margin-left: auto; font-family: ui-monospace, monospace; font-size: 11px;
+    color: var(--ink-soft); border: 1px solid var(--line); padding: 2px 7px; border-radius: 10px;
+  }
+  .row { display: flex; flex-wrap: wrap; gap: 10px; }
+
+  .chip { width: 168px; background: #fff; border: 1px solid var(--line); }
+  .litho-chip .swatch { height: 58px; background: var(--c); }
+  .alt-chip .band { height: 30px; }
+  .chip .meta { padding: 8px 10px 10px; display: flex; flex-direction: column; gap: 3px; }
+  .chip .name { font-size: 12.5px; font-weight: 600; }
+  .chip .hex { font-family: ui-monospace, "SF Mono", Consolas, monospace; font-size: 11px; color: var(--ink-soft); }
+  .chip .derived { font-size: 10.5px; color: var(--accent); font-style: italic; }
+
+  .risk-block { margin-top: 48px; border-top: 2px solid var(--ink); padding-top: 24px; }
+  .risk-block > h2 { font-size: 15px; margin: 0 0 16px; }
+  .risk { background: #fff; border: 1px solid var(--line); border-left: 4px solid var(--accent); padding: 14px 16px; margin-bottom: 12px; }
+  .risk h4 { margin: 0 0 6px; font-size: 13.5px; }
+  .risk p { margin: 0; font-size: 13px; color: var(--ink-soft); }
+
+  footer { margin-top: 48px; font-size: 12.5px; color: var(--ink-soft); border-top: 1px solid var(--line); padding-top: 16px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="kicker">Référentiel couleurs · lithologie & altération</p>
+    <h1>Palette générée en espace OKLCH</h1>
+    <p>57 familles (30 lithologie + 27 altération), regroupées par cluster génétique. Teintes réparties par
+    fenêtre allouée proportionnellement au nombre de familles, avec variation de luminosité/chroma pour
+    maximiser la distance perceptuelle (ΔE2000) au sein d'un même cluster. Les familles composites
+    (issues d'une combinaison d'indicateurs, ex. Propylitique = Chlorite + Épidote + Carbonate) sont rendues
+    en dégradé pour signaler visuellement leur origine.</p>
+  </header>
+
+  <section class="table-block">
+    <h2>Lithologie — 30 familles · aplat vif</h2>
+    <div class="cluster">
+          <h3>Felsique <span class="sub">rose – magenta</span><span class="count">6 familles</span></h3>
+          <div class="row"><div class="chip litho-chip" style="--c:#9B79E3">
+      <div class="swatch"></div>
+      <div class="meta">
+        <span class="name">01 · Felsique</span>
+        <span class="hex">#9B79E3</span>
+      </div>
+    </div>
+<div class="chip litho-chip" style="--c:#8A00D4">
+      <div class="swatch"></div>
+      <div class="meta">
+        <span class="name">05 · Volcanique felsique</span>
+        <span class="hex">#8A00D4</span>
+      </div>
+    </div>
+<div class="chip litho-chip" style="--c:#9877A5">
+      <div class="swatch"></div>
+      <div class="meta">
+        <span class="name">14 · Métamorphique felsique</span>
+        <span class="hex">#9877A5</span>
+      </div>
+    </div>
+<div class="chip litho-chip" style="--c:#A026A6">
+      <div class="swatch"></div>
+      <div class="meta">
+        <span class="name">19 · Pegmatitique</span>
+        <span class="hex">#A026A6</span>
+      </div>
+    </div>
+<div class="chip litho-chip" style="--c:#C968B5">
+      <div class="swatch"></div>
+      <div class="meta">
+        <span class="name">21 · Intrusive alcaline</span>
+        <span class="hex">#C968B5</span>
+      </div>
+    </div>
+<div class="chip litho-chip" style="--c:#B3007F">
+      <div class="swatch"></div>
+      <div class="meta">
+        <span class="name">22 · Intrusive felsique spécialisé</span>
+        <span class="hex">#B3007F</span>
+      </div>
+    </div></div>
+        </div>
+<div class="cluster">
+          <h3>Oxyde de fer <span class="sub">rouge – rouille</span><span class="count">3 familles</span></h3>
+          <div class="row"><div class="chip litho-chip" style="--c:#CB5786">
+      <div class="swatch"></div>
+      <div class="meta">
+        <span class="name">23 · Latérite / régolithe</span>
+        <span class="hex">#CB5786</span>
+      </div>
+    </div>
+<div class="chip litho-chip" style="--c:#B63F5F">
+      <div class="swatch"></div>
+      <div class="meta">
+        <span class="name">26 · Formation de fer</span>
+        <span class="hex">#B63F5F</span>
+      </div>
+    </div>
+<div class="chip litho-chip" style="--c:#D15761">
+      <div class="swatch"></div>
+      <div class="meta">
+        <span class="name">27 · Roche riche en minerai</span>
+        <span class="hex">#D15761</span>
+      </div>
+    </div></div>
+        </div>
+<div class="cluster">
+          <h3>Sédimentaire / clastique <span class="sub">brun – ocre</span><span class="count">5 familles</span></h3>
+          <div class="row"><div class="chip litho-chip" style="--c:#DF674F">
+      <div class="swatch"></div>
+      <div class="meta">
+        <span class="name">09 · Sédimentaire détritique</span>
+        <span class="hex">#DF674F</span>
+      </div>
+    </div>
+<div class="chip litho-chip" style="--c:#B02D00">
+      <div class="swatch"></div>
+      <div class="meta">
+        <span class="name">10 · Sédimentaire grossière</span>
+        <span class="hex">#B02D00</span>
+      </div>
+    </div>
+<div class="chip litho-chip" style="--c:#AB775A">
+      <div class="swatch"></div>
+      <div class="meta">
+        <span class="name">24 · Alluvion / colluvion</span>
+        <span class="hex">#AB775A</span>
+      </div>
+    </div>
+<div class="chip litho-chip" style="--c:#A24C00">
+      <div class="swatch"></div>
+      <div class="meta">
+        <span class="name">25 · Éluvion</span>
+        <span class="hex">#A24C00</span>
+      </div>
+    </div>
+<div class="chip litho-chip" style="--c:#CE7A00">
+      <div class="swatch"></div>
+      <div class="meta">
+        <span class="name">29 · Roche volcanoclastique</span>
+        <span class="hex">#CE7A00</span>
+      </div>
+    </div></div>
+        </div>
+<div class="cluster">
+          <h3>Chimique / pyroclastique <span class="sub">jaune</span><span class="count">3 familles</span></h3>
+          <div class="row"><div class="chip litho-chip" style="--c:#B37800">
+      <div class="swatch"></div>
+      <div class="meta">
+        <span class="name">08 · Pyroclastique</span>
+        <span class="hex">#B37800</span>
+      </div>
+    </div>
+<div class="chip litho-chip" style="--c:#906900">
+      <div class="swatch"></div>
+      <div class="meta">
+        <span class="name">12 · Chimique / évaporitique</span>
+        <span class="hex">#906900</span>
+      </div>
+    </div>
+<div class="chip litho-chip" style="--c:#A18200">
+      <div class="swatch"></div>
+      <div class="meta">
+        <span class="name">20 · Veine / veinule</span>
+        <span class="hex">#A18200</span>
+      </div>
+    </div></div>
+        </div>
+<div class="cluster">
+          <h3>Mafique / ultramafique <span class="sub">vert</span><span class="count">6 familles</span></h3>
+          <div class="row"><div class="chip litho-chip" style="--c:#989700">
+      <div class="swatch"></div>
+      <div class="meta">
+        <span class="name">03 · Mafique</span>
+        <span class="hex">#989700</span>
+      </div>
+    </div>
+<div class="chip litho-chip" style="--c:#576E00">
+      <div class="swatch"></div>
+      <div class="meta">
+        <span class="name">04 · Ultramafique</span>
+        <span class="hex">#576E00</span>
+      </div>
+    </div>
+<div class="chip litho-chip" style="--c:#738F5F">
+      <div class="swatch"></div>
+      <div class="meta">
+        <span class="name">07 · Volcanique mafique</span>
+        <span class="hex">#738F5F</span>
+      </div>
+    </div>
+<div class="chip litho-chip" style="--c:#008100">
+      <div class="swatch"></div>
+      <div class="meta">
+        <span class="name">15 · Métamorphique mafique</span>
+        <span class="hex">#008100</span>
+      </div>
+    </div>
+<div class="chip litho-chip" style="--c:#0BAC68">
+      <div class="swatch"></div>
+      <div class="meta">
+        <span class="name">16 · Métamorphique ultramafique</span>
+        <span class="hex">#0BAC68</span>
+      </div>
+    </div>
+<div class="chip litho-chip" style="--c:#007856">
+      <div class="swatch"></div>
+      <div class="meta">
+        <span class="name">18 · Skarn / calco-silicatée</span>
+        <span class="hex">#007856</span>
+      </div>
+    </div></div>
+        </div>
+<div class="cluster">
+          <h3>Intermédiaire <span class="sub">bleu – gris</span><span class="count">4 familles</span></h3>
+          <div class="row"><div class="chip litho-chip" style="--c:#00A2AB">
+      <div class="swatch"></div>
+      <div class="meta">
+        <span class="name">02 · Intermédiaire</span>
+        <span class="hex">#00A2AB</span>
+      </div>
+    </div>
+<div class="chip litho-chip" style="--c:#007891">
+      <div class="swatch"></div>
+      <div class="meta">
+        <span class="name">06 · Volcanique intermédiaire</span>
+        <span class="hex">#007891</span>
+      </div>
+    </div>
+<div class="chip litho-chip" style="--c:#2A85AB">
+      <div class="swatch"></div>
+      <div class="meta">
+        <span class="name">11 · Carbonatée</span>
+        <span class="hex">#2A85AB</span>
+      </div>
+    </div>
+<div class="chip litho-chip" style="--c:#1C92E3">
+      <div class="swatch"></div>
+      <div class="meta">
+        <span class="name">17 · Quartzite</span>
+        <span class="hex">#1C92E3</span>
+      </div>
+    </div></div>
+        </div>
+<div class="cluster">
+          <h3>Métamorphique pélitique <span class="sub">violet</span><span class="count">1 famille</span></h3>
+          <div class="row"><div class="chip litho-chip" style="--c:#617DE1">
+      <div class="swatch"></div>
+      <div class="meta">
+        <span class="name">13 · Métamorphique pélitique</span>
+        <span class="hex">#617DE1</span>
+      </div>
+    </div></div>
+        </div>
+<div class="cluster">
+          <h3>Neutre <span class="sub">gris foncé</span><span class="count">1 famille</span></h3>
+          <div class="row"><div class="chip litho-chip" style="--c:#333333">
+      <div class="swatch"></div>
+      <div class="meta">
+        <span class="name">28 · Roche carbonée</span>
+        <span class="hex">#333333</span>
+      </div>
+    </div></div>
+        </div>
+<div class="cluster">
+          <h3>Neutre <span class="sub">gris clair</span><span class="count">1 famille</span></h3>
+          <div class="row"><div class="chip litho-chip" style="--c:#A4A4A4">
+      <div class="swatch"></div>
+      <div class="meta">
+        <span class="name">30 · Inconnue / autre</span>
+        <span class="hex">#A4A4A4</span>
+      </div>
+    </div></div>
+        </div>
+  </section>
+
+  <section class="table-block">
+    <h2>Altération — 27 familles · bande pastel</h2>
+    <div class="cluster">
+          <h3>Argileuse / carbonatée pâle <span class="sub">beige – crème</span><span class="count">5 familles</span></h3>
+          <div class="row"><div class="chip alt-chip">
+      <div class="band" style="background:#FFDBCE"></div>
+      <div class="meta">
+        <span class="name">01 · Argileuse</span>
+        <span class="hex">#FFDBCE</span>
+        
+      </div>
+    </div>
+<div class="chip alt-chip">
+      <div class="band" style="background:#EFAE8F"></div>
+      <div class="meta">
+        <span class="name">06 · Carbonatée</span>
+        <span class="hex">#EFAE8F</span>
+        
+      </div>
+    </div>
+<div class="chip alt-chip">
+      <div class="band" style="background: linear-gradient(90deg, #FFDBCE, #FFDEC5);"></div>
+      <div class="meta">
+        <span class="name">12 · Argilique avancée</span>
+        <span class="hex">#FFDEC5</span>
+        <span class="derived">issue de Argileuse</span>
+      </div>
+    </div>
+<div class="chip alt-chip">
+      <div class="band" style="background: linear-gradient(90deg, #FFDBCE, #FFCDBE);"></div>
+      <div class="meta">
+        <span class="name">13 · Argilique intermédiaire</span>
+        <span class="hex">#FFCDBE</span>
+        <span class="derived">issue de Argileuse</span>
+      </div>
+    </div>
+<div class="chip alt-chip">
+      <div class="band" style="background:#FCE2C1"></div>
+      <div class="meta">
+        <span class="name">22 · Dolomitisation</span>
+        <span class="hex">#FCE2C1</span>
+        
+      </div>
+    </div></div>
+        </div>
+<div class="cluster">
+          <h3>Sulfatée <span class="sub">jaune pâle</span><span class="count">1 famille</span></h3>
+          <div class="row"><div class="chip alt-chip">
+      <div class="band" style="background:#EBD9B5"></div>
+      <div class="meta">
+        <span class="name">18 · Sulfatée</span>
+        <span class="hex">#EBD9B5</span>
+        
+      </div>
+    </div></div>
+        </div>
+<div class="cluster">
+          <h3>Chlorite / épidote / mafique <span class="sub">vert</span><span class="count">6 familles</span></h3>
+          <div class="row"><div class="chip alt-chip">
+      <div class="band" style="background:#ECE9C1"></div>
+      <div class="meta">
+        <span class="name">02 · Chloritique</span>
+        <span class="hex">#ECE9C1</span>
+        
+      </div>
+    </div>
+<div class="chip alt-chip">
+      <div class="band" style="background:#BBC785"></div>
+      <div class="meta">
+        <span class="name">07 · Épidote</span>
+        <span class="hex">#BBC785</span>
+        
+      </div>
+    </div>
+<div class="chip alt-chip">
+      <div class="band" style="background: linear-gradient(90deg, #ECE9C1, #BBC785, #EFAE8F, #CFC99E);"></div>
+      <div class="meta">
+        <span class="name">10 · Propylitique</span>
+        <span class="hex">#CFC99E</span>
+        <span class="derived">issue de Chloritique + Épidote + Carbonatée</span>
+      </div>
+    </div>
+<div class="chip alt-chip">
+      <div class="band" style="background:#A9CFA5"></div>
+      <div class="meta">
+        <span class="name">16 · Skarn</span>
+        <span class="hex">#A9CFA5</span>
+        
+      </div>
+    </div>
+<div class="chip alt-chip">
+      <div class="band" style="background:#CCF1D8"></div>
+      <div class="meta">
+        <span class="name">23 · Serpentinisation</span>
+        <span class="hex">#CCF1D8</span>
+        
+      </div>
+    </div>
+<div class="chip alt-chip">
+      <div class="band" style="background:#84D2B4"></div>
+      <div class="meta">
+        <span class="name">24 · Talc-carbonate</span>
+        <span class="hex">#84D2B4</span>
+        
+      </div>
+    </div></div>
+        </div>
+<div class="cluster">
+          <h3>Mica / silice / feldspath sodique <span class="sub">bleu – lavande</span><span class="count">9 familles</span></h3>
+          <div class="row"><div class="chip alt-chip">
+      <div class="band" style="background:#C0F2EE"></div>
+      <div class="meta">
+        <span class="name">03 · Séricite / Phyllique</span>
+        <span class="hex">#C0F2EE</span>
+        
+      </div>
+    </div>
+<div class="chip alt-chip">
+      <div class="band" style="background:#74D0D9"></div>
+      <div class="meta">
+        <span class="name">04 · Siliceuse / Silicification</span>
+        <span class="hex">#74D0D9</span>
+        
+      </div>
+    </div>
+<div class="chip alt-chip">
+      <div class="band" style="background:#C9E0E7"></div>
+      <div class="meta">
+        <span class="name">08 · Albitisation</span>
+        <span class="hex">#C9E0E7</span>
+        
+      </div>
+    </div>
+<div class="chip alt-chip">
+      <div class="band" style="background:#95CCE9"></div>
+      <div class="meta">
+        <span class="name">09 · Tourmalinisation</span>
+        <span class="hex">#95CCE9</span>
+        
+      </div>
+    </div>
+<div class="chip alt-chip">
+      <div class="band" style="background: linear-gradient(90deg, #C0F2EE, #74D0D9, #8ED1DF);"></div>
+      <div class="meta">
+        <span class="name">11 · Phyllique avancée</span>
+        <span class="hex">#8ED1DF</span>
+        <span class="derived">issue de Séricite / Phyllique + Siliceuse / Silicification</span>
+      </div>
+    </div>
+<div class="chip alt-chip">
+      <div class="band" style="background:#9EC0F9"></div>
+      <div class="meta">
+        <span class="name">14 · Sodique</span>
+        <span class="hex">#9EC0F9</span>
+        
+      </div>
+    </div>
+<div class="chip alt-chip">
+      <div class="band" style="background:#D6DBED"></div>
+      <div class="meta">
+        <span class="name">15 · Calco-silicatée</span>
+        <span class="hex">#D6DBED</span>
+        
+      </div>
+    </div>
+<div class="chip alt-chip">
+      <div class="band" style="background:#C0BCEF"></div>
+      <div class="meta">
+        <span class="name">17 · Greisen</span>
+        <span class="hex">#C0BCEF</span>
+        
+      </div>
+    </div>
+<div class="chip alt-chip">
+      <div class="band" style="background:#EDDFFF"></div>
+      <div class="meta">
+        <span class="name">26 · Zéolitique</span>
+        <span class="hex">#EDDFFF</span>
+        
+      </div>
+    </div></div>
+        </div>
+<div class="cluster">
+          <h3>Potassique / oxyde / Mn <span class="sub">rose – saumon</span><span class="count">5 familles</span></h3>
+          <div class="row"><div class="chip alt-chip">
+      <div class="band" style="background:#F9DBFA"></div>
+      <div class="meta">
+        <span class="name">05 · Potassique</span>
+        <span class="hex">#F9DBFA</span>
+        
+      </div>
+    </div>
+<div class="chip alt-chip">
+      <div class="band" style="background:#E5A9D3"></div>
+      <div class="meta">
+        <span class="name">19 · Oxydée</span>
+        <span class="hex">#E5A9D3</span>
+        
+      </div>
+    </div>
+<div class="chip alt-chip">
+      <div class="band" style="background:#EAD5DD"></div>
+      <div class="meta">
+        <span class="name">20 · Ferrifère</span>
+        <span class="hex">#EAD5DD</span>
+        
+      </div>
+    </div>
+<div class="chip alt-chip">
+      <div class="band" style="background:#EBB1BE"></div>
+      <div class="meta">
+        <span class="name">21 · Manganésifère</span>
+        <span class="hex">#EBB1BE</span>
+        
+      </div>
+    </div>
+<div class="chip alt-chip">
+      <div class="band" style="background:#FFD9DA"></div>
+      <div class="meta">
+        <span class="name">25 · Feldspathique</span>
+        <span class="hex">#FFD9DA</span>
+        
+      </div>
+    </div></div>
+        </div>
+<div class="cluster">
+          <h3>Blanchiment <span class="sub">neutre</span><span class="count">1 famille</span></h3>
+          <div class="row"><div class="chip alt-chip">
+      <div class="band" style="background:#F4F2EC"></div>
+      <div class="meta">
+        <span class="name">27 · Blanchiment / Bleaching</span>
+        <span class="hex">#F4F2EC</span>
+        
+      </div>
+    </div></div>
+        </div>
+  </section>
+
+  <div class="risk-block">
+    <h2>Zones encore tendues après optimisation — motif/liseré recommandé</h2>
+    <div class="risk"><h4>Altération — zone bleu-lavande/mica (9 familles)</h4><p>Séricite/Phyllique, Siliceuse, Albitisation, Tourmalinisation, Phyllique avancée, Sodique, Calco-silicatée, Greisen, Zéolitique restent perceptuellement proches même après optimisation — c'est la zone la plus chargée du référentiel. Le motif/liseré n'est pas optionnel ici.</p></div>
+<div class="risk"><h4>Altération — Argileuse vs Argilique intermédiaire</h4><p>Les indicateurs se recoupent (Illite/Smectite/Montmorillonite sont déjà listés dans Argileuse) : la proximité visuelle reflète une vraie proximité minéralogique, pas un défaut de palette.</p></div>
+  </div>
+
+  <footer>
+    Version 1 — point de départ à ajuster visuellement. Valeurs exportées dans
+    litho_palette.json / alt_palette.json (hex + OKLCH + cluster + parenté pour les composites) pour import direct dans le moteur.
+  </footer>
+</div>
+</body>
+</html>

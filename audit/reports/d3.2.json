@@ -1,0 +1,19 @@
+{
+  "agent": "D3.2",
+  "direction": "Géologie",
+  "question": "Les contrôles croisés couvrent-ils les incohérences physiques ?",
+  "score": 9.6,
+  "metrics": {
+    "controle_rqd_recovery": true
+  },
+  "findings": [
+    {
+      "severite": "mineur",
+      "categorie": "géologie",
+      "titre": "un seul contrôle croisé (RQD vs récupération)",
+      "preuve": "core/geotech.py:1",
+      "detail": "Pas de contrôle densité vs lithologie, ni teneur vs litho.",
+      "correction": "Étendre les contrôles croisés."
+    }
+  ]
+}

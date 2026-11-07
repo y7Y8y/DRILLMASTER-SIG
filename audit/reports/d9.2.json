@@ -1,0 +1,24 @@
+{
+  "agent": "D9.2",
+  "direction": "Export",
+  "question": "Les formats de sortie sont-ils complets ?",
+  "score": 9.6,
+  "metrics": {
+    "formats": [
+      "PNG",
+      "SVG",
+      "PDF (paginé)"
+    ],
+    "vectoriel_complet": 0
+  },
+  "findings": [
+    {
+      "severite": "mineur",
+      "categorie": "export",
+      "titre": "PDF uniquement via export paginé",
+      "preuve": "ui/section_export_scaled.py:275",
+      "detail": "Pas de PDF vectoriel de la coupe seule.",
+      "correction": "Harmoniser PNG/SVG/PDF."
+    }
+  ]
+}
