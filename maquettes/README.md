@@ -8,6 +8,18 @@ aux mêmes jetons de couleur que le code final. Deux fichiers :
 | `ui.py` | Bibliothèque de composants : `Tokens` (thème clair) / `Dark`, classe `C` (rectangles, texte, pilules, cases, curseurs, tableaux, barres). Super-échantillonnage ×2. |
 | `screens.py` | Les 9 écrans + les 2 variantes sombres. `python3 maquettes/screens.py`. |
 | `planche.py` | La planche contact (toutes les images sur une seule page). `python3 maquettes/planche.py`. |
+| `screens_v3.py` | Les 5 écrans de correction (`11` → `15`), puis `16_validation`. |
+| `screens_v4.py` | Les 4 écrans neufs (`18` → `21`) : import, blocage, coupe finie, exclusions. |
+| `planche_v4.py` | La planche contact des 4 écrans neufs → `22_planche_v4.png`. |
+
+## Les écrans neufs (v4) — ceux qui répondent à « et le fonctionnel ? »
+
+| # | Écran | Ce qu'il montre | D'où viennent les chiffres |
+|---|---|---|---|
+| 18 | **Importer un fichier** | zone de dépôt unique · 4 chiffres sur le fichier · 8 colonnes dont 2 à confirmer · **ce que l'import ne fait pas** · les 12 types avec 3 fournis et 9 absents affichés absents | 65 lignes, 1 doublon, 8 colonnes |
+| 19 | **Un doublon, expliqué** | le blocage en une phrase · les 2 lignes avec leurs 2 numéros · pourquoi c'est grave en 25 mots · **3 sorties dont une recommandée** · motif obligatoire · **ce qui a déjà été vérifié avant de vous demander de décider** | ISBRC045, lignes 46 et 47 |
+| 20 | **La coupe finie** | 14 forages, lithologie + barres de teneur, axes en altitudes, échelle de teneur fixe, **4 réglages seulement**, 2 forages écartés en pointillés | 14 forages, profondeurs 110 → 155 m |
+| 21 | **Forages écartés** | une décision **valable partout**, avec motif, auteur, date, **réversible** · son journal · la même page en mode Guidé | 3 écartés sur 64, 214 analyses retirées |
 
 ## Les écrans
 
