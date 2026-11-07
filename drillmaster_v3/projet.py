@@ -9,6 +9,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from .core.donnees.lecture import Forage, Lecture, lit_collets
+from .core.reglages import Reglages
 from .core.tracks import TrackCatalog, TrackStyle
 
 
@@ -54,6 +55,13 @@ class Projet:
     # ── lecture des forages : filtrée, jamais modifiée ───────────────
     def forages_actifs(self):
         return [f for f in self.colliers if f.id not in self.exclusions]
+
+    @property
+    def reglages(self):
+        """Un seul propriétaire des réglages de piste, porté par le projet."""
+        if not hasattr(self, "_reglages"):
+            self._reglages = Reglages(self.catalogue)
+        return self._reglages
 
     def style(self, pid) -> TrackStyle:
         return self.catalogue.resout(pid)

@@ -151,7 +151,10 @@ les 320 feuilles de style par des rôles. **Aucune décision de goût** : la cha
 - Boutons : 3 rôles (R-35).
 - **Preuve** : `spec_check` refuse un littéral `#RRGGBB` dans `DrillMaster/ui/`.
 
-### Chantier 2 — Un réglage, un propriétaire (le cœur du problème)
+### Chantier 2 — Un réglage, un propriétaire — ✅ **livré (cœur)**
+
+`drillmaster_v3/core/reglages.py` + 12 tests. Un seul écrivain, cinq lecteurs,
+journal, bornes lues dans le contrat. Preuve : `python3 tools/demo_reglages.py`.
 
 C'est **le** défaut qui explique « taille doit se répéter et rien ».
 Aujourd'hui : largeur, opacité, côté et étiquettes sont réglables dans 4 à 6

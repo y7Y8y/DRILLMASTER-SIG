@@ -319,3 +319,40 @@ sans point central (A-05, A-07).
 ### R-43 · Ajouter un domaine = ajouter une ligne
 Un type de données est aujourd'hui cité dans 30 fichiers en moyenne. Il doit
 être lu dans la table des domaines (`lexique.json`), jamais recopié (A-06).
+
+## 13. Chantier 2 livré — un réglage, un propriétaire
+
+Le défaut mesuré (F-01) : la largeur est réglable dans **12 endroits de
+5 fichiers**. Voici ce qui le remplace, et ce qui le prouve.
+
+### Le code
+
+`drillmaster_v3/core/reglages.py` — un seul objet, `Reglages`, porté par le
+projet (`Projet.reglages`). Aucune vue ne garde de copie.
+
+| Geste | Ce qui se passe | Test qui le prouve |
+|---|---|---|
+| `modifie(piste, champ, valeur, par=…)` | une valeur, un journal, cinq vues | `test_regler_une_fois_change_les_cinq_vues` |
+| sans nom d'auteur | **refusé** | `test_sans_nom_pas_de_changement` |
+| hors bornes | refusé, **avec les bornes du contrat** | `test_hors_bornes_refuse_avec_les_bornes_du_contrat` |
+| même valeur | rien n'est écrit | `test_meme_valeur_n_ecrit_pas_au_journal` |
+| `retablit()` | retour à la valeur de la famille | `test_retablit_revient_a_la_famille` |
+| une vue n'utilise pas le champ | elle **le dit et pourquoi** | `test_une_vue_sans_objet_le_dit_et_ne_ment_pas` |
+
+### La règle qui en découle
+
+**R-44 · Un réglage n'a qu'un écrivain.** Toute modification passe par
+`Reglages.modifie()`, qui exige **qui** modifie et journalise le changement.
+Une vue qui voudrait écrire directement est un défaut de livraison.
+
+**R-45 · Les bornes viennent du contrat, jamais du code.** Le validateur lit
+`specs/data/tracks.json` (`min`, `max`, `valeurs`). Un nombre écrit en dur dans
+la validation est un défaut : `test_les_bornes_viennent_du_contrat_pas_du_code`
+échoue s'il en apparaît un.
+
+### Ce que la vérification a attrapé
+
+En écrivant ce chantier, j'avais codé `width` entre **4 et 64** et `side` en
+« gauche/droite ». Le contrat dit **4 à 120** et `left/right/overlay`. Sans le
+test, j'aurais livré une contrainte inventée — exactement le défaut que la
+flotte reproche au plugin.
