@@ -1,15 +1,15 @@
 # 10 — Le chantier, dans l'ordre
 
 > La flotte (42 agents, 8 départements) a rendu son rapport : `09_RAPPORT_FLOTTE.md`.
-> **80 constats**, dont 10 bloquants. Voici ce qu'on fait, et dans quel ordre.
+> **86 constats**, dont 10 bloquants. Voici ce qu'on fait, et dans quel ordre.
 
 ## Où on en est
 
 | | |
 |---|---|
 | Plugin lu | **105 fichiers**, 56 577 lignes |
-| Agents | 42, dans 8 départements |
-| Constats | 80 — 10 bloquants · 41 majeurs · 29 mineurs |
+| Agents | 50, dans 9 départements |
+| Constats | 86 — 10 bloquants · 46 majeurs · 30 mineurs |
 | Maquettes | 22 planches, dont **4 écrans neufs** et **1 charte** |
 | Tests | **63 tests**, 62 vérifications de spec, 0 écart |
 
@@ -30,7 +30,7 @@
 
 ## Le plan : 2 programmes, 7 chantiers
 
-Les 80 constats sont tous affectés (vérifié : **80/80**, aucun orphelin).
+Les 86 constats sont tous affectés, aucun orphelin.
 
 ### Programme A — Rendre le socle cohérent (chantiers 1 à 3)
 Rien de nouveau à l'écran. On supprime les doublons : 12 propriétaires pour une
@@ -51,8 +51,42 @@ Messages, boutons, rangements, écrans neufs. C'est ce que l'utilisateur voit.
 | 5 · Boutons et gestes | 6 | **4** |
 | 6 · Les rangements | **38** | 0 |
 | 7 · Écrans neufs | 7 | 0 |
+| **8 · Navigation et options cachées** | **7** | **1** |
 | Continu · qualité et doctrine | — | — |
-| **Total** | **80** | **10** |
+| **Total** | **86** | **10** |
+
+## Chantier 8 — Navigation et options cachées (nouveau)
+
+Réponse mesurée à « y a-t-il des options cachées, des onglets mal gérés ? »
+Oui, quatre cas, et un point rassurant.
+
+| Constat | Mesure | Verdict |
+|---|---|---|
+| **N-01** Réglages enfermés dans une fenêtre | `ReferenceDialog` : **8 réglages** ; `LithologyStructureDialog` : 6 | **bloquant** : la fenêtre fermée, les options sont introuvables |
+| **N-02** Barres d'onglets masquées | **2** endroits (`main_dock`, `step2_import`) | un seul panneau est atteignable ; un second deviendrait invisible |
+| **N-04** Réglages sur le poste, pas dans le projet | **26 accès**, 8 clés nommées | un collègue ne retrouve pas la configuration |
+| **N-05** 39 fichiers d'interface | 3d 11 · section 9 · dialog 6 · step 4 | aucune frontière par responsabilité |
+| **N-06** Aide contextuelle | **102 infobulles pour 235 contrôles (43 %)** | plus d'un contrôle sur deux n'explique rien |
+| N-08 Fil d'Ariane | présent (`stepper`) | **rien à faire** |
+
+**Le point rassurant** : l'aide contextuelle n'est pas absente, elle est à
+43 %. Ce n'est donc pas un chantier de création, c'est un chantier de
+complètement — beaucoup moins cher que prévu.
+
+### Les meilleures options, concrètement
+
+Ce que la flotte recommande pour rendre les options **optimales** :
+
+1. **Zéro fenêtre porteuse de réglages.** Une fenêtre ne sert qu'à choisir un
+   fichier. Tout réglage vit dans le panneau, ou dans un repli « avancés ».
+2. **Un repli « avancés » par écran, pas par option.** 6 visibles, le reste
+   derrière un seul bouton qui se souvient de son état.
+3. **Deux catégories de réglages nommées** : *préférences de poste* (thème,
+   langue) et *réglages de projet* (pistes, seuils, couleurs). Les seconds
+   voyagent avec le projet.
+4. **Onglets assumés ou supprimés.** Pas de barre masquée : soit un panneau
+   unique, soit des onglets nommés et visibles.
+5. **100 % d'infobulles utiles** : ce que ça change + où ça s'applique.
 
 ## Le détail des chantiers
 

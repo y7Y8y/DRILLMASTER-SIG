@@ -19,6 +19,7 @@ sys.path.insert(0, str(ICI))
 import noyau                                    # noqa: E402
 import agents_da, agents_ui, agents_fonctionnel  # noqa: E402,F401
 import agents_messages, agents_qualite, agents_donnees  # noqa: E402,F401
+import agents_navigation                               # noqa: E402,F401
 from noyau import ORDRE, Contexte                # noqa: E402
 
 SORTIE = noyau.RACINE / "docs" / "09_RAPPORT_FLOTTE.md"

@@ -276,3 +276,23 @@ valeur est un défaut. **Preuve** : `test_six_tailles_de_police_exactement`.
 `primaire` (l'action attendue), `secondaire` (une alternative), `discret`
 (sortir sans rien changer). Plus d'un primaire visible = défaut.
 **Preuve** : `test_trois_roles_de_bouton_documentes`.
+
+### R-36 · Aucun réglage dans une fenêtre
+Une fenêtre ne sert qu'à **choisir un fichier**. Un réglage vit dans le
+panneau, visible en permanence, ou derrière le repli « réglages avancés ».
+Constat d'origine : `ReferenceDialog` enferme 8 réglages, `LithologyStructureDialog`
+en enferme 6 (agent N-01).
+
+### R-37 · Pas de barre d'onglets masquée
+Soit un panneau unique assumé, soit des onglets **nommés et visibles**.
+Constat d'origine : 2 barres masquées (agent N-02).
+
+### R-38 · Deux catégories de réglages, nommées
+*Préférences de poste* (thème, langue, géométrie des panneaux) et
+*réglages de projet* (pistes, seuils, couleurs, exclusions). Les seconds
+voyagent avec le projet. Constat d'origine : 26 accès à des réglages de poste
+(agent N-04).
+
+### R-39 · Une infobulle par contrôle, qui dit quoi et où
+Ce que ça change, et sur quoi ça s'applique (coupe, 3D, légende, export,
+carte). Constat d'origine : 102 infobulles pour 235 contrôles (agent N-06).

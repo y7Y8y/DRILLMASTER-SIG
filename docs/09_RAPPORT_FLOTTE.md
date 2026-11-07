@@ -11,16 +11,16 @@
 | Périmètre | `DrillMaster/` — le plugin complet |
 | Fichiers | **105** fichiers Python |
 | Lignes | **56,577** |
-| Agents | 42 répartis en 8 départements |
-| Constats | **80** |
+| Agents | 50 répartis en 9 départements |
+| Constats | **86** |
 
 ## Verdict en une ligne
 
 | Gravité | Nombre | Ce que ça veut dire |
 |---|---|---|
 | **Bloquant** | 10 | empêche de promettre « simple et fiable » |
-| **Majeur** | 41 | se voit à l'usage et fait perdre du temps |
-| **Mineur** | 29 | donne l'impression de bricolage |
+| **Majeur** | 46 | se voit à l'usage et fait perdre du temps |
+| **Mineur** | 30 | donne l'impression de bricolage |
 | **Note** | 0 | occasion manquée, pas un défaut |
 
 ## Les départements
@@ -35,6 +35,7 @@
 | **Qualité et dette** | tests, duplication, fichiers monolithes, dépendances | 5 | 0 | 6 |
 | **Données et vues** | une donnée, cinq vues ; aucun calcul dupliqué | 5 | 1 | 1 |
 | **Cohérence et doctrine** | un mot = une chose ; une règle = un seul endroit | 3 | 0 | 0 |
+| **Navigation et options cachées** | tout réglage est atteignable en 1 clic, aucun onglet muet | 8 | 0 | 5 |
 
 ---
 
@@ -265,6 +266,17 @@ Ce sont les seuls à traiter avant toute nouvelle maquette.
 | C-01 | Deux mots pour la même chose | Mineur | « forage » 326 fois et « hole » 790 fois |
 | C-01 | Deux mots pour la même chose | Mineur | « altération » 103 fois et « alteration » 230 fois |
 | C-03 | La doctrine n'est pas vérifiée par la machine | Mineur | un vérificateur existe hors du plugin |
+
+### Navigation et options cachées — tout réglage est atteignable en 1 clic, aucun onglet muet
+
+| Agent | Constat | Gravité | Mesure |
+|---|---|---|---|
+| N-01 | Réglages enfermés dans une fenêtre qu'on ne peut pas rouvrir | Majeur | `LithologyStructureDialog` enferme 6 réglages dans une fenêtre · `lithology_structure_dialog.py` |
+| N-01 | Réglages enfermés dans une fenêtre qu'on ne peut pas rouvrir | Majeur | `ReferenceDialog` enferme 8 réglages dans une fenêtre · `reference_dialog.py` |
+| N-02 | Onglets et barres d'onglets masqués | Majeur | 2 barres d'onglets masquées par le code |
+| N-04 | Réglages conservés sur le poste, invisibles dans le projet | Majeur | 26 accès à des réglages de poste, 8 clés nommées |
+| N-05 | Trop de fichiers d'interface pour un seul produit | Majeur | 39 fichiers d'interface : 3d 11, autres 9, section 9, dialog 6, step 4 |
+| N-06 | Aucune aide contextuelle : tout dépend de la documentation | Mineur | 102 infobulles pour 235 contrôles (43 %) |
 
 ---
 

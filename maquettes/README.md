@@ -11,6 +11,8 @@ aux mêmes jetons de couleur que le code final. Deux fichiers :
 | `screens_v3.py` | Les 5 écrans de correction (`11` → `15`), puis `16_validation`. |
 | `screens_v4.py` | Les 4 écrans neufs (`18` → `21`) : import, blocage, coupe finie, exclusions. |
 | `planche_v4.py` | La planche contact des 4 écrans neufs → `22_planche_v4.png`. |
+| `23_charte.py` | La charte visuelle complète → `23_charte.png` (lue dans `theme.json`). |
+| `24_options.py` | Où vivent les options aujourd'hui / demain → `24_options.png`. |
 
 ## Les écrans neufs (v4) — ceux qui répondent à « et le fonctionnel ? »
 
