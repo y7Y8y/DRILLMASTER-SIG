@@ -239,7 +239,7 @@ def pistes(path, dark=False):
             c.r(fx + 4, ry + 62 + j * 10, 4 + v * 26, 7.5,
                 fill=["#B42318", "#DC6803", "#F79009", "#FDB022"][j], rx=1)
 
-    c.status_bar("Coupe 004 · 12 pistes · 1 contrat · dernier calcul il y a 18 min",
+    c.status_bar("Coupe 004 · 12 pistes · un seul jeu de réglages · calculé il y a 18 min",
                  "À jour")
     return c.save(path)
 
@@ -293,22 +293,22 @@ def partages(path, dark=False):
     c = C(W, H, T)
     c.app_bar("Coupe 2D", dark_btn=dark)
     c.page_title(24, 82, "Un réglage, cinq lecteurs",
-                 "Le même objet est lu par la coupe, la 3D, la légende, "
-                 "l'export et la carte — jamais recopié")
+                 "La coupe, la 3D, la légende, l'export et la carte utilisent "
+                 "toujours la même valeur — jamais une copie")
 
     # bandeau avant / après
     y = 132
     c.r(24, y, 760, 66, fill="#FFF4F2", stroke="#F9D6D0", rx=9)
     c.txt(40, y + 20, "Avant", size=9, fill="#B42318", bold=True, anchor="ls")
-    c.txt(40, y + 38, "3 magasins de réglages · 78 clés plates · "
-          "9 clés manquantes (RQD, récupération, densité)", size=9.6,
+    c.txt(40, y + 38, "3 endroits différents pour régler la même chose · "
+          "et 9 réglages absents (RQD, récupération, densité)", size=9.6,
           fill="#7A271A", anchor="ls")
 
     c.r(800, y, 776, 66, fill="#EEF9F2", stroke="#C7EFDA", rx=9)
     c.txt(816, y + 20, "Maintenant", size=9, fill="#067647", bold=True,
           anchor="ls")
-    c.txt(816, y + 38, "1 magasin · 14 emplacements communs + les réglages "
-          "propres à chaque type de piste", size=9.6, fill="#05603A",
+    c.txt(816, y + 38, "1 seul endroit · 15 réglages communs + ceux propres à "
+          "chaque famille de piste", size=9.6, fill="#05603A",
           anchor="ls")
 
     # matrice

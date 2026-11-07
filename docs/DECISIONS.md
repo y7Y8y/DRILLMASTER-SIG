@@ -37,6 +37,10 @@
 | **D-020** | **17 cas d'usage rejoués à chaque modification** (projet vide, projet complet, types manquants, doublons, séparateur, décimale, encodage, forages inclinés et horizontaux, pendage inversé, CRS du MNT, MNT absent, 500 forages, export A1, sombre, zoom 400 %, contraste). Un cas qui ne passe pas bloque la livraison. | Qualité | **entérinée** | maquette 16 |
 | **D-021** | **Écran « Pistes » dédié** (Coupe 2D → Pistes) : la liste des 12 pistes avec visibilité, largeur, opacité, côté ; le détail d'une piste montre *commune à toutes / propre à sa famille / où le réglage s'applique*. Le panneau de la coupe ne contient plus que 3 familles + 4 réglages de coupe. | 2D, UX | **appliquée** | maquettes 11 et 7 |
 
+| **D-022** | **Le principe directeur devient une règle de développement.** *La puissance d'un logiciel professionnel ne doit jamais se traduire par une complexité imposée à son utilisateur.* Traduction normative : `docs/07_SPEC_NORMATIVE.md` (31 règles R-01 → R-31, chacune avec un critère d'acceptation), `specs/data/tracks.json` et `specs/data/lexique.json` comme **seules sources de vérité**, `specs/TICKETS.md` comme ordre de travail. **Un développeur n'invente plus rien** : ni un mot, ni une valeur, ni un comportement. | Pilotage | **entérinée** | ta remarque |
+| **D-023** | **La spécification est exécutable.** `tools/spec_check.py` (62 vérifications) et `specs/tests/` (21 tests) refusent une livraison qui s'écarte : mot interdit à l'écran, piste hors contrat, second magasin de réglages, message sans « pourquoi ». Le contrôle tourne sans QGIS. | Qualité | **entérinée** | R-30 |
+| **D-024** | **8 tickets dans un ordre imposé** (T-00 → T-09). `T-05` (la coupe) ne démarre pas avant `T-02` (le contrat) et `T-03` (les messages) : c'est l'ordre inverse de la v2 qui a produit les 3 magasins de réglages. | Pilotage | **entérinée** | specs/TICKETS.md |
+
 ---
 
 ## Questions restantes
@@ -57,6 +61,7 @@ le nom exact des 8 modules dans l'interface, et le choix typographique final (de
 
 | Date | Événement |
 |---|---|
+| J3 | **Principe directeur → règles vérifiables** : `docs/07_SPEC_NORMATIVE.md`, `specs/`, `tools/spec_check.py`, `drillmaster_v3/core/` (lexique, contrat, messages) + 21 tests. |
 | J2 | **Corrections après ta remarque** : contrat en 4 familles, rangs de données, message explicable, 2 voix d'états, 17 cas de validation. `maquettes/10_planche_corrections.png`. |
 | J1 | **Jeu complet de maquettes** (9 écrans + 2 variantes sombres + planche contact) : `maquettes/*.png`, D-016 appliquée. |
 | J0 | Audit d'apparence produit (doc 01), contrat de piste proposé (02), arborescence (03), états (04), organisation (05). 15 décisions proposées. |

@@ -462,13 +462,16 @@ def geometrie(path, dark=False):
         c.txt(68, ry + 11, lbl, size=10, fill=t.ink)
     c.button(44, y + 284, "Recalculer les 64 trajectoires", primary=True)
 
-    # cache
-    c.panel(440, y, 400, 155, "Cache")
-    c.txt(460, y + 68, "Signature des entrées", size=9.5)
-    c.r(460, y + 78, 360, 26, fill=t.surface_2, stroke=t.border, rx=6)
-    c.txt(472, y + 87, "a7f3c9…e21b  ·  validée", size=9.8, fill="#475467")
-    c.chip(460, y + 114, "Cache à jour", "ok")
-    c.txt(580, y + 124, "dernier calcul il y a 2 h", size=9)
+    # ce que DrillMaster recalcule, et depuis quand
+    c.panel(440, y, 400, 155, "Dernier calcul",
+            "Recalculer ne change aucune donnée source")
+    c.txt(460, y + 76, "64 trajectoires calculées", size=10.4, bold=True,
+          anchor="ls")
+    c.txt(460, y + 94, "il y a 2 h · même résultat qu'aujourd'hui",
+          size=9.2, fill=t.ink_3, anchor="ls")
+    c.chip(460, y + 110, "À jour", "ok")
+    c.txt(560, y + 130, "les fichiers n'ont pas changé", size=9,
+          fill=t.ink_3, anchor="ls")
 
     # contrôles
     c.panel(856, y, W - 880, 330, "Contrôles de trajectoire")
