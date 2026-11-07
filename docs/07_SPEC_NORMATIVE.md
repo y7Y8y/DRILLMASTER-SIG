@@ -250,3 +250,29 @@ Une tâche est terminée quand **les sept** sont vrais :
    RQD en montrait 7. `ramp` et `range` sont passés en « avancé » — pas la règle.
 2. **Le test « aucune piste codée en dur »** a trouvé `detail="assays"` dans l'écran.
    La piste de détail est maintenant choisie par `cat.par_famille(...)[0]["id"]`.
+
+---
+
+## 11. Les deux nouvelles règles issues du rapport de la flotte
+
+Le rapport `09_RAPPORT_FLOTTE.md` a mesuré 655 couleurs littérales, 320 feuilles
+de style en ligne et 9 tailles de police. Deux règles en découlent, et elles
+sont vérifiées par `tools/spec_check.py` + `specs/tests/test_charte.py`.
+
+### R-32 · Une couleur n'a qu'un foyer
+Toute couleur vient de `specs/data/theme.json` (chrome, états) ou de
+`specs/data/referentiel.json` (lithologie, teneurs). Un littéral `#RRGGBB` dans
+un écran est un défaut de livraison. **Preuve** : `test_aucune_couleur_en_dur_dans_la_charte`.
+
+### R-33 · L'échelle typographique est fermée
+Six tailles, pas une de plus : 20 · 16 · 12,5 · 10 · 9 · 8,4 pt. Toute autre
+valeur est un défaut. **Preuve** : `test_six_tailles_de_police_exactement`.
+
+### R-34 · La grille d'espacement est un multiple de 4
+4 · 8 · 12 · 16 · 24 · 32. Un 14 ou un 18 px est un défaut.
+**Preuve** : `test_grille_de_4px`.
+
+### R-35 · Trois rôles de bouton, un seul primaire par écran
+`primaire` (l'action attendue), `secondaire` (une alternative), `discret`
+(sortir sans rien changer). Plus d'un primaire visible = défaut.
+**Preuve** : `test_trois_roles_de_bouton_documentes`.
