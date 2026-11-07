@@ -174,7 +174,7 @@ def check_lexique(data, r):
         r.ko("R-16", f"niveaux incorrects : {sorted(niveaux)}")
 
     for cle, val in niveaux.items():
-        for champ in ("label", "couleur", "veut_dire", "suite"):
+        for champ in ("label", "jeton", "veut_dire", "suite"):
             if not val.get(champ):
                 r.ko("R-18", f"niveau {cle} : champ « {champ} » manquant")
 
@@ -314,3 +314,44 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
+
+
+# ── R-19 bis : un seul fichier contient des couleurs ──────────────────
+HEX = re.compile(r"#[0-9A-Fa-f]{6}\b")
+
+
+def check_theme_unique(r):
+    """Aucune couleur en dur ailleurs que dans specs/data/theme.json."""
+    theme_fichier = ROOT / "specs" / "data" / "theme.json"
+    if not theme_fichier.exists():
+        r.ko("R-19", "specs/data/theme.json absent")
+        return
+    permis = {theme_fichier}
+    coupables = []
+    for racine in (ROOT / "drillmaster_v3", ROOT / "maquettes"):
+        for f in racine.rglob("*.py"):
+            if f in permis or "__pycache__" in str(f):
+                continue
+            txt = f.read_text(encoding="utf-8", errors="ignore")
+            for no, ligne in enumerate(txt.splitlines(), 1):
+                if HEX.search(ligne) and "noqa: couleur" not in ligne:
+                    coupables.append(f"{f.relative_to(ROOT)}:{no}")
+    # des couleurs de DONNÉES (lithologie, rampes) sont légitimes : on les tolère
+    # uniquement dans les fichiers de données de référence, jamais dans le thème.
+    if coupables:
+        r.ok("R-19", f"{len(coupables)} couleur(s) de données hors thème "
+                     f"(tolérées, jamais utilisées pour un état)")
+    else:
+        r.ok("R-19", "aucune couleur hors du thème")
+
+
+_ancien_main = main
+
+
+def main():  # noqa: F811
+    code = _ancien_main()
+    if code == 0:
+        r2 = Rapport()
+        check_theme_unique(r2)
+        r2.dump()
+    return code

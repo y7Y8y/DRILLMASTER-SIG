@@ -9,6 +9,11 @@ import math
 
 from PIL import Image, ImageDraw, ImageFont
 
+import sys as _sys
+from pathlib import Path as _Path
+_sys.path.insert(0, str(_Path(__file__).resolve().parents[1]))
+from drillmaster_v3.theme import theme_pour  # noqa: E402
+
 S = 2  # super-échantillonnage
 
 FONT_R = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
@@ -24,39 +29,42 @@ def font(size, bold=False):
 
 
 class Tokens:
-    """Thème clair (défaut) — le sombre dérive des mêmes clés."""
-    bg = "#F6F7F9"
-    surface = "#FFFFFF"
-    surface_2 = "#F9FAFB"
-    surface_3 = "#F2F4F7"
-    border = "#E4E7EC"
-    border_strong = "#D0D5DD"
-    ink = "#101828"
-    ink_2 = "#475467"
-    ink_3 = "#98A2B3"
-    accent = "#2E5BFF"
-    accent_soft = "#EEF2FF"
-    accent_line = "#C7D4FF"
-    ok = "#12B76A"
-    warn = "#F79009"
-    block = "#D92D20"
-    quest = "#7F56D9"
-    info = "#667085"
+    """Jetons lus dans specs/data/theme.json — jamais écrits ici."""
+    _t = theme_pour("clair")
+    bg = _t.bg
+    surface = _t.surface
+    surface_2 = _t.surface_2
+    surface_3 = _t.surface_3
+    border = _t.border
+    border_strong = _t.border_strong
+    ink = _t.ink
+    ink_2 = _t.ink_2
+    ink_3 = _t.ink_3
+    accent = _t.accent
+    accent_soft = _t.accent_soft
+    accent_line = _t.accent_line
+    ok = _t.ok
+    warn = _t.warn
+    block = _t.block
+    quest = _t.quest
+    info = _t.info
+    tech = _t.tech
 
 
 class Dark(Tokens):
-    bg = "#0F1115"
-    surface = "#16191F"
-    surface_2 = "#1B1F26"
-    surface_3 = "#22272F"
-    border = "#262B33"
-    border_strong = "#39404A"
-    ink = "#E7EAEE"
-    ink_2 = "#9AA4B2"
-    ink_3 = "#6B7482"
-    accent = "#5B7CFF"
-    accent_soft = "#1B2340"
-    accent_line = "#2B3A6B"
+    _t = theme_pour("sombre")
+    bg = _t.bg
+    surface = _t.surface
+    surface_2 = _t.surface_2
+    surface_3 = _t.surface_3
+    border = _t.border
+    border_strong = _t.border_strong
+    ink = _t.ink
+    ink_2 = _t.ink_2
+    ink_3 = _t.ink_3
+    accent = _t.accent
+    accent_soft = _t.accent_soft
+    accent_line = _t.accent_line
 
 
 class C:

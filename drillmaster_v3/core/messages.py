@@ -4,6 +4,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from enum import Enum
 
+from ..theme import theme
 from .lexique import lexique
 
 
@@ -62,7 +63,8 @@ class Message:
 
     @property
     def couleur(self):
-        return lexique.niveau(self.niveau.value, "couleur")
+        """Vient du thème unique, jamais de la maquette (R-19)."""
+        return theme.couleur_etat(self.niveau.value)
 
     @property
     def suite(self):

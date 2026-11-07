@@ -1,45 +1,145 @@
 {
-  "$comment": "Lexique FR gelé. Toute chaîne affichée à l'utilisateur vient d'ici. Aucune exception.",
+  "$comment": "Lexique FR gelé. Toute chaîne affichée à l'utilisateur vient d'ici. Aucune exception. Les couleurs vivent dans theme.json (jeton), pas ici.",
   "niveaux": {
-    "info": {"label": "Information", "couleur": "#667085",
-             "veut_dire": "un fait, rien à décider", "suite": "poursuit seul"},
-    "avertissement": {"label": "Avertissement", "couleur": "#F79009",
-                      "veut_dire": "ça marche, mais quelque chose manque",
-                      "suite": "poursuit"},
-    "question": {"label": "Question", "couleur": "#7F56D9",
-                 "veut_dire": "DrillMaster ne peut pas décider à votre place",
-                 "suite": "met la ligne en attente"},
-    "blocage": {"label": "Blocage", "couleur": "#D92D20",
-                "veut_dire": "rien ne peut continuer sur cette donnée",
-                "suite": "arrête l'étape suivante"},
-    "erreur_technique": {"label": "Erreur technique", "couleur": "#B54708",
-                         "veut_dire": "DrillMaster lui-même a échoué",
-                         "suite": "arrête l'action en cours"}
+    "info": {
+      "label": "Information",
+      "veut_dire": "un fait, rien à décider",
+      "suite": "poursuit seul",
+      "jeton": "info"
+    },
+    "avertissement": {
+      "label": "Avertissement",
+      "veut_dire": "ça marche, mais quelque chose manque",
+      "suite": "poursuit",
+      "jeton": "warn"
+    },
+    "question": {
+      "label": "Question",
+      "veut_dire": "DrillMaster ne peut pas décider à votre place",
+      "suite": "met la ligne en attente",
+      "jeton": "quest"
+    },
+    "blocage": {
+      "label": "Blocage",
+      "veut_dire": "rien ne peut continuer sur cette donnée",
+      "suite": "arrête l'étape suivante",
+      "jeton": "block"
+    },
+    "erreur_technique": {
+      "label": "Erreur technique",
+      "veut_dire": "DrillMaster lui-même a échoué",
+      "suite": "arrête l'action en cours",
+      "jeton": "tech"
+    }
   },
   "familles": {
-    "structurelle": {"label": "Structurelles", "pluriel_base": 3},
-    "categorielle": {"label": "Catégorielles", "pluriel_base": 4},
-    "quantitative": {"label": "Quantitatives", "pluriel_base": 4},
-    "media": {"label": "Médias", "pluriel_base": 1}
+    "structurelle": {
+      "label": "Structurelles",
+      "pluriel_base": 3
+    },
+    "categorielle": {
+      "label": "Catégorielles",
+      "pluriel_base": 4
+    },
+    "quantitative": {
+      "label": "Quantitatives",
+      "pluriel_base": 4
+    },
+    "media": {
+      "label": "Médias",
+      "pluriel_base": 1
+    }
   },
   "rangs": {
-    "1": {"label": "Socle — vos repères", "defaut": ["collets", "deviations", "topographie", "profils"]},
-    "2": {"label": "Ce que vous observez", "defaut": ["lithologie", "alterations", "mineralisations", "structures", "teneurs", "imagerie"]},
-    "3": {"label": "Ce qui se calcule", "defaut": ["rqd", "recuperation"]}
+    "1": {
+      "label": "Socle — vos repères",
+      "defaut": [
+        "collets",
+        "deviations",
+        "topographie",
+        "profils"
+      ]
+    },
+    "2": {
+      "label": "Ce que vous observez",
+      "defaut": [
+        "lithologie",
+        "alterations",
+        "mineralisations",
+        "structures",
+        "teneurs",
+        "imagerie"
+      ]
+    },
+    "3": {
+      "label": "Ce qui se calcule",
+      "defaut": [
+        "rqd",
+        "recuperation"
+      ]
+    }
   },
   "types_donnees": {
-    "collets": {"label": "Collets", "rang": 1, "unite": "forages"},
-    "deviations": {"label": "Déviations", "rang": 1, "unite": "forages"},
-    "topographie": {"label": "Topographie", "rang": 1, "unite": "sources"},
-    "profils": {"label": "Profils d'ouvrage", "rang": 1, "unite": "profils"},
-    "lithologie": {"label": "Lithologie", "rang": 2, "unite": "intervalles"},
-    "alterations": {"label": "Altérations", "rang": 2, "unite": "intervalles"},
-    "mineralisations": {"label": "Minéralisations", "rang": 2, "unite": "points"},
-    "structures": {"label": "Structures", "rang": 2, "unite": "mesures"},
-    "teneurs": {"label": "Teneurs", "rang": 2, "unite": "analyses"},
-    "imagerie": {"label": "Imagerie", "rang": 2, "unite": "photos"},
-    "rqd": {"label": "RQD", "rang": 3, "unite": "mesures"},
-    "recuperation": {"label": "Récupération", "rang": 3, "unite": "mesures"}
+    "collets": {
+      "label": "Collets",
+      "rang": 1,
+      "unite": "forages"
+    },
+    "deviations": {
+      "label": "Déviations",
+      "rang": 1,
+      "unite": "forages"
+    },
+    "topographie": {
+      "label": "Topographie",
+      "rang": 1,
+      "unite": "sources"
+    },
+    "profils": {
+      "label": "Profils d'ouvrage",
+      "rang": 1,
+      "unite": "profils"
+    },
+    "lithologie": {
+      "label": "Lithologie",
+      "rang": 2,
+      "unite": "intervalles"
+    },
+    "alterations": {
+      "label": "Altérations",
+      "rang": 2,
+      "unite": "intervalles"
+    },
+    "mineralisations": {
+      "label": "Minéralisations",
+      "rang": 2,
+      "unite": "points"
+    },
+    "structures": {
+      "label": "Structures",
+      "rang": 2,
+      "unite": "mesures"
+    },
+    "teneurs": {
+      "label": "Teneurs",
+      "rang": 2,
+      "unite": "analyses"
+    },
+    "imagerie": {
+      "label": "Imagerie",
+      "rang": 2,
+      "unite": "photos"
+    },
+    "rqd": {
+      "label": "RQD",
+      "rang": 3,
+      "unite": "mesures"
+    },
+    "recuperation": {
+      "label": "Récupération",
+      "rang": 3,
+      "unite": "mesures"
+    }
   },
   "modules": {
     "projet": "Projet",
@@ -51,8 +151,23 @@
     "export": "Export"
   },
   "interdits": [
-    "clé", "clés", "cache", "signature", "token", "contrat",
-    "config", "json", "hex", "payload", "callback", "index",
-    "instance", "objet", "incrémental", "asynchrone", "mutex", "thread"
+    "clé",
+    "clés",
+    "cache",
+    "signature",
+    "token",
+    "contrat",
+    "config",
+    "json",
+    "hex",
+    "payload",
+    "callback",
+    "index",
+    "instance",
+    "objet",
+    "incrémental",
+    "asynchrone",
+    "mutex",
+    "thread"
   ]
 }

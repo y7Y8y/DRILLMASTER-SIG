@@ -7,6 +7,7 @@ RACINE = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(RACINE))
 
 from drillmaster_v3.core.lexique import MotInterdit, lexique       # noqa: E402
+from drillmaster_v3.theme import theme                              # noqa: E402
 from drillmaster_v3.core.messages import (Message, MessageIncomplet,  # noqa: E402
                                          Niveau, avertissement, blocage,
                                          question)
@@ -39,9 +40,19 @@ class Vocabulaire(unittest.TestCase):
                           "ce_que_vous_pouvez_faire", "ce_qui_continue"])
 
     def test_R19_couleurs_d_etat_reservees(self):
-        couleurs = {lexique.niveau(n.value, "couleur") for n in Niveau}
+        """Les 5 états ont 5 couleurs, et le bleu de marque n'en fait pas partie."""
+        couleurs = {theme.couleur_etat(n.value) for n in Niveau}
         self.assertEqual(len(couleurs), 5)
-        self.assertNotIn("#2E5BFF", couleurs)   # l'accent n'exprime pas un état
+        self.assertNotIn(theme.accent, couleurs)
+
+    def test_R19_les_couleurs_ne_sont_pas_dans_le_lexique(self):
+        for n in Niveau:
+            with self.assertRaises(KeyError):
+                lexique.niveau(n.value, "couleur")
+
+    def test_R19_le_theme_a_un_jeton_par_niveau(self):
+        for n in Niveau:
+            self.assertTrue(lexique.niveau(n.value, "jeton"))
 
 
 class ContratDeMessage(unittest.TestCase):

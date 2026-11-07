@@ -1,0 +1,96 @@
+{
+  "$comment": "Jetons visuels — source unique. La maquette ET le plugin Qt lisent ce fichier. Aucun hexadécimal ailleurs.",
+  "clair": {
+    "bg": "#F6F7F9",
+    "surface": "#FFFFFF",
+    "surface_2": "#F9FAFB",
+    "surface_3": "#F2F4F7",
+    "border": "#E4E7EC",
+    "border_strong": "#D0D5DD",
+    "ink": "#101828",
+    "ink_2": "#475467",
+    "ink_3": "#98A2B3",
+    "accent": "#2E5BFF",
+    "accent_soft": "#EEF2FF",
+    "accent_line": "#C7D4FF",
+    "ok": "#12B76A",
+    "warn": "#F79009",
+    "block": "#D92D20",
+    "quest": "#7F56D9",
+    "info": "#667085",
+    "tech": "#93370D"
+  },
+  "sombre": {
+    "bg": "#0F1115",
+    "surface": "#16191F",
+    "surface_2": "#1B1F26",
+    "surface_3": "#22272F",
+    "border": "#262B33",
+    "border_strong": "#39404A",
+    "ink": "#E7EAEE",
+    "ink_2": "#9AA4B2",
+    "ink_3": "#6B7482",
+    "accent": "#5B7CFF",
+    "accent_soft": "#1B2340",
+    "accent_line": "#2B3A6B",
+    "ok": "#12B76A",
+    "warn": "#F79009",
+    "block": "#D92D20",
+    "quest": "#7F56D9",
+    "info": "#667085",
+    "tech": "#F79009"
+  },
+  "semantique": {
+    "info": "info",
+    "avertissement": "warn",
+    "question": "quest",
+    "blocage": "block",
+    "erreur_technique": "tech"
+  },
+  "typographie": {
+    "titre": 20,
+    "section": 12.5,
+    "corps": 10,
+    "secondaire": 9,
+    "micro": 8.4,
+    "chiffre": 16
+  },
+  "rayons": {
+    "surface": 10,
+    "champ": 6,
+    "pilule": 10,
+    "bouton": 7
+  },
+  "espacements": {
+    "grille": 4,
+    "bloc": 16,
+    "section": 24,
+    "page": 24
+  },
+  "disposition": {
+    "fenetre": [
+      1600,
+      1000
+    ],
+    "barre_haute": 54,
+    "barre_bas": 32,
+    "marge": 24,
+    "panneau_principal": [
+      1010,
+      792
+    ],
+    "panneau_detail": [
+      526,
+      792
+    ],
+    "gouttiere": 16,
+    "colonnes_liste": {
+      "visible": 78,
+      "piste": 300,
+      "largeur": 96,
+      "opacite": 96,
+      "cote": 110,
+      "etat": 150
+    }
+  }
+}

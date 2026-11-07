@@ -36,6 +36,24 @@ python3 tools/demo_fonctionnel.py           # démonstration bout en bout
 ── fichier source intact : True
 ```
 
+## La maquette et le plugin lisent le MÊME thème
+
+Avant T-10, une source unique a été créée : `specs/data/theme.json`.
+
+| Ce qu'il contient | Qui le lit |
+|---|---|
+| 18 jetons de couleur (clair **et** sombre) | `maquettes/ui.py` **et** `drillmaster_v3/theme.py` |
+| typographie (6 tailles), rayons, espacements | idem |
+| disposition : fenêtre 1600 × 1000, barre haute 54, barre bas 32, marge 24, panneaux 1010 + 526 | idem |
+| correspondance état → couleur | `Message.couleur` (plus de couleur dans le lexique) |
+
+`drillmaster_v3/theme.py` sait aussi produire la **feuille de style Qt** (`theme.qss()`),
+donc les couleurs ne seront pas retapées dans le plugin : elles seront générées.
+
+**Preuve.** `test_R19_les_couleurs_ne_sont_pas_dans_le_lexique`,
+`test_R19_le_theme_a_un_jeton_par_niveau`, et la coupe et l'écran Pistes ont été
+régénérés **après** ce changement, à l'identique.
+
 ## Réponse à la question laissée ouverte
 
 **Une exclusion est globale au projet, pas locale à la coupe.** Elle porte un motif,
