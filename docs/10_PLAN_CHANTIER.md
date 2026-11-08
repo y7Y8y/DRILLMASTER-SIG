@@ -182,7 +182,13 @@ Preuve : `python3 tools/demo_messages.py`.
 - Les absences annoncées : chaque domaine a trois états (fourni, non fourni,
   en réserve).
 
-### Chantier 5 — Les boutons et les gestes
+### Chantier 5 — Boutons et gestes — ✅ **livré**
+
+`core/gestes.py` + 10 gestes réels réécrits (3 barres) + 14 tests.
+**Deux constats de la flotte étaient faux** : les 4 « suppressions sans filet »
+ne détruisent rien (couches régénérables), et la suppression réelle de projet
+demandait déjà trois protections. Le vrai défaut — l'annonce avant le clic —
+est corrigé. Preuve : `python3 tools/demo_gestes.py`.
 
 - 3 rôles, un seul primaire par écran.
 - Toute suppression : confirmation qui dit **ce qui sera perdu**, puis

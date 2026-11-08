@@ -404,3 +404,55 @@ Le contenu est prêt ; il reste à remplacer les appels dans `DrillMaster/ui/`
 par `bandeau.ajoute(par_id("fichier.py:ligne"))`. C'est un remplacement
 mécanique, vérifiable ligne à ligne — et le test de comptabilité refusera
 toute fenêtre laissée sans message.
+
+## 15. Chantier 5 livré — boutons et gestes
+
+### D'abord : deux constats de la flotte étaient faux
+
+Le département Boutons avait classé **4 actions « bloquantes : supprime sans
+demander confirmation »**. Vérification faite dans le code :
+
+| Fonction signalée | Ce qu'elle fait réellement | Verdict |
+|---|---|---|
+| `_on_project_layers_will_be_removed` | oublie des couches que QGIS détruit lui-même | rien à confirmer |
+| `_remove_generated_layers` | retire les couches **régénérables** | rien à confirmer |
+| `_remove_project_group` | retire le groupe racine des couches de coupe | rien à confirmer |
+| `delete_project_folder` | **supprime vraiment** — et demande déjà : dialogue, seconde confirmation, case à cocher, « Supprimer » grisé | déjà protégé |
+
+Le détecteur cherchait le mot « supprim » dans un nom de fonction : il
+mesurait **la forme**, pas le risque. Deux leçons en découlent.
+
+**R-47 · Un agent qui se trompe est corrigé, pas écouté.** Un constat de la
+flotte qui ne résiste pas à la lecture du code est retiré du rapport avec sa
+raison. Le rapport est un outil, pas un juge.
+
+**R-48 · Une couche régénérable n'est pas une donnée.** Retirer une couche
+recalculable ne demande aucune confirmation ; supprimer un fichier en demande
+trois.
+
+### Le vrai défaut, celui qui reste
+
+Ce n'est pas la suppression : c'est que **l'utilisateur ne sait pas ce qu'un
+bouton va changer avant de cliquer**. `core/gestes.py` répond à ça.
+
+| Garantie | Test |
+|---|---|
+| un bouton dit ce qu'il fait (« OK » refusé) | `test_un_mot_creux_est_refuse` |
+| une destruction annonce **ce qui sera perdu** | `test_une_action_destructrice_dit_ce_qui_sera_perdu` |
+| une destruction propose une sortie | `test_sans_sortie_une_destruction_est_refusee` |
+| une destruction n'est **jamais** le bouton principal | `test_une_destruction_n_est_jamais_le_bouton_principal` |
+| un seul bouton principal par barre | `test_un_seul_primaire_par_barre` |
+| rien ne s'exécute sans nom, ni sans motif si exigé, ni sans écrit | 3 tests |
+| les gestes réels du plugin (10 boutons) passent ces règles | `demo_gestes.py` |
+
+**R-49 · Une action qui peut détruire n'est jamais le bouton principal**, et
+elle exige un nom, un motif et une confirmation écrite.
+
+### État
+
+| | |
+|---|---|
+| Geste implémenté | `core/gestes.py` (14 tests) |
+| Gestes du plugin réécrits | **10 boutons** en 3 barres (`core/gestes_plugin.py`) |
+| Démonstration | `python3 tools/demo_gestes.py` |
+| Planche | `maquettes/25_gestes.png` |
