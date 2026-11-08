@@ -165,7 +165,7 @@ class MainDock(QgsDockWidget):
         self.about_button.setText("ⓘ")
         self.about_button.setObjectName("about_button")
         self.about_button.setToolTip(self.tr("À propos de DrillMaster"))
-        self.about_button.setCursor(Qt.PointingHandCursor)
+        self.about_button.setCursor(Qt.CursorShape.PointingHandCursor)
         self.about_button.setStyleSheet(
             f"QToolButton {{ color:{COLORS['text_medium']}; border:none; "
             f"padding:0 4px; font-size:10pt; background:transparent; }}")
@@ -344,7 +344,7 @@ class MainDock(QgsDockWidget):
         """
         try:
             from .about_dialog import AboutDialog
-            AboutDialog(self).exec_()
+            AboutDialog(self).exec()
         except Exception as _exc:
             from ..core.diagnostics import log_swallowed
             log_swallowed("À propos : ouverture depuis l'atelier "
@@ -373,7 +373,7 @@ class MainDock(QgsDockWidget):
         dialog = ReferenceDialog(
             self.project, self, domain_key=domain_key, raw_code=raw_code)
         dialog.reference_saved.connect(self._on_reference_saved)
-        dialog.exec_()
+        dialog.exec()
 
     def _on_reference_saved(self, domain_key=""):
         """CHEMIN UNIQUE de synchronisation (v2.7.10).
@@ -689,12 +689,12 @@ class MainDock(QgsDockWidget):
         layout.addWidget(keep_files)
         layout.addWidget(delete_files)
         buttons = QDialogButtonBox(
-            QDialogButtonBox.Cancel | QDialogButtonBox.Ok)
-        buttons.button(QDialogButtonBox.Ok).setText(self.tr("Continuer"))
+            QDialogButtonBox.StandardButton.Cancel | QDialogButtonBox.StandardButton.Ok)
+        buttons.button(QDialogButtonBox.StandardButton.Ok).setText(self.tr("Continuer"))
         buttons.accepted.connect(dialog.accept)
         buttons.rejected.connect(dialog.reject)
         layout.addWidget(buttons)
-        if dialog.exec_() != QDialog.Accepted:
+        if dialog.exec() != QDialog.DialogCode.Accepted:
             return
         if keep_files.isChecked():
             self._close_project(
@@ -704,26 +704,26 @@ class MainDock(QgsDockWidget):
 
         # --- Suppression définitive : confirmation renforcée ---------------
         confirm = QMessageBox(self)
-        confirm.setIcon(QMessageBox.Warning)
+        confirm.setIcon(QMessageBox.Icon.Warning)
         confirm.setWindowTitle(self.tr("Suppression définitive"))
         confirm.setText(self.tr(
             "Le dossier suivant sera supprimé définitivement "
             "(action irréversible) :"))
         confirm.setInformativeText(
             project_dir or self.tr("(dossier introuvable)"))
-        confirm.setStandardButtons(QMessageBox.Cancel | QMessageBox.Ok)
-        confirm.button(QMessageBox.Ok).setText(self.tr("Supprimer"))
+        confirm.setStandardButtons(QMessageBox.StandardButton.Cancel | QMessageBox.StandardButton.Ok)
+        confirm.button(QMessageBox.StandardButton.Ok).setText(self.tr("Supprimer"))
         confirm.setCheckBox(
             self.tr("Je comprends que les fichiers de ce projet seront "
                     "définitivement supprimés."))
-        confirm.button(QMessageBox.Ok).setEnabled(False)
+        confirm.button(QMessageBox.StandardButton.Ok).setEnabled(False)
 
         def _toggle_ok(_state):
-            confirm.button(QMessageBox.Ok).setEnabled(
+            confirm.button(QMessageBox.StandardButton.Ok).setEnabled(
                 confirm.checkBox().isChecked())
 
         confirm.checkBox().stateChanged.connect(_toggle_ok)
-        if confirm.exec_() != QMessageBox.Ok:
+        if confirm.exec() != QMessageBox.StandardButton.Ok:
             return
         ok, message = self.project.delete_project_folder()
         if not ok:

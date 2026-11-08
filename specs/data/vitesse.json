@@ -1,8 +1,8 @@
 {
   "coupe": {
-    "median_ms": 1.55,
-    "min_ms": 1.5,
-    "max_ms": 2.09,
+    "median_ms": 1.71,
+    "min_ms": 1.52,
+    "max_ms": 2.24,
     "forages": 64,
     "intercepts": 294,
     "analyses": 3200
@@ -36,8 +36,6 @@
     "core/benchmark.py",
     "core/scene3d/render.py",
     "drillmaster.py",
-    "tools/bench_qpainter_draw.py",
-    "tools/bench_scene3d.py",
     "ui/main_dock.py",
     "ui/section_dock.py"
   ],

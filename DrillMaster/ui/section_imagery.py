@@ -138,11 +138,11 @@ class ImageryPixmapCache:
                     if w >= h:
                         scaled = image.scaled(
                             target, max(1, round(h * target / w)),
-                            Qt.KeepAspectRatio, Qt.SmoothTransformation)
+                            Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
                     else:
                         scaled = image.scaled(
                             max(1, round(w * target / h)), target,
-                            Qt.KeepAspectRatio, Qt.SmoothTransformation)
+                            Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
                 if scaled.isNull():
                     return None
                 pixmap = QPixmap.fromImage(scaled)
@@ -333,11 +333,11 @@ def _composite_band_pixmap(poly, pixmap):
     out = QPixmap(width, height)
     if out.isNull():
         return None, None
-    out.fill(Qt.transparent)
+    out.fill(Qt.GlobalColor.transparent)
     try:
         painter = QPainter(out)
-        painter.setRenderHint(QPainter.Antialiasing)
-        painter.setRenderHint(QPainter.SmoothPixmapTransform)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
         painter.translate(-scene_rect.left(), -scene_rect.top())
         local = QPolygonF([
             QPointF(p.x() - scene_rect.left(), p.y() - scene_rect.top())
@@ -372,13 +372,13 @@ def _draw_hatched_missing(canvas, items, ph, record, res_path, poly,
         canvas, "_imagery_opacity", 100)) * 1.1)))
     colour.setAlpha(alpha)
     polygon = QGraphicsPolygonItem(poly)
-    polygon.setBrush(QBrush(colour, Qt.BDiagPattern))
+    polygon.setBrush(QBrush(colour, Qt.BrushStyle.BDiagPattern))
     polygon.setPen(QPen(QColor(_MISSING_PEN), 0.4))
     polygon.setZValue(4.0)
     polygon.setToolTip(imagery_tooltip(
         canvas, ph, record, res_path,
         missing=not bool(res_path), unreadable=unreadable))
-    polygon.setAcceptedMouseButtons(Qt.NoButton)
+    polygon.setAcceptedMouseButtons(Qt.MouseButton.NoButton)
     canvas.scene.addItem(polygon)
     items.append(polygon)
 
@@ -432,7 +432,7 @@ def _draw_material_badge(canvas, items, ph, record, poly, tooltip: str = ""):
         background.setPen(QPen(QColor("#FFFFFF"), 0.4))
         background.setZValue(5.0)
         background.setToolTip(tooltip)
-        background.setAcceptedMouseButtons(Qt.NoButton)
+        background.setAcceptedMouseButtons(Qt.MouseButton.NoButton)
         canvas.scene.addItem(background)
         items.append(background)
 
@@ -448,7 +448,7 @@ def _draw_material_badge(canvas, items, ph, record, poly, tooltip: str = ""):
             bx + (size - text_rect.width()) / 2.0,
             by + (size - text_rect.height()) / 2.0)
         text_item.setToolTip(tooltip)
-        text_item.setAcceptedMouseButtons(Qt.NoButton)
+        text_item.setAcceptedMouseButtons(Qt.MouseButton.NoButton)
         canvas.scene.addItem(text_item)
         items.append(text_item)
     except Exception as _exc:
@@ -470,10 +470,10 @@ def _draw_image_item(canvas, items, ph, record, res_path, pixmap, poly):
     item.setTransform(transform)
     # v2.9.262 — export HD : interpolation douce quand la scène agrandit
     # la bande (sinon blocs visibles).
-    item.setTransformationMode(Qt.SmoothTransformation)
+    item.setTransformationMode(Qt.TransformationMode.SmoothTransformation)
     item.setZValue(4.0)
     item.setToolTip(tooltip)
-    item.setAcceptedMouseButtons(Qt.NoButton)
+    item.setAcceptedMouseButtons(Qt.MouseButton.NoButton)
     try:
         item.setData(0, (
             "imagery", ph.hole_id, float(record.from_m),
@@ -492,12 +492,12 @@ def _draw_image_item(canvas, items, ph, record, res_path, pixmap, poly):
     rim = QGraphicsPolygonItem(poly)
     # v2.9.262 — retour écran QGIS 3.44 : setBrush attend un QBrush, pas
     # l'énumération brute Qt.NoBrush (TypeError 'BrushStyle').
-    rim.setBrush(QBrush(Qt.NoBrush))
+    rim.setBrush(QBrush(Qt.BrushStyle.NoBrush))
     pen = QPen(QColor("#34495E"), 0.35)
     pen.setCosmetic(True)
     rim.setPen(pen)
     rim.setZValue(4.1)
-    rim.setAcceptedMouseButtons(Qt.NoButton)
+    rim.setAcceptedMouseButtons(Qt.MouseButton.NoButton)
     canvas.scene.addItem(rim)
     items.append(rim)
 
@@ -600,7 +600,7 @@ def build_imagery_group(widget):
         "(carotte/RC/auger/puits/autre) est une étiquette, pas un filtre.")))
     open_btn = QPushButton(widget.tr("Ouvrir le dossier assets…"))
     open_btn.setStyleSheet(BUTTON_SECONDARY)
-    open_btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+    open_btn.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
     open_btn.setToolTip(widget.tr(
         "Dossier projets/assets/ : images copiées en mode « copy »"))
     open_btn.clicked.connect(
@@ -640,7 +640,7 @@ def _legend_label(text: str) -> "QLabel":
     label.setWordWrap(True)
     font = label.font()
     try:
-        font.setCapitalization(QFont.SmallCaps)
+        font.setCapitalization(QFont.Capitalization.SmallCaps)
     except Exception as _exc:
         log_swallowed("section_imagery : _legend_label", _exc)
     font.setPointSize(max(8, font.pointSize()))
@@ -688,9 +688,9 @@ def fill_imagery_legend(widget, grid):
         swatch = QLabel()
         swatch.setFixedSize(16, 16)
         pixmap = QPixmap(16, 16)
-        pixmap.fill(Qt.transparent)
+        pixmap.fill(Qt.GlobalColor.transparent)
         painter = QPainter(pixmap)
-        painter.setRenderHint(QPainter.Antialiasing)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         bg = QColor("#2C3E50")
         bg.setAlpha(215)
         painter.setBrush(QBrush(bg))
@@ -702,7 +702,7 @@ def fill_imagery_legend(widget, grid):
         painter.setFont(font)
         painter.setPen(QColor("#FFFFFF"))
         letter = _material_badge_letter(material)
-        painter.drawText(pixmap.rect(), Qt.AlignCenter, letter)
+        painter.drawText(pixmap.rect(), Qt.AlignmentFlag.AlignCenter, letter)
         painter.end()
         swatch.setPixmap(pixmap)
         swatch.setToolTip(f"{material} ({letter})")

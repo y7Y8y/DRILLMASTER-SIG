@@ -155,7 +155,7 @@ donc été câblée au plugin, et pas seulement documentée.
 | R-50, R-51 (docs/07 §16) | — |
 
 **Ce qui reste, chiffré** : 44 déclarations dans `styles_qt.COLORS` (304 usages
-à repointer en façade) et **417 couleurs dans 30 feuilles de style**. Une
+à repointer en façade) et **413 couleurs dans 30 feuilles de style**. Une
 migration automatique a été tentée trois fois et **échoue** : une couleur au
 milieu d'une feuille de style exige que la chaîne devienne une f-string ; un
 `re.sub` produit du code invalide. **Décision : fichier par fichier, avec
@@ -247,6 +247,45 @@ promesses · 23 tenues · 5 à faire**.
 **Reste, nommé** : 11 types de données sans lecteur · Excel, LAS, Shapefile ·
 rendu de la coupe par le noyau · export branché · écartés en pointillés.
 
+## Chantier 12 — Installation dans QGIS — ✅ **livré (le paquet)**
+
+La flotte annonçait trois constats ; **deux étaient vrais, un était faux**, et
+le plus coûteux n'y figurait pas.
+
+| Constat | Verdict | Mesure |
+|---|---|---|
+| E-01 `email` manque | **vrai** | 7 champs obligatoires sur 8 → **8/8** |
+| E-03 compatibilité `3.99` | **vrai, autrement** | **692** énumérations + **15** `exec_()` que Qt 6 refuse |
+| E-02 désinstallation | **vrai** | `unload()` est propre — rien à faire |
+| *(manquant)* | **le vrai défaut** | la licence cherchée **au-dessus** du paquet : « introuvable » chez chaque utilisateur |
+
+| Livré | Preuve |
+|---|---|
+| `drillmaster_v3/core/installation.py` — fiche, `verifie()`, `fenetre()`, `paquet_propre()`, `preflight()`, `cherche_licence()` | — |
+| `metadata.txt` : `email` ajouté, `category=Plugins` retiré (catégorie inexistante) | audit **8/8**, 0 reproche |
+| `LICENSE` **dans** le paquet ; `about.license_file()` le cherche là d'abord | packagé seul : **trouvée** |
+| `DrillMaster/tools/` (7 fichiers, 4 pointant vers `/home/claude/dm`) **sorti du paquet** | 101 fichiers inutiles → **0** |
+| **707 formes Qt 5 migrées** mécaniquement (`tools/migre_qt6.py`, réversible) | Qt 6 refuse **0** forme |
+| `tools/verifie_qt6.py` — Qt 5 à l'exécution **et** les `.pyi` des deux PyQt | **119** formes, 119 acceptées par Qt 5, 119 par Qt 6 |
+| `qgisMaximumVersion` **3.99 → 4.99** (le code suit) | `specs/data/qt6.json` : `epreuve_reelle_qgis4: false` |
+| `tools/audit_installation.py [--ecrit]` | `specs/data/installation.json` |
+| `specs/tests/test_installation.py` — **21 tests** | verts |
+| `maquettes/33_installation.png` | relue |
+| R-64, R-65, R-66 (docs/07 §23) | — |
+
+**Deux erreurs de ma table, trouvées par l'épreuve et non par la
+relecture** : `Qt.TextInteractionFlag.TextWordWrap` (inexistant sur les deux
+Qt, remplacé par `Qt.TextFlag.TextWordWrap`) et
+`QComboBox.…AdjustToMinimumContentsLength` (retirée de Qt 6, remplacée par
+`…AdjustToMinimumContentsLengthWithIcon`). Une migration qui casse Qt 5 pour
+faire plaisir à Qt 6 aurait rendu le plugin inutilisable chez ceux qui
+l'emploient aujourd'hui.
+
+**Reste, nommé** : l'essai dans un QGIS 4 réel (aucun n'a été ouvert ici — le
+drapeau `epreuve_reelle_qgis4` le dit, et un test interdit de le passer à
+vrai sans l'essai) · pas d'archive générée (une archive est une décision de
+version).
+
 ## Ce qui n'est pas dans ce plan, et pourquoi
 
 | Sujet | Pourquoi il attend |
@@ -257,6 +296,6 @@ rendu de la coupe par le noyau · export branché · écartés en pointillés.
 
 ## Ordre imposé
 
-1 → 2 → 3 → 4 → 5 → 6 → 7. Les chantiers 1 à 3 ne changent **aucune**
+1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 → 11 → 12. Les chantiers 1 à 3 ne changent **aucune**
 fonctionnalité : ils rendent les suivants possibles. C'est pour ça qu'ils
 passent en premier, même s'ils ne se voient pas.

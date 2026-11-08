@@ -49,10 +49,10 @@ def _selection_highlight_pen(width: float = 2.0,
     hex_c = str(color or SELECTION_HIGHLIGHT_COLOR).strip() or SELECTION_HIGHLIGHT_COLOR
     if not hex_c.startswith("#"):
         hex_c = "#" + hex_c
-    pen = QPen(QColor(hex_c), float(width), Qt.DashLine)
+    pen = QPen(QColor(hex_c), float(width), Qt.PenStyle.DashLine)
     pen.setCosmetic(False)
-    pen.setCapStyle(Qt.RoundCap)
-    pen.setJoinStyle(Qt.RoundJoin)
+    pen.setCapStyle(Qt.PenCapStyle.RoundCap)
+    pen.setJoinStyle(Qt.PenJoinStyle.RoundJoin)
     return pen
 
 def _selection_chrome_stylesheet() -> str:
@@ -75,27 +75,27 @@ def _selection_chrome_stylesheet() -> str:
 # projects; "dots" is now genuinely SPARSE points and legacy "dense"
 # reads as the same sparse look (they were indiscernible by design).
 _LITHO_BRUSH_PATTERNS = {
-    "": Qt.SolidPattern,
-    "diagonal": Qt.FDiagPattern,
-    "backward_diagonal": Qt.BDiagPattern,
-    "cross": Qt.CrossPattern,
-    "diagonal_cross": Qt.DiagCrossPattern,
-    "horizontal": Qt.HorPattern,
-    "vertical": Qt.VerPattern,
-    "dots": Qt.Dense1Pattern,
-    "dense": Qt.Dense1Pattern,  # legacy alias, reads as sparse dots
+    "": Qt.BrushStyle.SolidPattern,
+    "diagonal": Qt.BrushStyle.FDiagPattern,
+    "backward_diagonal": Qt.BrushStyle.BDiagPattern,
+    "cross": Qt.BrushStyle.CrossPattern,
+    "diagonal_cross": Qt.BrushStyle.DiagCrossPattern,
+    "horizontal": Qt.BrushStyle.HorPattern,
+    "vertical": Qt.BrushStyle.VerPattern,
+    "dots": Qt.BrushStyle.Dense1Pattern,
+    "dense": Qt.BrushStyle.Dense1Pattern,  # legacy alias, reads as sparse dots
 # v2.7.8.2 — trois densités de pointillés discernables sur 8 px
-    "dots_moyen": Qt.Dense3Pattern,
-    "dots_fin": Qt.Dense5Pattern,
-    "dots_dense": Qt.Dense7Pattern,
+    "dots_moyen": Qt.BrushStyle.Dense3Pattern,
+    "dots_fin": Qt.BrushStyle.Dense5Pattern,
+    "dots_dense": Qt.BrushStyle.Dense7Pattern,
 }
 
 
 # v2.7.10.27/32 — les motifs à LIGNES seuls reçoivent une encre
 # contrastée ; les motifs DENSES (Qt.Dense* = remplissage) gardent la
 # couleur de base, sinon la bande entière vire au gris.
-_LINE_BRUSH_STYLES = (Qt.FDiagPattern, Qt.BDiagPattern, Qt.CrossPattern,
-                      Qt.DiagCrossPattern, Qt.HorPattern, Qt.VerPattern)
+_LINE_BRUSH_STYLES = (Qt.BrushStyle.FDiagPattern, Qt.BrushStyle.BDiagPattern, Qt.BrushStyle.CrossPattern,
+                      Qt.BrushStyle.DiagCrossPattern, Qt.BrushStyle.HorPattern, Qt.BrushStyle.VerPattern)
 
 
 def _pattern_ink_colour(base_colour: QColor, brush_style=None) -> QColor:
@@ -115,7 +115,7 @@ def _export_smallcaps_font(point_size: int = 8, bold: bool = False) -> "QFont":
     f = QFont("Segoe UI", max(6, int(point_size)))
     f.setBold(bool(bold))
     try:
-        f.setCapitalization(QFont.SmallCaps)
+        f.setCapitalization(QFont.Capitalization.SmallCaps)
     except Exception as _exc:
         from ..core.diagnostics import log_swallowed
         log_swallowed("Export : _export_smallcaps_font", _exc)
@@ -139,7 +139,7 @@ def _legend_label(text: str) -> "QLabel":
     label.setWordWrap(True)
     font = label.font()
     try:
-        font.setCapitalization(QFont.SmallCaps)
+        font.setCapitalization(QFont.Capitalization.SmallCaps)
     except Exception as _exc:
         from ..core.diagnostics import log_swallowed
         log_swallowed("Légende : _legend_label", _exc)
@@ -165,8 +165,8 @@ class _PatternPolygonItem(QGraphicsPolygonItem):
 
     def paint(self, painter, option, widget=None):
         painter.save()
-        painter.setRenderHint(QPainter.Antialiasing, False)
-        painter.setRenderHint(QPainter.SmoothPixmapTransform, False)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, False)
+        painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform, False)
         super().paint(painter, option, widget)
         painter.restore()
 
@@ -178,16 +178,16 @@ class _ClippedStrokeItem(QGraphicsPolygonItem):
         super().__init__(poly, parent)
         self._strokes = strokes_path
         self._pen = pen
-        self.setPen(QPen(Qt.NoPen))
-        self.setBrush(QBrush(Qt.NoBrush))
+        self.setPen(QPen(Qt.PenStyle.NoPen))
+        self.setBrush(QBrush(Qt.BrushStyle.NoBrush))
 
     def paint(self, painter, option, widget=None):
         # v2.9.30 — NE PAS passer un QPolygon à setClipRegion (TypeError
         # sous PyQt6 / QGIS 3.44 : attend un QRegion).  setClipPath avec
         # QPainterPath est le chemin portable et précis.
         painter.save()
-        painter.setRenderHint(QPainter.Antialiasing, False)
-        painter.setRenderHint(QPainter.SmoothPixmapTransform, False)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, False)
+        painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform, False)
         try:
             from qgis.PyQt.QtGui import QPainterPath, QRegion
             clip = QPainterPath()
@@ -206,7 +206,7 @@ class _ClippedStrokeItem(QGraphicsPolygonItem):
                 # pas de clip — traits un peu hors bande, mieux que crash
                 pass
         painter.setPen(self._pen)
-        painter.setBrush(QBrush(Qt.NoBrush))
+        painter.setBrush(QBrush(Qt.BrushStyle.NoBrush))
         painter.drawPath(self._strokes)
         painter.restore()
 
@@ -218,12 +218,12 @@ class _ClippedFillItem(QGraphicsPolygonItem):
         super().__init__(poly, parent)
         self._fill = fill_path
         self._ink = QColor(ink_colour)
-        self.setPen(QPen(Qt.NoPen))
-        self.setBrush(QBrush(Qt.NoBrush))
+        self.setPen(QPen(Qt.PenStyle.NoPen))
+        self.setBrush(QBrush(Qt.BrushStyle.NoBrush))
 
     def paint(self, painter, option, widget=None):
         painter.save()
-        painter.setRenderHint(QPainter.Antialiasing, False)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, False)
         try:
             from qgis.PyQt.QtGui import QPainterPath
             clip = QPainterPath()
@@ -234,7 +234,7 @@ class _ClippedFillItem(QGraphicsPolygonItem):
             log_swallowed("section_dock : paint", _exc)
             # pas de clip — points un peu hors bande, mieux que crash
             pass
-        painter.setPen(QPen(Qt.NoPen))
+        painter.setPen(QPen(Qt.PenStyle.NoPen))
         painter.setBrush(QBrush(self._ink))
         painter.drawPath(self._fill)
         painter.restore()
@@ -255,12 +255,12 @@ class _StyledFillItem(QGraphicsPolygonItem):
         self._style_def = style_def
         self._axis_dx = float(axis_dx)
         self._axis_dy = float(axis_dy)
-        self.setPen(border_pen if border_pen is not None else QPen(Qt.NoPen))
-        self.setBrush(QBrush(Qt.NoBrush))
+        self.setPen(border_pen if border_pen is not None else QPen(Qt.PenStyle.NoPen))
+        self.setBrush(QBrush(Qt.BrushStyle.NoBrush))
 
     def paint(self, painter, option, widget=None):
         painter.save()
-        painter.setRenderHint(QPainter.Antialiasing, False)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, False)
         try:
             from ..core.pattern_paint import paint_style
             poly = self.polygon()
@@ -278,11 +278,11 @@ class _StyledFillItem(QGraphicsPolygonItem):
             from ..core.diagnostics import log_swallowed
             log_swallowed("section_dock : paint", _exc)
             c = QColor(getattr(self._style_def, "fill_color", None) or "#CCC")
-            painter.setPen(QPen(Qt.NoPen))
+            painter.setPen(QPen(Qt.PenStyle.NoPen))
             painter.setBrush(QBrush(c))
             painter.drawPolygon(self.polygon())
-        if self.pen().style() != Qt.NoPen:
+        if self.pen().style() != Qt.PenStyle.NoPen:
             painter.setPen(self.pen())
-            painter.setBrush(QBrush(Qt.NoBrush))
+            painter.setBrush(QBrush(Qt.BrushStyle.NoBrush))
             painter.drawPolygon(self.polygon())
         painter.restore()

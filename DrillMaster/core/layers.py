@@ -46,6 +46,36 @@ DISPLAY_ASSAYS = "Teneurs"
 LAYER_SURVEY_STATIONS = "Survey_Stations"
 LAYER_SECTION_LINE = "Ligne de coupe"
 
+# ── le type d'un champ, selon le QGIS qui exécute ────────────────────
+# Le même champ s'écrit `QVariant.String` jusqu'à QGIS 3.37, et
+# `Qgis.FieldType.String` à partir de QGIS 4. Écrire l'un casse l'autre :
+# on choisit donc à l'exécution, en un seul endroit — la forme ancienne
+# n'apparaît plus qu'ici, nommée une fois, plutôt que 53 fois.
+_FORMES_ANCIENNES = {"String": "String", "Double": "Double",
+                     "Int": "Int", "Bool": "Bool"}
+
+
+def type_de_champ():
+    """Les types de champ du QGIS en cours d'exécution.
+
+    Ne lève jamais : sans QGIS (tests, outils), on rend une table inerte qui
+    porte les mêmes noms — elle ne sert qu'à construire des couches, et un
+    appel sans QGIS n'en construit aucune.
+    """
+    try:
+        from qgis.core import Qgis
+        formes = getattr(Qgis, "FieldType", None)
+        if formes is not None:
+            return formes
+    except Exception:
+        pass
+    try:
+        from qgis.PyQt.QtCore import QVariant
+        return QVariant
+    except Exception:
+        return type("TypesDeChamp", (), _FORMES_ANCIENNES)
+
+
 
 def get_or_create_root_group(project_name):
     from qgis.core import QgsProject
@@ -97,68 +127,63 @@ def _create_mem_layer(name, wkb_type_str, crs, fields):
 
 def _collar_fields():
     from qgis.core import QgsField
-    from qgis.PyQt.QtCore import QVariant
     return [
-        QgsField("hole_id", QVariant.String, len=50),
-        QgsField("x", QVariant.Double),
-        QgsField("y", QVariant.Double),
-        QgsField("z", QVariant.Double),
-        QgsField("max_depth", QVariant.Double),
-        QgsField("azimuth", QVariant.Double),
-        QgsField("dip", QVariant.Double),
-        QgsField("hole_type", QVariant.String, len=20),  # v2.9.289
-        QgsField("short_id", QVariant.String, len=10),  # v2.9.307
+        QgsField("hole_id", type_de_champ().String, len=50),
+        QgsField("x", type_de_champ().Double),
+        QgsField("y", type_de_champ().Double),
+        QgsField("z", type_de_champ().Double),
+        QgsField("max_depth", type_de_champ().Double),
+        QgsField("azimuth", type_de_champ().Double),
+        QgsField("dip", type_de_champ().Double),
+        QgsField("hole_type", type_de_champ().String, len=20),  # v2.9.289
+        QgsField("short_id", type_de_champ().String, len=10),  # v2.9.307
     ]
 
 
 def _survey_fields():
     from qgis.core import QgsField
-    from qgis.PyQt.QtCore import QVariant
-    return [QgsField("hole_id", QVariant.String, len=50)]
+    return [QgsField("hole_id", type_de_champ().String, len=50)]
 
 
 def _litho_fields():
     from qgis.core import QgsField
-    from qgis.PyQt.QtCore import QVariant
     return [
-        QgsField("hole_id", QVariant.String, len=50),
-        QgsField("from_depth", QVariant.Double),
-        QgsField("to_depth", QVariant.Double),
-        QgsField("lithology", QVariant.String, len=100),
-        QgsField("component_role", QVariant.String, len=40),
-        QgsField("raw_role", QVariant.String, len=80),
-        QgsField("proportion", QVariant.Double),
-        QgsField("proportion_unit", QVariant.String, len=20),
-        QgsField("source_line", QVariant.Int),
-        QgsField("is_primary", QVariant.Bool),
+        QgsField("hole_id", type_de_champ().String, len=50),
+        QgsField("from_depth", type_de_champ().Double),
+        QgsField("to_depth", type_de_champ().Double),
+        QgsField("lithology", type_de_champ().String, len=100),
+        QgsField("component_role", type_de_champ().String, len=40),
+        QgsField("raw_role", type_de_champ().String, len=80),
+        QgsField("proportion", type_de_champ().Double),
+        QgsField("proportion_unit", type_de_champ().String, len=20),
+        QgsField("source_line", type_de_champ().Int),
+        QgsField("is_primary", type_de_champ().Bool),
     ]
 
 
 def _survey_station_fields():
     from qgis.core import QgsField
-    from qgis.PyQt.QtCore import QVariant
     return [
-        QgsField("hole_id", QVariant.String, len=50),
-        QgsField("depth", QVariant.Double),
-        QgsField("azimuth", QVariant.Double),
-        QgsField("dip", QVariant.Double),
+        QgsField("hole_id", type_de_champ().String, len=50),
+        QgsField("depth", type_de_champ().Double),
+        QgsField("azimuth", type_de_champ().Double),
+        QgsField("dip", type_de_champ().Double),
     ]
 
 
 def _structure_fields():
     """v2.9.258-rendu — fields of the point-wise ``structure`` layer."""
     from qgis.core import QgsField
-    from qgis.PyQt.QtCore import QVariant
     return [
-        QgsField("hole_id", QVariant.String, len=50),
-        QgsField("depth", QVariant.Double),
-        QgsField("type", QVariant.String, len=100),
-        QgsField("dip", QVariant.Double),
-        QgsField("dip_direction", QVariant.Double),
-        QgsField("alpha", QVariant.Double),
-        QgsField("beta", QVariant.Double),
-        QgsField("confidence", QVariant.String, len=40),
-        QgsField("comment", QVariant.String, len=255),
+        QgsField("hole_id", type_de_champ().String, len=50),
+        QgsField("depth", type_de_champ().Double),
+        QgsField("type", type_de_champ().String, len=100),
+        QgsField("dip", type_de_champ().Double),
+        QgsField("dip_direction", type_de_champ().Double),
+        QgsField("alpha", type_de_champ().Double),
+        QgsField("beta", type_de_champ().Double),
+        QgsField("confidence", type_de_champ().String, len=40),
+        QgsField("comment", type_de_champ().String, len=255),
     ]
 
 
@@ -170,17 +195,16 @@ def _alteration_fields():
     from the GeoPackage (source values are never modified nor lost).
     """
     from qgis.core import QgsField
-    from qgis.PyQt.QtCore import QVariant
     return [
-        QgsField("hole_id", QVariant.String, len=50),
-        QgsField("from_depth", QVariant.Double),
-        QgsField("to_depth", QVariant.Double),
-        QgsField("alteration", QVariant.String, len=100),
-        QgsField("raw_cell", QVariant.String, len=200),
-        QgsField("component_role", QVariant.String, len=40),
-        QgsField("raw_role", QVariant.String, len=80),
-        QgsField("intensity", QVariant.String, len=40),
-        QgsField("source_line", QVariant.Int),
+        QgsField("hole_id", type_de_champ().String, len=50),
+        QgsField("from_depth", type_de_champ().Double),
+        QgsField("to_depth", type_de_champ().Double),
+        QgsField("alteration", type_de_champ().String, len=100),
+        QgsField("raw_cell", type_de_champ().String, len=200),
+        QgsField("component_role", type_de_champ().String, len=40),
+        QgsField("raw_role", type_de_champ().String, len=80),
+        QgsField("intensity", type_de_champ().String, len=40),
+        QgsField("source_line", type_de_champ().Int),
     ]
 
 
@@ -189,28 +213,26 @@ def _mineralization_fields():
     raw minerals text, intensity).  Minerals are never auto-split (AM-05).
     """
     from qgis.core import QgsField
-    from qgis.PyQt.QtCore import QVariant
     return [
-        QgsField("hole_id", QVariant.String, len=50),
-        QgsField("from_depth", QVariant.Double),
-        QgsField("to_depth", QVariant.Double),
-        QgsField("mineralization_style", QVariant.String, len=100),
-        QgsField("minerals", QVariant.String, len=200),
-        QgsField("intensity", QVariant.String, len=40),
-        QgsField("source_line", QVariant.Int),
+        QgsField("hole_id", type_de_champ().String, len=50),
+        QgsField("from_depth", type_de_champ().Double),
+        QgsField("to_depth", type_de_champ().Double),
+        QgsField("mineralization_style", type_de_champ().String, len=100),
+        QgsField("minerals", type_de_champ().String, len=200),
+        QgsField("intensity", type_de_champ().String, len=40),
+        QgsField("source_line", type_de_champ().Int),
     ]
 
 
 def _assay_fields(element_columns):
     from qgis.core import QgsField
-    from qgis.PyQt.QtCore import QVariant
     f = [
-        QgsField("hole_id", QVariant.String, len=50),
-        QgsField("from_depth", QVariant.Double),
-        QgsField("to_depth", QVariant.Double),
+        QgsField("hole_id", type_de_champ().String, len=50),
+        QgsField("from_depth", type_de_champ().Double),
+        QgsField("to_depth", type_de_champ().Double),
     ]
     for c in (element_columns or []):
-        f.append(QgsField(c, QVariant.Double))
+        f.append(QgsField(c, type_de_champ().Double))
     return f
 
 

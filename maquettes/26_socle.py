@@ -100,7 +100,7 @@ maux = [("Deux palettes vivantes", "theme.json (18 rôles neutres) et "
          "styles_qt.COLORS (17 teintes terreuses) se contredisaient"),
         ("Une teinte de chrome qui imite une donnée", "un teal d'interface "
          "identique au teal d'une lithologie — prouvé à l'écran"),
-        ("417 couleurs écrites dans des feuilles de style", "dans 30 fichiers ; "
+        ("413 couleurs écrites dans des feuilles de style", "dans 30 fichiers ; "
          "changer le fond obligeait à en corriger 30")]
 for titre, quoi in maux:
     d.ellipse([48 * S, (y + 5) * S, 56 * S, (y + 13) * S], fill=CLAIR["block"])

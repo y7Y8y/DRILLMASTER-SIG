@@ -37,7 +37,7 @@ def build_side_panel(widget):
     """
     panel_scroll = QScrollArea()
     panel_scroll.setWidgetResizable(True)
-    panel_scroll.setFrameShape(QFrame.NoFrame)
+    panel_scroll.setFrameShape(QFrame.Shape.NoFrame)
     panel_scroll.setMaximumWidth(260)
 
     panel = QWidget()
@@ -345,7 +345,7 @@ def build_side_panel(widget):
     # v2.9.141 — opacité du MNT : 100 = opaque par défaut (le user ne
     # veut plus d'une surface « en transparence » par défaut).
     gb_rend_l.addWidget(QLabel(_tr("Opacité MNT :")), 2, 0)
-    widget.slider_terrain = QSlider(Qt.Horizontal)
+    widget.slider_terrain = QSlider(Qt.Orientation.Horizontal)
     widget.slider_terrain.setRange(0, 100)
     widget.slider_terrain.setValue(100)
     widget.slider_terrain.setToolTip(_tr(

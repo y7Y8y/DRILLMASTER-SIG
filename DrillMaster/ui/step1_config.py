@@ -163,7 +163,7 @@ class Step1Config(QWidget):
         # secondaire → largeur au contenu, alignée à gauche. La note des
         # champs obligatoires était orpheline tout en bas (après le
         # stretch) — elle reste collée au formulaire.
-        layout.addWidget(open_btn, 0, Qt.AlignLeft)
+        layout.addWidget(open_btn, 0, Qt.AlignmentFlag.AlignLeft)
 
         note = QLabel(self.tr(
             "* Champs obligatoires. Le SCR doit être projeté (pas EPSG:4326)."))

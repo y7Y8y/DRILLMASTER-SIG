@@ -100,7 +100,7 @@ class View3DCanvas(QWidget):
         super().__init__(parent)
         self.workspace_state = workspace_state
         self.setMouseTracking(True)
-        self.setFocusPolicy(Qt.StrongFocus)
+        self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
 
         # v2.9.145 (volet 1) — les MATHS de caméra vivent dans
         # core/camera3d.OrbitCamera (pur, zéro Qt, réutilisable) ; ce
@@ -940,7 +940,7 @@ class View3DCanvas(QWidget):
             from qgis.PyQt.QtGui import QFont
             painter.setFont(QFont("Segoe UI", 9))
             painter.drawText(
-                self.rect(), Qt.AlignCenter,
+                self.rect(), Qt.AlignmentFlag.AlignCenter,
                 _tr("Vue 3D : erreur de rendu.\n"
                         "Changez la caméra ou rouvrez l'onglet pour "
                         "réessayer.\nLe détail est dans le journal de "

@@ -29,38 +29,38 @@ from .styles_qt import (
 
 
 _PATTERN_BRUSHES = {
-    "": Qt.SolidPattern,
-    "diagonal": Qt.FDiagPattern,
-    "backward_diagonal": Qt.BDiagPattern,
-    "cross": Qt.CrossPattern,
-    "diagonal_cross": Qt.DiagCrossPattern,
-    "horizontal": Qt.HorPattern,
-    "vertical": Qt.VerPattern,
-    "dots": Qt.Dense1Pattern,
-    "dense": Qt.Dense1Pattern,  # legacy alias (v2.7.5)
-    "dots_moyen": Qt.Dense3Pattern,
-    "dots_fin": Qt.Dense5Pattern,
-    "dots_dense": Qt.Dense7Pattern,
+    "": Qt.BrushStyle.SolidPattern,
+    "diagonal": Qt.BrushStyle.FDiagPattern,
+    "backward_diagonal": Qt.BrushStyle.BDiagPattern,
+    "cross": Qt.BrushStyle.CrossPattern,
+    "diagonal_cross": Qt.BrushStyle.DiagCrossPattern,
+    "horizontal": Qt.BrushStyle.HorPattern,
+    "vertical": Qt.BrushStyle.VerPattern,
+    "dots": Qt.BrushStyle.Dense1Pattern,
+    "dense": Qt.BrushStyle.Dense1Pattern,  # legacy alias (v2.7.5)
+    "dots_moyen": Qt.BrushStyle.Dense3Pattern,
+    "dots_fin": Qt.BrushStyle.Dense5Pattern,
+    "dots_dense": Qt.BrushStyle.Dense7Pattern,
 }
 
 
 def _pattern_icon(pattern, colour="#85929E"):
     """v2.9.87 — preview motifs 2.9.33 (underlay + QBrush Qt)."""
     brush_style = _PATTERN_BRUSHES.get(
-        normalise_pattern(pattern), Qt.SolidPattern)
+        normalise_pattern(pattern), Qt.BrushStyle.SolidPattern)
     pixmap = QPixmap(58, 18)
     pixmap.fill(QColor("#FFFFFF"))
     painter = QPainter(pixmap)
-    painter.setRenderHint(QPainter.Antialiasing, False)
-    if brush_style != Qt.SolidPattern:
+    painter.setRenderHint(QPainter.RenderHint.Antialiasing, False)
+    if brush_style != Qt.BrushStyle.SolidPattern:
         underlay = QColor(colour)
         underlay.setAlpha(round(255 * 0.55))
-        painter.fillRect(0, 0, 57, 17, QBrush(underlay, Qt.SolidPattern))
+        painter.fillRect(0, 0, 57, 17, QBrush(underlay, Qt.BrushStyle.SolidPattern))
         # encre lignes contrastée comme la coupe
         ink = QColor(colour)
         if brush_style in (
-                Qt.FDiagPattern, Qt.BDiagPattern, Qt.CrossPattern,
-                Qt.DiagCrossPattern, Qt.HorPattern, Qt.VerPattern):
+                Qt.BrushStyle.FDiagPattern, Qt.BrushStyle.BDiagPattern, Qt.BrushStyle.CrossPattern,
+                Qt.BrushStyle.DiagCrossPattern, Qt.BrushStyle.HorPattern, Qt.BrushStyle.VerPattern):
             ink = (QColor("#FFFFFF") if QColor(colour).lightness() < 130
                    else QColor("#4A4A4A"))
         painter.setPen(QPen(QColor("#7F8C8D"), 1))
@@ -120,7 +120,7 @@ class _DomainColorPicker(QDialog):
         for i, hx in enumerate(palette):
             btn = QPushButton()
             btn.setFixedSize(34, 28)
-            btn.setCursor(Qt.PointingHandCursor)
+            btn.setCursor(Qt.CursorShape.PointingHandCursor)
             btn.setToolTip(hx)
             btn.setStyleSheet(
                 f"QPushButton {{ background:{hx}; border:1px solid #7F8C8D; }}"
@@ -135,12 +135,12 @@ class _DomainColorPicker(QDialog):
         lay.addWidget(scroll)
 
         self._preview = QLabel(cur)
-        self._preview.setAlignment(Qt.AlignCenter)
+        self._preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self._preview.setMinimumHeight(36)
         self._set_preview(cur)
         lay.addWidget(self._preview)
 
-        buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
         buttons.accepted.connect(self.accept)
         buttons.rejected.connect(self.reject)
         lay.addWidget(buttons)
@@ -279,8 +279,8 @@ class ReferenceDialog(QDialog):
         self.table = QTableWidget()
         self.table.setStyleSheet(TABLE_STYLE)
         self.table.setAlternatingRowColors(True)
-        self.table.setSelectionBehavior(QAbstractItemView.SelectRows)
-        self.table.setSelectionMode(QAbstractItemView.SingleSelection)
+        self.table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+        self.table.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
         self.table.verticalHeader().setVisible(False)
         self.table.cellDoubleClicked.connect(self._edit_colour)
         self.table.currentCellChanged.connect(self._selection_changed)
@@ -356,12 +356,12 @@ class ReferenceDialog(QDialog):
         layout.addLayout(bottom)
 
         buttons = QDialogButtonBox(
-            QDialogButtonBox.Ok | QDialogButtonBox.Apply |
-            QDialogButtonBox.Cancel)
-        buttons.button(QDialogButtonBox.Ok).setText(self.tr("OK"))
-        buttons.button(QDialogButtonBox.Apply).setText(self.tr("Appliquer"))
-        buttons.button(QDialogButtonBox.Cancel).setText(self.tr("Annuler"))
-        buttons.button(QDialogButtonBox.Apply).clicked.connect(self._apply)
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Apply |
+            QDialogButtonBox.StandardButton.Cancel)
+        buttons.button(QDialogButtonBox.StandardButton.Ok).setText(self.tr("OK"))
+        buttons.button(QDialogButtonBox.StandardButton.Apply).setText(self.tr("Appliquer"))
+        buttons.button(QDialogButtonBox.StandardButton.Cancel).setText(self.tr("Annuler"))
+        buttons.button(QDialogButtonBox.StandardButton.Apply).clicked.connect(self._apply)
         buttons.accepted.connect(self._accept)
         buttons.rejected.connect(self.reject)
         layout.addWidget(buttons)
@@ -454,8 +454,8 @@ class ReferenceDialog(QDialog):
             if header_item is not None:
                 header_item.setText(self.tr("Code"))
         header = self.table.horizontalHeader()
-        header.setSectionResizeMode(QHeaderView.ResizeToContents)
-        header.setSectionResizeMode(1, QHeaderView.Stretch)
+        header.setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
         header.setStretchLastSection(False)
         for column, title in enumerate(columns):
             item = self.table.horizontalHeaderItem(column)
@@ -509,9 +509,9 @@ class ReferenceDialog(QDialog):
         item = QTableWidgetItem(str(text or ""))
         item.setToolTip(str(text or ""))
         if raw_code is not None:
-            item.setData(Qt.UserRole, raw_code)
+            item.setData(Qt.ItemDataRole.UserRole, raw_code)
         if not editable:
-            item.setFlags(item.flags() & ~Qt.ItemIsEditable)
+            item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
         return item
 
     def _fill_category_row(self, row, entry):
@@ -524,7 +524,7 @@ class ReferenceDialog(QDialog):
             # v2.7.8 : la minéralisation est codée par motif — la couleur
             # est désactivée, le motif reste choisi ci-dessous.
             colour = self._base_item("—", editable=False)
-            colour.setTextAlignment(Qt.AlignCenter)
+            colour.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
             colour.setForeground(QBrush(QColor(COLORS["text_medium"])))
             if getattr(entry, "family", ""):
                 colour_tooltip = self.tr(
@@ -549,8 +549,8 @@ class ReferenceDialog(QDialog):
                     entry.raw_code, entry.symbol_id or "", entry.pattern)
                 code_item = self._base_item(display_text)
                 code_item.setFlags(
-                    Qt.ItemIsEnabled | Qt.ItemIsSelectable
-                    | Qt.ItemIsEditable)
+                    Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemIsSelectable
+                    | Qt.ItemFlag.ItemIsEditable)
                 code_item.setToolTip(self.tr("Code bande (ex. MA) · vide = rien"))
                 self.table.setItem(row, 3, code_item)
                 self.table.setCellWidget(row, 3, None)
@@ -583,7 +583,7 @@ class ReferenceDialog(QDialog):
             colour.setForeground(QBrush(
                 QColor("#FFFFFF") if QColor(entry.color).lightness() < 128
                 else QColor("#000000")))
-            colour.setTextAlignment(Qt.AlignCenter)
+            colour.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
             # v2.9.88 — sélecteur restreint : pastel only / vif only.
             _convention = ""
             _domain_key = self.domain_combo.currentData()
@@ -617,7 +617,7 @@ class ReferenceDialog(QDialog):
         wrapper = QWidget()
         wrap_layout = QHBoxLayout(wrapper)
         wrap_layout.setContentsMargins(0, 0, 0, 0)
-        wrap_layout.setAlignment(Qt.AlignCenter)
+        wrap_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
         wrap_layout.addWidget(visible_box)
         self.table.setCellWidget(row, 4, wrapper)
         state = (self.tr("Automatique") if entry.automatic
@@ -627,12 +627,12 @@ class ReferenceDialog(QDialog):
         if not entry.usage_count:
             state += self.tr(" · non utilisé")
         state_item = self._base_item(state, editable=False)
-        state_item.setData(Qt.UserRole + 1, entry.automatic)
-        state_item.setData(Qt.UserRole + 2, entry.usage_count)
-        state_item.setData(Qt.UserRole + 3, entry.newly_discovered)
+        state_item.setData(Qt.ItemDataRole.UserRole + 1, entry.automatic)
+        state_item.setData(Qt.ItemDataRole.UserRole + 2, entry.usage_count)
+        state_item.setData(Qt.ItemDataRole.UserRole + 3, entry.newly_discovered)
         self.table.setItem(row, 5, state_item)
         uses = self._base_item(str(entry.usage_count), editable=False)
-        uses.setTextAlignment(Qt.AlignCenter)
+        uses.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
         self.table.setItem(row, 6, uses)
 
     def _fill_element_row(self, row, entry):
@@ -649,9 +649,9 @@ class ReferenceDialog(QDialog):
                 value, entry.raw_code if column == 0 else None,
                 editable=column not in (0, 7))
             if column == 6:
-                item.setData(Qt.UserRole + 1, entry.automatic)
-                item.setData(Qt.UserRole + 2, entry.usage_count)
-                item.setData(Qt.UserRole + 3, entry.newly_discovered)
+                item.setData(Qt.ItemDataRole.UserRole + 1, entry.automatic)
+                item.setData(Qt.ItemDataRole.UserRole + 2, entry.usage_count)
+                item.setData(Qt.ItemDataRole.UserRole + 3, entry.newly_discovered)
             self.table.setItem(row, column, item)
 
     # ------------------------------------------------------------------
@@ -670,7 +670,7 @@ class ReferenceDialog(QDialog):
         if not domain or row < 0 or not self.table.item(row, 0):
             self._detail_row = -1
             return
-        raw_code = self.table.item(row, 0).data(Qt.UserRole)
+        raw_code = self.table.item(row, 0).data(Qt.ItemDataRole.UserRole)
         entry = domain.entries.get(raw_code)
         if not entry:
             return
@@ -693,7 +693,7 @@ class ReferenceDialog(QDialog):
         item = self.table.item(self._detail_row, 0)
         if not domain or not item:
             return
-        entry = domain.entries.get(item.data(Qt.UserRole))
+        entry = domain.entries.get(item.data(Qt.ItemDataRole.UserRole))
         if not entry:
             return
         entry.normalized_code = self.normalized_edit.text().strip()
@@ -713,7 +713,7 @@ class ReferenceDialog(QDialog):
             raw_item = self.table.item(row, 0)
             if not raw_item:
                 continue
-            raw_code = raw_item.data(Qt.UserRole)
+            raw_code = raw_item.data(Qt.ItemDataRole.UserRole)
             entry = domain.entries.get(raw_code)
             if not entry:
                 continue
@@ -794,7 +794,7 @@ class ReferenceDialog(QDialog):
         if domain.key in ("alteration", "lithology"):
             picker = _DomainColorPicker(
                 self, domain.key, item.text() or "#CCCCCC", code_label)
-            if not picker.exec_():
+            if not picker.exec():
                 return
             value = picker.selected_hex()
             colour = QColor(value)
@@ -802,7 +802,7 @@ class ReferenceDialog(QDialog):
             # v2.7.10.23 — constructeur QColorDialog (initial, parent) only.
             dialog = QColorDialog(QColor(item.text() or "#CCCCCC"), self)
             dialog.setWindowTitle(self.tr("Couleur de {}").format(code_label))
-            if not dialog.exec_():
+            if not dialog.exec():
                 return
             colour = dialog.selectedColor()
             if not colour.isValid():
@@ -836,9 +836,9 @@ class ReferenceDialog(QDialog):
             if domain and domain.kind == "quantitative_fields":
                 state_column = self.table.columnCount() - 1
             state = self.table.item(row, state_column)
-            automatic = bool(state.data(Qt.UserRole + 1)) if state else True
-            uses = int(state.data(Qt.UserRole + 2) or 0) if state else 0
-            is_new = bool(state.data(Qt.UserRole + 3)) if state else False
+            automatic = bool(state.data(Qt.ItemDataRole.UserRole + 1)) if state else True
+            uses = int(state.data(Qt.ItemDataRole.UserRole + 2) or 0) if state else 0
+            is_new = bool(state.data(Qt.ItemDataRole.UserRole + 3)) if state else False
             matches_text = not query or query in raw or query in label
             matches_state = (
                 mode == "all"
@@ -858,7 +858,7 @@ class ReferenceDialog(QDialog):
         row = self.table.currentRow()
         if row < 0:
             return
-        raw_code = self.table.item(row, 0).data(Qt.UserRole)
+        raw_code = self.table.item(row, 0).data(Qt.ItemDataRole.UserRole)
         fallback = ""
         if self.domain_combo.currentData() == "lithology":
             from ..core.section import suggested_litho_color
@@ -869,7 +869,7 @@ class ReferenceDialog(QDialog):
         self._reset_entries.add((domain_key, raw_code))
         self._load_current_domain()
         for candidate in range(self.table.rowCount()):
-            if self.table.item(candidate, 0).data(Qt.UserRole) == raw_code:
+            if self.table.item(candidate, 0).data(Qt.ItemDataRole.UserRole) == raw_code:
                 self.table.setCurrentCell(candidate, 0)
                 break
 
@@ -903,8 +903,8 @@ class ReferenceDialog(QDialog):
                     "automatiquement si elles réapparaissent dans les "
                     "données. Confirmez ensuite avec « Appliquer » ou "
                     "« OK ».").format(len(unused), shown),
-            QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
-        if answer != QMessageBox.Yes:
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No, QMessageBox.StandardButton.No)
+        if answer != QMessageBox.StandardButton.Yes:
             return
         for code in unused:
             domain.entries.pop(code, None)
@@ -957,8 +957,8 @@ class ReferenceDialog(QDialog):
                     "distinct (les motifs déjà choisis sont conservés) :"
                     "\n\n{}\n\nConfirmez ensuite avec « Appliquer » "
                     "ou « OK ».").format(len(bare), shown),
-            QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
-        if answer != QMessageBox.Yes:
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No, QMessageBox.StandardButton.No)
+        if answer != QMessageBox.StandardButton.Yes:
             return
         for code, motif in zip(bare, cycle_pattern_list(cycle, len(bare))):
             domain.entries[code].pattern = motif
@@ -1022,8 +1022,8 @@ class ReferenceDialog(QDialog):
                     "sont conservées) :\n\n{}\n\nConfirmez ensuite "
                     "avec « Appliquer » ou « OK ».").format(len(targets),
                                                             shown),
-            QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
-        if answer != QMessageBox.Yes:
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No, QMessageBox.StandardButton.No)
+        if answer != QMessageBox.StandardButton.Yes:
             return
         self.repository.assign_distinct_style_colors()
         self._load_current_domain()
@@ -1039,7 +1039,7 @@ class ReferenceDialog(QDialog):
         raw_item = self.table.item(row, 0)
         if not raw_item:
             return
-        entry = domain.entries.get(raw_item.data(Qt.UserRole))
+        entry = domain.entries.get(raw_item.data(Qt.ItemDataRole.UserRole))
         if entry is None:
             return
         entry.visible = bool(checked)
@@ -1125,8 +1125,8 @@ class ReferenceDialog(QDialog):
             answer = QMessageBox.question(
                 self, QCoreApplication.translate("ReferenceDialog", "Modifications non enregistrées"),
                 QCoreApplication.translate("ReferenceDialog", "Fermer sans enregistrer les modifications du Référentiel ?"),
-                QMessageBox.Discard | QMessageBox.Cancel,
-                QMessageBox.Cancel)
-            if answer != QMessageBox.Discard:
+                QMessageBox.StandardButton.Discard | QMessageBox.StandardButton.Cancel,
+                QMessageBox.StandardButton.Cancel)
+            if answer != QMessageBox.StandardButton.Discard:
                 return
         super().reject()

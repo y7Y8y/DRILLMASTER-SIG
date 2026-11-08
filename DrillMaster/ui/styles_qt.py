@@ -342,8 +342,8 @@ def apply_combo_popup_style(combo):
     class _ReadableComboDelegate(QStyledItemDelegate):
         def paint(self, painter, option, index):
             styled = QStyleOptionViewItem(option)
-            selected = bool(styled.state & QStyle.State_Selected)
-            hovered = bool(styled.state & QStyle.State_MouseOver)
+            selected = bool(styled.state & QStyle.StateFlag.State_Selected)
+            hovered = bool(styled.state & QStyle.StateFlag.State_MouseOver)
             painter.save()
             if selected:
                 painter.fillRect(styled.rect, QColor(COLORS["accent"]))
@@ -355,8 +355,8 @@ def apply_combo_popup_style(combo):
                 text_colour = QColor(COLORS["text_dark"])
             # Background is painted explicitly. Removing native state flags
             # prevents Windows/QGIS themes from repainting it white-on-white.
-            styled.state &= ~QStyle.State_Selected
-            styled.state &= ~QStyle.State_MouseOver
+            styled.state &= ~QStyle.StateFlag.State_Selected
+            styled.state &= ~QStyle.StateFlag.State_MouseOver
             styled.palette.setColor(QPalette.Text, text_colour)
             styled.palette.setColor(QPalette.WindowText, text_colour)
             super().paint(painter, styled, index)
@@ -526,9 +526,9 @@ def suppress_button_focus_rects(root_widget) -> None:
     for cls in (QPushButton, QToolButton):
         for btn in root_widget.findChildren(cls):
             try:
-                btn.setFocusPolicy(Qt.NoFocus)
+                btn.setFocusPolicy(Qt.FocusPolicy.NoFocus)
                 # macOS / certains styles
-                btn.setAttribute(Qt.WA_MacShowFocusRect, False)
+                btn.setAttribute(Qt.WidgetAttribute.WA_MacShowFocusRect, False)
             except Exception as _exc:
                 from ..core.diagnostics import log_swallowed
                 log_swallowed("styles_qt : suppress_button_focus_rects", _exc)
@@ -556,8 +556,8 @@ def make_collapsible_help(text: str, parent=None):
     hint_btn.setText(QCoreApplication.translate("StylesQt", "ⓘ Aide"))
     hint_btn.setCheckable(True)
     hint_btn.setChecked(False)
-    hint_btn.setToolButtonStyle(Qt.ToolButtonTextOnly)
-    hint_btn.setCursor(Qt.PointingHandCursor)
+    hint_btn.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextOnly)
+    hint_btn.setCursor(Qt.CursorShape.PointingHandCursor)
     hint_btn.setToolTip(QCoreApplication.translate("StylesQt", "Afficher l'aide"))
     hint_btn.setStyleSheet(
         f"QToolButton {{ color:{COLORS['text_medium']}; border:none; "
@@ -570,7 +570,7 @@ def make_collapsible_help(text: str, parent=None):
     hint_btn.toggled.connect(hint_lab.setVisible)
     # CHK-35 — rallumeur : même setter, argument non-const
     hint_lab.setVisible(hint_btn.isChecked())
-    lay.addWidget(hint_btn, 0, Qt.AlignLeft)
+    lay.addWidget(hint_btn, 0, Qt.AlignmentFlag.AlignLeft)
     lay.addWidget(hint_lab)
     wrap._help_btn = hint_btn
     wrap._help_body = hint_lab

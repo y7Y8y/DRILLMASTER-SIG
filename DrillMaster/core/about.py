@@ -27,7 +27,22 @@ import os
 # ---------------------------------------------------------------------------
 PLUGIN_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO_DIR = os.path.dirname(PLUGIN_DIR)
-LICENSE_FILE = os.path.join(REPO_DIR, "LICENSE")
+
+
+def license_file(plugin_dir: str | None = None) -> str:
+    """Le `LICENSE` **du paquet**, sinon celui du dépôt (v2.9.394·chantier 12).
+
+    Le défaut mesuré : le chemin était calculé AU-DESSUS du dossier du
+    plugin. Dans le dépôt, cela tombait sur le `LICENSE` de la racine —
+    donc « trouvé » pour l'auteur, et **introuvable pour tout le monde** :
+    une fois installé, `plugins/DrillMaster/` n'a rien au-dessus de lui, et
+    la fenêtre « À propos » annonçait « Fichier LICENSE introuvable » à
+    chaque utilisateur alors que la licence était bien livrée.
+    """
+    ici = os.path.join(plugin_dir or PLUGIN_DIR, "LICENSE")
+    if os.path.isfile(ici):
+        return ici
+    return os.path.join(REPO_DIR, "LICENSE")
 
 # ---------------------------------------------------------------------------
 # Attribution — valeurs de repli si metadata.txt est muet
@@ -38,7 +53,7 @@ COPYRIGHT = "Copyright © 2026 Yann BONFUL"
 # ---------------------------------------------------------------------------
 # Licence — GPL-2.0-or-later (choix de l'auteur, v2.9.272).  Compatible avec
 # le dépôt officiel des extensions QGIS.  Le texte intégral est le fichier
-# LICENSE à la racine du dépôt (texte gnu.org/gpl-2.0 verbatim).
+# LICENSE, livré DANS le paquet (texte gnu.org/gpl-2.0 verbatim).
 # ---------------------------------------------------------------------------
 LICENSE_ID = "GPL-2.0-or-later"
 LICENSE_NAME = "GNU General Public License version 2 ou ultérieure"
@@ -98,8 +113,8 @@ def about_info(plugin_dir: str | None = None) -> dict:
         "copyright": COPYRIGHT,
         "license_id": LICENSE_ID,
         "license_name": LICENSE_NAME,
-        "license_file": LICENSE_FILE,
-        "license_installed": os.path.isfile(LICENSE_FILE),
+        "license_file": license_file(plugin_dir),
+        "license_installed": os.path.isfile(license_file(plugin_dir)),
         "repository": meta.get("repository") or REPOSITORY,
         "description": meta.get("description") or "",
         "about": meta.get("about") or "",

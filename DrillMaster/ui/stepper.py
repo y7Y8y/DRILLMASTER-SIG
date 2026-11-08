@@ -29,7 +29,7 @@ class StepIndicator(QWidget):
 
     def paintEvent(self, event):
         p = QPainter(self)
-        p.setRenderHint(QPainter.Antialiasing)
+        p.setRenderHint(QPainter.RenderHint.Antialiasing)
 
         if self._state == "current":
             fill, text_c, ring = QColor("#1C2833"), QColor("#FFFFFF"), QColor("#2A3C4D")
@@ -47,7 +47,7 @@ class StepIndicator(QWidget):
         f = QFont("Segoe UI", 8)
         f.setBold(True)
         p.setFont(f)
-        p.drawText(rect, Qt.AlignCenter, str(self._index + 1))
+        p.drawText(rect, Qt.AlignmentFlag.AlignCenter, str(self._index + 1))
 
 
 class StepperWidget(QWidget):
@@ -71,18 +71,18 @@ class StepperWidget(QWidget):
         for i in range(4):
             col = QVBoxLayout()
             col.setSpacing(2)
-            col.setAlignment(Qt.AlignCenter)
+            col.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
             ind = StepIndicator(i)
             self._indicators.append(ind)
-            col.addWidget(ind, 0, Qt.AlignCenter)
+            col.addWidget(ind, 0, Qt.AlignmentFlag.AlignCenter)
 
             lbl = QLabel([
                 self.tr("Projet"), self.tr("Données"),
                 self.tr("Géométrie 3D"), self.tr("Coupes"),
             ][i])
             lbl.setStyleSheet("font-size: 7.5pt; color: #566573; background: transparent;")
-            lbl.setAlignment(Qt.AlignCenter)
+            lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
             # v2.9.18 — bulle courte par étape (1–4)
             # v2.9.228 — Lot 1b : bulles traduisibles
             tips = (
@@ -94,7 +94,7 @@ class StepperWidget(QWidget):
             )
             lbl.setToolTip(tips[i])
             ind.setToolTip(tips[i])
-            col.addWidget(lbl, 0, Qt.AlignCenter)
+            col.addWidget(lbl, 0, Qt.AlignmentFlag.AlignCenter)
 
             layout.addLayout(col)
 

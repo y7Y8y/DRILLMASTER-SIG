@@ -37,7 +37,7 @@ def structure_click_target(items_at_pos):
     """
     for item in (items_at_pos or []):
         if hasattr(item, "acceptedMouseButtons") \
-                and item.acceptedMouseButtons() == Qt.NoButton:
+                and item.acceptedMouseButtons() == Qt.MouseButton.NoButton:
             continue
         data = item.data(0) if hasattr(item, "data") else None
         if isinstance(data, tuple) and len(data) >= 4 \
@@ -121,7 +121,7 @@ def _legend_label(text: str) -> "QLabel":
     label.setWordWrap(True)
     font = label.font()
     try:
-        font.setCapitalization(QFont.SmallCaps)
+        font.setCapitalization(QFont.Capitalization.SmallCaps)
     except Exception as _exc:
         log_swallowed("section_structure : _legend_label", _exc)
         pass
@@ -419,7 +419,7 @@ def build_structure_group(widget):
         "l'infobulle.")))
     edit_symbols = QPushButton(widget.tr("Libellés et symboles…"))
     edit_symbols.setStyleSheet(BUTTON_SECONDARY)
-    edit_symbols.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+    edit_symbols.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
     edit_symbols.setToolTip(widget.tr("Référentiel · Type de structure"))
     edit_symbols.clicked.connect(
         lambda _checked=False: widget._open_domain_reference("structure"))
@@ -428,7 +428,7 @@ def build_structure_group(widget):
     # v2.9.261 — Incrément B : ouverture du dialogue rose/stéréonet.
     analyse_btn = QPushButton(widget.tr("Analyser les structures…"))
     analyse_btn.setStyleSheet(BUTTON_SECONDARY)
-    analyse_btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+    analyse_btn.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
     analyse_btn.setToolTip(widget.tr(
         "Rose des directions et stéréonet des mesures de structure"))
     analyse_btn.clicked.connect(
@@ -451,9 +451,9 @@ def _legend_structure_pixmap(family, radius, colour):
     """
     w, h = 28, 16
     pixmap = QPixmap(w, h)
-    pixmap.fill(Qt.transparent)
+    pixmap.fill(Qt.GlobalColor.transparent)
     painter = QPainter(pixmap)
-    painter.setRenderHint(QPainter.Antialiasing)
+    painter.setRenderHint(QPainter.RenderHint.Antialiasing)
     centre = QPointF(6.0, 8.0)
     end = QPointF(22.0, 12.0)
     if family == "linear":
@@ -471,7 +471,7 @@ def _legend_structure_pixmap(family, radius, colour):
             QPointF(bx + uy * 2.6, by - ux * 2.6),
         ])
         painter.setBrush(QBrush(colour))
-        painter.setPen(QPen(Qt.NoPen))
+        painter.setPen(QPen(Qt.PenStyle.NoPen))
         painter.drawPolygon(arrow)
     elif family in ("planar", "unknown"):
         painter.setPen(QPen(colour, 1.0))
@@ -605,8 +605,8 @@ def open_structure_analysis(widget):
         code_color=code_color,
         workspace_state=workspace_state,
     )
-    dialog.setWindowModality(Qt.NonModal)
-    dialog.setAttribute(Qt.WA_DeleteOnClose, True)
+    dialog.setWindowModality(Qt.WindowModality.NonModal)
+    dialog.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose, True)
     widget._structure_analysis_dialog = dialog
 
     def _forget_dialog():

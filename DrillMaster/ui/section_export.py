@@ -122,7 +122,7 @@ def run_deferred_export(dock):
         from qgis.PyQt.QtWidgets import QApplication
         app = QApplication.instance()
         if app is not None:
-            app.setOverrideCursor(Qt.WaitCursor)
+            app.setOverrideCursor(Qt.CursorShape.WaitCursor)
             app.processEvents()
         ok, err = dock._render_canvas_to_png(
             path, include_legends=include_legends,
@@ -255,7 +255,7 @@ def export_png_dialog(dock, start_path: str):
 
     zoom_row = QHBoxLayout()
     zoom_row.addWidget(QLabel(_tr("Zoom")))
-    zoom_slider = QSlider(Qt.Horizontal)
+    zoom_slider = QSlider(Qt.Orientation.Horizontal)
     zoom_slider.setRange(100, 1000)  # 329 : cadrer soi-même au secteur
     zoom_slider.setSingleStep(10)
     zoom_slider.setValue(int(round(init_zoom * 100)))
@@ -349,16 +349,16 @@ def export_png_dialog(dock, start_path: str):
     lay.addLayout(author_row)
 
     buttons = QDialogButtonBox(
-        QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
     # 341 — boutons standards FORCÉS dans notre langue : sinon Qt
     # branche sa propre locale et l'on obtient le franglais vu à
     # l'écran (« OK » / « Annuler » en mode ENG).
-    buttons.button(QDialogButtonBox.Ok).setText(_tr("OK"))
-    buttons.button(QDialogButtonBox.Cancel).setText(_tr("Annuler"))
+    buttons.button(QDialogButtonBox.StandardButton.Ok).setText(_tr("OK"))
+    buttons.button(QDialogButtonBox.StandardButton.Cancel).setText(_tr("Annuler"))
     buttons.accepted.connect(dlg.accept)
     buttons.rejected.connect(dlg.reject)
     lay.addWidget(buttons)
-    if dlg.exec_() != QDialog.Accepted:
+    if dlg.exec() != QDialog.DialogCode.Accepted:
         # Annuler = rien ne change (cadrage antérieur restauré)
         dock._locator_zoom = init_zoom
         dock._locator_off = init_off
@@ -857,7 +857,7 @@ def paint_legends_image_impl(dock, col_w = 260, scale = 1.5):
         if st is None:
             painter.fillRect(x, y, sw_w, sw_h, QColor("#CCCCCC"))
             painter.setPen(QPen(QColor("#888"), 1))
-            painter.setBrush(QBrush(Qt.NoBrush))
+            painter.setBrush(QBrush(Qt.BrushStyle.NoBrush))
             painter.drawRect(x, y, sw_w - 1, sw_h - 1)
             return
         try:
@@ -866,8 +866,8 @@ def paint_legends_image_impl(dock, col_w = 260, scale = 1.5):
                 raise ValueError("empty")
             if pix.width() != sw_w or pix.height() != sw_h:
                 pix = pix.scaled(
-                    sw_w, sw_h, Qt.IgnoreAspectRatio,
-                    Qt.FastTransformation)
+                    sw_w, sw_h, Qt.AspectRatioMode.IgnoreAspectRatio,
+                    Qt.TransformationMode.FastTransformation)
             painter.drawPixmap(x, y, pix)
         except Exception as _exc:
             from ..core.diagnostics import log_swallowed
@@ -880,7 +880,7 @@ def paint_legends_image_impl(dock, col_w = 260, scale = 1.5):
                 colr = QColor("#CCCCCC")
             painter.fillRect(x, y, sw_w, sw_h, colr)
             painter.setPen(QPen(QColor("#888"), 1))
-            painter.setBrush(QBrush(Qt.NoBrush))
+            painter.setBrush(QBrush(Qt.BrushStyle.NoBrush))
             painter.drawRect(x, y, sw_w - 1, sw_h - 1)
 
     def draw_point_swatch(st, x, y, code=None):
@@ -934,7 +934,7 @@ def paint_legends_image_impl(dock, col_w = 260, scale = 1.5):
             side = max(3.0, 2.4 * s)
             bx, by = ex - vx * head, ey - vy * head
             painter.setBrush(QBrush(colr))
-            painter.setPen(QPen(Qt.NoPen))
+            painter.setPen(QPen(Qt.PenStyle.NoPen))
             painter.drawPolygon(QPolygonF([
                 QPointF(ex, ey),
                 QPointF(bx - vy * side, by + vx * side),
@@ -953,7 +953,7 @@ def paint_legends_image_impl(dock, col_w = 260, scale = 1.5):
         if kind == "traj":
             _lab, colr, width = payload
             pen_w = max(1.0, float(width) * s * 0.9)
-            painter.setPen(QPen(QColor(colr), pen_w, Qt.SolidLine))
+            painter.setPen(QPen(QColor(colr), pen_w, Qt.PenStyle.SolidLine))
             painter.drawLine(sx + 2, cy, sx + sw_w - 2, cy)
         elif kind == "collar":
             # POINT seul — pas de trait
@@ -966,7 +966,7 @@ def paint_legends_image_impl(dock, col_w = 260, scale = 1.5):
             painter.setBrush(QBrush(QColor("#AED6F1")))
             painter.drawRect(sx + 1, y0 + 2, sw_w - 3, sw_h - 2)
             painter.setBrush(QBrush(QColor("#F5B041")))
-            painter.setPen(QPen(Qt.NoPen))
+            painter.setPen(QPen(Qt.PenStyle.NoPen))
             painter.drawRect(sx + 2, y0 + 3, int((sw_w - 4) * 0.3), sw_h - 4)
         elif kind == "litho_vein":
             painter.setPen(QPen(QColor("#566573"), 0.5 * s))
@@ -976,25 +976,25 @@ def paint_legends_image_impl(dock, col_w = 260, scale = 1.5):
             painter.drawLine(sx + 3, y0 + 3, sx + sw_w - 4, y0 + sw_h - 2)
         elif kind == "surface":
             _lab, colr, dash = payload
-            style = Qt.DashLine if dash else Qt.SolidLine
+            style = Qt.PenStyle.DashLine if dash else Qt.PenStyle.SolidLine
             painter.setPen(QPen(QColor(colr), max(1.2, 1.3 * s * 0.6), style))
             painter.drawLine(sx + 2, cy, sx + sw_w - 2, cy)
 
     try:
-        painter.setRenderHint(QPainter.TextAntialiasing, True)
-        painter.setRenderHint(QPainter.Antialiasing, True)
+        painter.setRenderHint(QPainter.RenderHint.TextAntialiasing, True)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
         y = pad
         painter.setFont(font_title)
         painter.setPen(primary)
         painter.drawText(pad, y, W - 2 * pad, title_h,
-                         Qt.AlignLeft | Qt.AlignVCenter, _tr("Légendes"))
+                         Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter, _tr("Légendes"))
         y += title_h + 2
 
         for title, rows, kind in blocks:
             painter.setFont(font_sec)
             painter.setPen(primary)
             painter.drawText(pad, y, W - 2 * pad, sec_h,
-                             Qt.AlignLeft | Qt.AlignVCenter, title)
+                             Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter, title)
             y += sec_h
 
             if kind == "threshold":
@@ -1016,7 +1016,7 @@ def paint_legends_image_impl(dock, col_w = 260, scale = 1.5):
                     painter.setPen(ink)
                     painter.drawText(
                         cx + sw_w + 4, y, W - 2 * pad - sw_w - 4, row_h,
-                        Qt.AlignLeft | Qt.AlignVCenter, str(line))
+                        Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter, str(line))
                     y += row_h
                 y += 4
                 continue
@@ -1034,14 +1034,14 @@ def paint_legends_image_impl(dock, col_w = 260, scale = 1.5):
                     painter.setFont(font_sec)
                     painter.drawText(
                         gx, yy, g_w, row_h,
-                        Qt.AlignLeft | Qt.AlignVCenter, str(g_header))
+                        Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter, str(g_header))
                     yy += row_h
                     for lab, colr in g_rows:
                         if colr:
                             painter.fillRect(
                                 gx, yy + 1, sw_w, sw_h, QColor(colr))
                             painter.setPen(QPen(QColor("#777"), 1))
-                            painter.setBrush(QBrush(Qt.NoBrush))
+                            painter.setBrush(QBrush(Qt.BrushStyle.NoBrush))
                             painter.drawRect(
                                 gx, yy + 1, sw_w - 1, sw_h - 1)
                             tx = gx + sw_w + 4
@@ -1051,7 +1051,7 @@ def paint_legends_image_impl(dock, col_w = 260, scale = 1.5):
                         painter.setFont(font_body)
                         painter.drawText(
                             tx, yy, g_w - (tx - gx), row_h,
-                            Qt.AlignLeft | Qt.AlignVCenter, str(lab))
+                            Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter, str(lab))
                         yy += row_h
                     return yy
 
@@ -1082,7 +1082,7 @@ def paint_legends_image_impl(dock, col_w = 260, scale = 1.5):
                     note = "Bornes de classes arrondies"
                     painter.drawText(
                         pad, y, W - 2 * pad, row_h,
-                        Qt.AlignLeft | Qt.AlignVCenter, note)
+                        Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter, note)
                     y += row_h
                 y += 2
                 continue
@@ -1099,7 +1099,7 @@ def paint_legends_image_impl(dock, col_w = 260, scale = 1.5):
                     painter.setFont(font_body)
                     painter.drawText(
                         x + sw_w + 4, row_y, cell_w - sw_w - 6, row_h,
-                        Qt.AlignLeft | Qt.AlignVCenter, str(label))
+                        Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter, str(label))
                     col += 1
                     if col >= 2:
                         col = 0
@@ -1118,7 +1118,7 @@ def paint_legends_image_impl(dock, col_w = 260, scale = 1.5):
                     painter.setFont(font_body)
                     painter.drawText(
                         x + sw_w + 4, row_y, cell_w - sw_w - 6, row_h,
-                        Qt.AlignLeft | Qt.AlignVCenter, str(label))
+                        Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter, str(label))
                     col += 1
                     if col >= 2:
                         col = 0
@@ -1139,8 +1139,8 @@ def paint_legends_image_impl(dock, col_w = 260, scale = 1.5):
                     painter.setFont(hf)
                     hr = painter.boundingRect(
                         pad, y, W - 2 * pad, int(row_h * 1.4),
-                        Qt.AlignLeft | Qt.TextWordWrap, hint)
-                    painter.drawText(hr, Qt.AlignLeft | Qt.TextWordWrap, hint)
+                        Qt.AlignmentFlag.AlignLeft | Qt.TextFlag.TextWordWrap, hint)
+                    painter.drawText(hr, Qt.AlignmentFlag.AlignLeft | Qt.TextFlag.TextWordWrap, hint)
                     y += hr.height() + 4
             else:
                 for item in rows:
@@ -1168,14 +1168,14 @@ def paint_legends_image_impl(dock, col_w = 260, scale = 1.5):
                         painter.setFont(font_body)
                         painter.drawText(
                             pad + sw_w + 4, y, W - pad * 2 - sw_w, row_h,
-                            Qt.AlignLeft | Qt.AlignVCenter, str(label))
+                            Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter, str(label))
                     elif kind == "assay":
                         label, colr = item
                         if colr:
                             painter.fillRect(
                                 pad, y + 1, sw_w, sw_h, QColor(colr))
                             painter.setPen(QPen(QColor("#777"), 1))
-                            painter.setBrush(QBrush(Qt.NoBrush))
+                            painter.setBrush(QBrush(Qt.BrushStyle.NoBrush))
                             painter.drawRect(pad, y + 1, sw_w - 1, sw_h - 1)
                             tx = pad + sw_w + 4
                             painter.setPen(ink)
@@ -1187,7 +1187,7 @@ def paint_legends_image_impl(dock, col_w = 260, scale = 1.5):
                             painter.setFont(font_sec)
                         painter.drawText(
                             tx, y, W - tx - pad, row_h,
-                            Qt.AlignLeft | Qt.AlignVCenter, str(label))
+                            Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter, str(label))
                     elif kind in ("litho", "alter"):
                         label, st = item
                         draw_style_swatch(st, pad, y + 1)
@@ -1195,21 +1195,21 @@ def paint_legends_image_impl(dock, col_w = 260, scale = 1.5):
                         painter.setFont(font_body)
                         painter.drawText(
                             pad + sw_w + 4, y, W - pad * 2 - sw_w, row_h,
-                            Qt.AlignLeft | Qt.AlignVCenter, str(label))
+                            Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter, str(label))
                     elif kind == "mineral":
                         key, lab = item
                         painter.setPen(QPen(QColor("#AAB7B8"), 1))
-                        painter.setBrush(QBrush(Qt.NoBrush))
+                        painter.setBrush(QBrush(Qt.BrushStyle.NoBrush))
                         painter.drawRect(pad, y + 1, sw_w - 1, sw_h - 1)
                         painter.setPen(QColor("#5D6D7E"))
                         painter.setFont(font_body)
                         painter.drawText(
                             pad, y + 1, sw_w, sw_h,
-                            Qt.AlignCenter, str(key)[:4])
+                            Qt.AlignmentFlag.AlignCenter, str(key)[:4])
                         painter.setPen(ink)
                         painter.drawText(
                             pad + sw_w + 4, y, W - pad * 2 - sw_w, row_h,
-                            Qt.AlignLeft | Qt.AlignVCenter, str(lab))
+                            Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter, str(lab))
                     elif kind == "structure":
                         code, label, st = item
                         draw_point_swatch(st, pad, y, code)
@@ -1217,7 +1217,7 @@ def paint_legends_image_impl(dock, col_w = 260, scale = 1.5):
                         painter.setFont(font_body)
                         painter.drawText(
                             pad + sw_w + 4, y, W - pad * 2 - sw_w, row_h,
-                            Qt.AlignLeft | Qt.AlignVCenter, str(label))
+                            Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter, str(label))
                     elif kind == "imagery":
                         label, material = item
                         from .section_imagery import _material_badge_letter
@@ -1227,25 +1227,25 @@ def paint_legends_image_impl(dock, col_w = 260, scale = 1.5):
                         painter.fillRect(
                             pad, y + 1, sw_w, sw_h, bg)
                         painter.setPen(QPen(QColor("#FFFFFF"), 1))
-                        painter.setBrush(QBrush(Qt.NoBrush))
+                        painter.setBrush(QBrush(Qt.BrushStyle.NoBrush))
                         painter.drawRect(pad, y + 1, sw_w - 1, sw_h - 1)
                         painter.setPen(QColor("#FFFFFF"))
                         painter.setFont(font_badge)
                         painter.drawText(
                             pad, y + 1, sw_w, sw_h,
-                            Qt.AlignCenter, str(badge_letter or "?"))
+                            Qt.AlignmentFlag.AlignCenter, str(badge_letter or "?"))
                         painter.setPen(ink)
                         painter.setFont(font_body)
                         painter.drawText(
                             pad + sw_w + 4, y, W - pad * 2 - sw_w, row_h,
-                            Qt.AlignLeft | Qt.AlignVCenter, str(label))
+                            Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter, str(label))
                     else:
                         label = item[0] if isinstance(item, (tuple, list)) else item
                         painter.setPen(ink)
                         painter.setFont(font_body)
                         painter.drawText(
                             pad, y, W - 2 * pad, row_h,
-                            Qt.AlignLeft | Qt.AlignVCenter, str(label))
+                            Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter, str(label))
                     y += row_h
                 if kind == "alter":
                     hint = _tr(
@@ -1260,9 +1260,9 @@ def paint_legends_image_impl(dock, col_w = 260, scale = 1.5):
                     painter.setFont(hf)
                     hr = painter.boundingRect(
                         pad, y, W - 2 * pad, int(row_h * 1.4),
-                        Qt.AlignLeft | Qt.TextWordWrap, hint)
+                        Qt.AlignmentFlag.AlignLeft | Qt.TextFlag.TextWordWrap, hint)
                     painter.drawText(
-                        hr, Qt.AlignLeft | Qt.TextWordWrap, hint)
+                        hr, Qt.AlignmentFlag.AlignLeft | Qt.TextFlag.TextWordWrap, hint)
                     y += hr.height() + 2
                 y += 4
     finally:
@@ -1361,14 +1361,14 @@ def paint_export_title(dock, width: int, scale: float = 1.25):
         pt = max(18, int(17 * s * 0.85))
         f = QFont("Segoe UI", pt)
         f.setBold(True)
-        f.setWeight(QFont.Bold)
+        f.setWeight(QFont.Weight.Bold)
         painter.setFont(f)
         painter.setPen(QColor(COLORS.get("primary", "#1A252F")))
         title = (meta.get("section_name") or _tr("Coupe")).strip()
         # centré horizontalement + verticalement sur toute la largeur page
         painter.drawText(
             0, 0, w, h,
-            Qt.AlignHCenter | Qt.AlignVCenter,
+            Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignVCenter,
             title)
     finally:
         painter.end()
@@ -1408,10 +1408,10 @@ def paint_export_footer(dock, width: int, scale: float = 1.25):
         if meta.get("author"):
             l2.append(_tr("Auteur : {}").format(meta['author']))
         painter.drawText(8, 0, w - 16, h // 2,
-                         Qt.AlignLeft | Qt.AlignVCenter,
+                         Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter,
                          "  ·  ".join(l1))
         painter.drawText(8, h // 2, w - 16, h // 2,
-                         Qt.AlignLeft | Qt.AlignVCenter,
+                         Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter,
                          "  ·  ".join(l2))
     finally:
         painter.end()
@@ -1457,7 +1457,7 @@ def paint_locator_map(dock, size: int = 200, scale: float = 1.25):
         painter.setPen(QColor("#1A252F"))
         painter.drawText(
             4, 2, side - 8, title_band - 2,
-            Qt.AlignHCenter | Qt.AlignVCenter, _tr("Carte en plan"))
+            Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignVCenter, _tr("Carte en plan"))
         # décale tout le dessin carte sous le bandeau
         painter.translate(0, title_band)
         try:
@@ -1548,7 +1548,7 @@ def paint_locator_map(dock, size: int = 200, scale: float = 1.25):
             return QPointF(px, py)
 
         painter.setPen(QPen(QColor("#B0B8C0"), max(1, side // 160)))
-        painter.setBrush(QBrush(Qt.NoBrush))
+        painter.setBrush(QBrush(Qt.BrushStyle.NoBrush))
         painter.drawRect(2, 2, side - 5, side - 5)
 
         if others:  # 325 : alentours (gris, sans étiquette)
@@ -1567,7 +1567,7 @@ def paint_locator_map(dock, size: int = 200, scale: float = 1.25):
         fill = QColor("#5DADE2")
         fill.setAlpha(40)
         painter.setBrush(QBrush(fill))
-        painter.setPen(QPen(QColor("#3498DB"), max(1, side // 200), Qt.DashLine))
+        painter.setPen(QPen(QColor("#3498DB"), max(1, side // 200), Qt.PenStyle.DashLine))
         painter.drawPolygon(QPolygonF(corners))
 
         lw = max(2, side // 110)
@@ -1631,7 +1631,7 @@ def paint_locator_map(dock, size: int = 200, scale: float = 1.25):
                 th = fm.height()
                 rx = max(3, min(side - tw - 3, int(pt.x()) + 8))
                 ry = max(3, min(side - th - 3, int(pt.y()) - th // 2))
-                painter.setPen(QPen(Qt.NoPen))
+                painter.setPen(QPen(Qt.PenStyle.NoPen))
                 painter.setBrush(QBrush(QColor("#FFFFFF")))
                 painter.drawRect(QRectF(rx - 1, ry - 1, tw + 2, th + 2))
                 occupied.append(QRectF(rx - 1, ry - 1, tw + 2, th + 2))
@@ -1815,7 +1815,7 @@ def compose_export_page(dock, section_img, legend_img = None, cartouche_img = No
                     lx - 2, ly - 2, loc_w + 4, loc_h + 4,
                     QColor("#FFFFFF"))
                 painter.setPen(QPen(QColor("#B0B8C0"), 1))
-                painter.setBrush(QBrush(Qt.NoBrush))
+                painter.setBrush(QBrush(Qt.BrushStyle.NoBrush))
                 painter.drawRect(lx - 2, ly - 2, loc_w + 3, loc_h + 3)
                 painter.drawImage(lx, ly, locator_img)
         y = body_top + body_h + 4
@@ -1849,8 +1849,8 @@ def stamp_locator_on_section(dock, section_img, size_px = 400):
     if loc is None or loc.isNull():
         return section_img
     if loc.width() != target:
-        loc = loc.scaled(target, target, Qt.KeepAspectRatio,
-                         Qt.SmoothTransformation)
+        loc = loc.scaled(target, target, Qt.AspectRatioMode.KeepAspectRatio,
+                         Qt.TransformationMode.SmoothTransformation)
     out = QImage(section_img)
     painter = QPainter(out)
     if not painter.isActive():
@@ -1866,7 +1866,7 @@ def stamp_locator_on_section(dock, section_img, size_px = 400):
             loc.width() + 2 * border, loc.height() + 2 * border,
             QColor("#FFFFFF"))
         painter.setPen(QPen(QColor("#5D6D7E"), max(1, border)))
-        painter.setBrush(QBrush(Qt.NoBrush))
+        painter.setBrush(QBrush(Qt.BrushStyle.NoBrush))
         painter.drawRect(
             x - border, y - border,
             loc.width() + 2 * border - 1, loc.height() + 2 * border - 1)
@@ -1946,8 +1946,8 @@ def render_canvas_to_png(dock, path: str, max_edge_px: int = 20000, include_lege
         if not painter.isActive():
             return False, "QPainter inactif."
         try:
-            painter.setRenderHint(QPainter.Antialiasing, True)
-            painter.setRenderHint(QPainter.TextAntialiasing, True)
+            painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
+            painter.setRenderHint(QPainter.RenderHint.TextAntialiasing, True)
             target = QRectF(0, 0, float(out_w), float(out_h))
             # v2.9.89 — export SANS surbrillance légende (état par défaut)
             _hl_state = None
@@ -1977,7 +1977,7 @@ def render_canvas_to_png(dock, path: str, max_edge_px: int = 20000, include_lege
                 except Exception as _exc:
                     from ..core.diagnostics import log_swallowed
                     log_swallowed("Export PNG : parité sélection", _exc)
-                scene.render(painter, target, source, Qt.IgnoreAspectRatio)
+                scene.render(painter, target, source, Qt.AspectRatioMode.IgnoreAspectRatio)
             finally:
                 try:
                     canvas.highlight_hole(

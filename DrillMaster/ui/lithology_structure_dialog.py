@@ -109,9 +109,9 @@ class LithologyStructureDialog(QDialog):
         layout.addWidget(self.preview)
 
         buttons = QDialogButtonBox(
-            QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
-        buttons.button(QDialogButtonBox.Ok).setText(self.tr("Valider l’organisation"))
-        buttons.button(QDialogButtonBox.Cancel).setText(self.tr("Annuler"))
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+        buttons.button(QDialogButtonBox.StandardButton.Ok).setText(self.tr("Valider l’organisation"))
+        buttons.button(QDialogButtonBox.StandardButton.Cancel).setText(self.tr("Annuler"))
         buttons.accepted.connect(self._validate_and_accept)
         buttons.rejected.connect(self.reject)
         layout.addWidget(buttons)

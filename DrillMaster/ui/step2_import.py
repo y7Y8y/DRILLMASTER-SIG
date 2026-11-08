@@ -163,7 +163,7 @@ class DropZone(QFrame):
         self._empty_label = empty_label or self.tr(
             "Glissez un fichier CSV ici ou cliquez sur Parcourir")
         self.setAcceptDrops(True)
-        self.setFrameShape(QFrame.StyledPanel)
+        self.setFrameShape(QFrame.Shape.StyledPanel)
         # v2.9.99 — zone compacte, hauteur alignée sur le bouton Parcourir
         # (plus de bande trop haute vs pastilles / dock étroit).
         if self.multi:
@@ -199,12 +199,12 @@ class DropZone(QFrame):
             BUTTON_SECONDARY
             + "QPushButton { padding: 3px 10px; font-size: 8pt; "
             "min-height: 22px; max-height: 26px; }")
-        self.btn.setCursor(Qt.PointingHandCursor)
+        self.btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.btn.setMinimumWidth(78)
         self.btn.setMaximumWidth(96)
         self.btn.setFixedHeight(26)
         self.btn.clicked.connect(self._browse)
-        layout.addWidget(self.btn, 0, Qt.AlignVCenter)
+        layout.addWidget(self.btn, 0, Qt.AlignmentFlag.AlignVCenter)
 
     def _browse(self, *_args):
         if self.multi:
@@ -393,10 +393,10 @@ class ImportTab(QWidget):
         outer.setSpacing(0)
         self.tab_scroll = QScrollArea()
         self.tab_scroll.setWidgetResizable(True)
-        self.tab_scroll.setFrameShape(QFrame.NoFrame)
+        self.tab_scroll.setFrameShape(QFrame.Shape.NoFrame)
         # Jamais de défilement horizontal : c'est lui qui donnait
         # l'impression de textes coupés et superposés (revue écran).
-        self.tab_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.tab_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.tab_scroll.setStyleSheet("background: transparent;")
         content = QWidget()
         # v2.7.12.8 — REVUE ÉCRAN (« infobulle noir sur noir ») : le
@@ -447,8 +447,8 @@ class ImportTab(QWidget):
         # v2.7.12.8 — revue écran : les deux colonnes partagent la largeur
         # disponible (ResizeToContents laissait la colonne « Champ cible »
         # se rognée au bord du dock sur tableau large).
-        self.mapping_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.Stretch)
-        self.mapping_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)
+        self.mapping_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
+        self.mapping_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
         # v2.7.11.6 / v2.7.12.8 — infobulles : la règle QToolTip a été
         # remontée à la racine (BASE_STYLE, cascade) — avant, elle était
         # déclarée ici ET dans TABLE_STYLE (double) ; le groupe
@@ -577,7 +577,7 @@ class ImportTab(QWidget):
         editor_row.addWidget(self.editor_btn)
         pl.addLayout(editor_row)
         self.preview_table = QTableWidget(0, 0)
-        self.preview_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.preview_table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         # v2.7.12.10 — revue écran (« on voit pas bien les noms de
         # colonnes ») : 8 colonnes partagées sur ~400 px, les en-têtes
         # rogeaient à 42 px. Largeur MINIMUM par colonne (56 px) : quand
@@ -971,7 +971,7 @@ class ImportTab(QWidget):
         self.mapping_table.setRowCount(len(pr.raw_headers))
         for row, raw_h in enumerate(pr.raw_headers):
             item = QTableWidgetItem(raw_h)
-            item.setFlags(item.flags() & ~Qt.ItemIsEditable)
+            item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
             details = pr.mapping_details.get(raw_h, {})
             if details:
                 confidence = round(float(details.get("confidence", 0.0)) * 100)
@@ -1350,7 +1350,7 @@ class ImportTab(QWidget):
                 self.file_type, self.parse_result.raw_headers,
                 initial_profile or self.parse_result.structure,
                 parent=self)
-            if dialog.exec_() != QDialog.Accepted:
+            if dialog.exec() != QDialog.DialogCode.Accepted:
                 return
             self._save_structure_profile(dialog.profile())
             return
@@ -1362,7 +1362,7 @@ class ImportTab(QWidget):
             self.parse_result.rows,
             mappings=self.parse_result.effective_mappings,
             parent=self)
-        if dialog.exec_() != QDialog.Accepted:
+        if dialog.exec() != QDialog.DialogCode.Accepted:
             return
         self._save_structure_profile(dialog.profile())
 
@@ -1396,7 +1396,7 @@ class ImportTab(QWidget):
                 item = QTableWidgetItem(val)
                 # v2.7.12.9 — lecture seule explicite (drapeau, en plus de
                 # NoEditTriggers) : plus de fausse impression d'édition.
-                item.setFlags(item.flags() & ~Qt.ItemIsEditable)
+                item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
                 self.preview_table.setItem(r, c, item)
 
     def _open_editor(self, *_args):
@@ -1523,8 +1523,8 @@ class GroupedValidationPanel(QWidget):
 
         self.scroll = QScrollArea()
         self.scroll.setWidgetResizable(True)
-        self.scroll.setFrameShape(QFrame.NoFrame)
-        self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.scroll.setFrameShape(QFrame.Shape.NoFrame)
+        self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         # v2.7.6.2 : plus de hauteur figée — le séparateur de l'étape 2
         # décide du partage, la liste occupe la place qu'on lui donne.
         self.scroll.setMinimumHeight(64)
@@ -1733,7 +1733,7 @@ class GroupedValidationPanel(QWidget):
             button.setStyleSheet(BUTTON_COMPACT)
             button.setFixedHeight(22)
             button.setMinimumWidth(74)
-            button.setCursor(Qt.PointingHandCursor)
+            button.setCursor(Qt.CursorShape.PointingHandCursor)
             button.setToolTip(self.tr("Éditeur CSV · cellule concernée"))
             button.clicked.connect(
                 lambda _checked=False, key=tab_key, r=row_v, c=col_v:
@@ -1773,18 +1773,18 @@ class FamilyChip(QPushButton):
         self._tooltip = ""
         self._status = FamilyStatus(EMPTY)
         self._selected = False
-        self.setCursor(Qt.PointingHandCursor)
+        self.setCursor(Qt.CursorShape.PointingHandCursor)
         # v2.9.99 — pastilles plus petites (moins d'espace vertical)
         # v2.9.273 — pastilles 2 px plus basses (lisibilité/hauteur)
         self.setMinimumHeight(22)
         self.setMaximumHeight(26)
-        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         # v2.9.98 — pastille plate : pas de relief natif ni carre de focus
         # Qt (le carre a l'interieur au clic / selection clavier).
         self.setFlat(True)
         self.setAutoDefault(False)
         self.setDefault(False)
-        self.setFocusPolicy(Qt.NoFocus)
+        self.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self._refresh_paint()
 
     def set_selected(self, selected: bool):
@@ -1924,7 +1924,7 @@ class Step2Import(QWidget):
                 continue
             if not first_group:
                 sep = QFrame()
-                sep.setFrameShape(QFrame.HLine)
+                sep.setFrameShape(QFrame.Shape.HLine)
                 sep.setFixedHeight(1)
                 sep.setStyleSheet(
                     f"color:{COLORS['border']}; "
@@ -1937,7 +1937,7 @@ class Step2Import(QWidget):
             grid.setSpacing(2)
             grid.setColumnStretch(0, 0)
             toggle = QPushButton("▾ " + self.tr(title))
-            toggle.setCursor(Qt.PointingHandCursor)
+            toggle.setCursor(Qt.CursorShape.PointingHandCursor)
             toggle.setStyleSheet(
                 f"QPushButton {{ text-align:left; border:none; background:"
                 f"transparent; color:{COLORS['text_medium']}; font-size:7pt; "
@@ -1984,7 +1984,7 @@ class Step2Import(QWidget):
         # se disputaient la hauteur et finissaient par se chevaucher. Un
         # séparateur mobile donne la priorité aux onglets, laisse toujours
         # une hauteur minimale à chacun et rend le partage réglable.
-        self.import_splitter = QSplitter(Qt.Vertical)
+        self.import_splitter = QSplitter(Qt.Orientation.Vertical)
         self.import_splitter.setChildrenCollapsible(False)
         self.import_splitter.setHandleWidth(6)
         self.tab_widget.setMinimumHeight(240)
@@ -2203,9 +2203,9 @@ class Step2Import(QWidget):
                 button.setStyleSheet(BUTTON_COMPACT)
                 button.setFixedHeight(24)
                 button.setSizePolicy(
-                    QSizePolicy.Expanding, QSizePolicy.Fixed)
+                    QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
                 button.setToolTip(caption)
-                button.setCursor(Qt.PointingHandCursor)
+                button.setCursor(Qt.CursorShape.PointingHandCursor)
                 button.clicked.connect(
                     lambda _checked=False, idx=absolute_index,
                            cand=candidate:

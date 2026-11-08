@@ -144,13 +144,15 @@ class AboutDialog(QDialog):
 
         if self.info.get("license_installed"):
             source = QLabel(
-                self.tr("Le texte intégral de la licence figure dans le "
-                        "fichier LICENSE à la racine du dépôt."),
+                self.tr("Le texte intégral de la licence est livré avec "
+                        "l'extension, dans le fichier LICENSE."),
                 self)
             source.setObjectName("about_license_file")
         else:
             source = QLabel(
-                self.tr("Fichier LICENSE introuvable à la racine du dépôt."),
+                self.tr("Le fichier LICENSE n'a pas été trouvé à côté de "
+                        "l'extension : réinstallez-la depuis l'archive "
+                        "d'origine."),
                 self)
             source.setObjectName("about_license_missing")
         source.setWordWrap(True)
@@ -178,9 +180,9 @@ class AboutDialog(QDialog):
         lay.addStretch()
 
         # ── Bouton Fermer ────────────────────────────────────────────
-        buttons = QDialogButtonBox(QDialogButtonBox.Close, self)
+        buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Close, self)
         buttons.setObjectName("about_buttons")
-        close = buttons.button(QDialogButtonBox.Close)
+        close = buttons.button(QDialogButtonBox.StandardButton.Close)
         if close is not None:
             close.setText(self.tr("Fermer"))
         buttons.rejected.connect(self.reject)
@@ -192,7 +194,7 @@ class AboutDialog(QDialog):
     # ------------------------------------------------------------------
     def _separator(self) -> QFrame:
         line = QFrame(self)
-        line.setFrameShape(QFrame.HLine)
+        line.setFrameShape(QFrame.Shape.HLine)
         line.setFixedHeight(1)
         line.setStyleSheet(
             f"background-color:{COLORS['border']}; border:none;")
@@ -213,10 +215,10 @@ class AboutDialog(QDialog):
         grid.addWidget(key)
         val = QLabel(value, row)
         val.setWordWrap(True)
-        val.setTextInteractionFlags(Qt.TextSelectableByMouse)
+        val.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
         if link and value.startswith("http"):
             val.setTextInteractionFlags(
-                Qt.TextBrowserInteraction)
+                Qt.TextInteractionFlag.TextBrowserInteraction)
             val.setText(f'<a href="{value}">{value}</a>')
             val.setOpenExternalLinks(True)
         val.setStyleSheet(f"color:{COLORS['text_dark']}; font-size:9pt;")

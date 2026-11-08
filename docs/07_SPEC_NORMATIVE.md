@@ -467,7 +467,7 @@ Le plugin portait **deux palettes vivantes** qui se contredisaient :
 |---|---|---|
 | `specs/data/theme.json` | 18 rôles neutres × 2 modes | la DA décidée, jamais lue par Qt |
 | `DrillMaster/ui/styles_qt.py` | 17 teintes « géologiques » | une deuxième vérité, éditée à la main |
-| 30 feuilles de style | **417 couleurs littérales** | changer le fond obligeait à corriger 30 fichiers |
+| 30 feuilles de style | **413 couleurs littérales** | changer le fond obligeait à corriger 30 fichiers |
 
 Deux teintes se ressemblaient jusqu'à l'ambiguïté : l'ancien accent teal du
 chrome et le teal d'une lithologie. Une couleur d'interface **ne doit pas**
@@ -501,7 +501,7 @@ planche 26 mesure l'écart en Lab, rôle par rôle.
 | Reste | Mesure | Pourquoi ce n'est pas fait d'un coup |
 |---|---|---|
 | jetons de `styles_qt.COLORS` | **44** déclarations | la table est le point d'entrée de 304 usages ; elle sera **réécrite en façade** sur `palette_jetons`, pas supprimée |
-| couleurs dans les feuilles de style | **417** dans 30 fichiers | une couleur au milieu d'une feuille de style ne se remplace pas par un littéral : la chaîne doit devenir une f-string |
+| couleurs dans les feuilles de style | **413** dans 30 fichiers | une couleur au milieu d'une feuille de style ne se remplace pas par un littéral : la chaîne doit devenir une f-string |
 
 Une migration automatique a été tentée **trois fois** (`tools/migre_couleurs.py`,
 conservé comme trace) : elle casse le code dès qu'une couleur est au milieu
@@ -862,3 +862,101 @@ et **qu'on peut continuer à regarder**.
 | 119 boucles imbriquées dont **43** dans `section_dock.py` | ce sont des boucles de dessin (tri, placement de codes). Les déplier demande de comprendre chaque géométrie : c'est le chantier 6 (les rangements), pas un compteur |
 | 6 modules qui mesurent sans publier | ils vivent dans l'ancienne interface ; y brancher `chronometre()` est un travail d'écran, pas de noyau |
 | la mesure du rendu Qt | impossible dans ce bac à sable (`libGL` absent) : on mesure le calcul pur et on le dit, au lieu d'inventer un chiffre de frame |
+
+## 23. Chantier 12 — l'installation : ce que reçoit l'utilisateur
+
+### Ce que la flotte avait vu, et ce qu'elle avait manqué
+
+Le rapport annonçait trois constats sur l'installation. Deux étaient vrais,
+**un était faux**, et le plus coûteux n'y figurait pas.
+
+| Constat de la flotte | Verdict | Mesure |
+|---|---|---|
+| E-01 `email` manque dans `metadata.txt` | **vrai** | 7 champs obligatoires sur 8 |
+| E-03 la compatibilité s'arrête à `3.99` | **vrai, mais pas comme annoncé** | 692 sites que Qt 6 refuse + 15 `exec_()` |
+| E-02 la désinstallation est propre | **vrai** | `unload()` retire menus, actions, docks |
+| — (manquant) | **le vrai défaut** | la licence était cherchée **au-dessus** du paquet |
+
+### Le défaut que personne n'avait vu
+
+`core/about.py` calculait `LICENSE` à la racine **du dépôt** — un dossier
+au-dessus de `DrillMaster/`. Dans le dépôt, cela tombait sur le fichier
+présent : donc « trouvé » à la compilation. Une fois le plugin installé,
+`plugins/DrillMaster/` n'a rien au-dessus de lui : la fenêtre « À propos »
+annonçait **« Fichier LICENSE introuvable »** à chaque utilisateur, alors que
+la licence GPL était bien livrée. Et le dépôt officiel exige un fichier
+`LICENSE` **dans** le paquet.
+
+C'est le genre de défaut qu'aucune lecture du code ne montre, parce qu'il ne
+se produit que là où le code s'exécute. La correction ne se prouve donc pas
+par un raisonnement : le test **installe le paquet seul** dans un dossier
+temporaire et lui demande ce qu'il trouve.
+
+### Ce qui est mesuré
+
+| Mesure | Avant | Après |
+|---|---|---|
+| champs obligatoires fournis | 7 / 8 | **8 / 8** |
+| catégories admises par la documentation | `Plugins` (n'existe pas) | aucune — le plugin se pose déjà dans son menu |
+| licence trouvée, paquet installé seul | **non** | **oui** |
+| fichiers du paquet qui ne servent à rien | 101 (compilé + bancs d'essai) | **0** |
+| bancs d'essai pointant vers `/home/claude/dm` | 4 | **sortis du paquet** |
+| formes que Qt 5 ou Qt 6 refusent | 692 + 15 `exec_()` + 53 champs | **0** |
+
+Les 707 formes anciennes ont été migrées en **une passe mécanique et
+réversible** (`tools/migre_qt6.py`, `--vers 3` pour revenir). Aucune n'a été
+corrigée à la main : la table qui **mesure** est celle qui **corrige**.
+
+### La migration a été éprouvée, et elle avait tort
+
+Une table de correspondance peut se tromper. Celle-ci s'est trompée deux
+fois, et c'est l'épreuve — pas la relecture — qui l'a montré :
+
+| Erreur | Ce que l'épreuve a dit | Correction |
+|---|---|---|
+| `Qt.TextInteractionFlag.TextWordWrap` | n'existe ni sur Qt 5 ni sur Qt 6 | `Qt.TextFlag.TextWordWrap`, valable sur les deux |
+| `QComboBox.…AdjustToMinimumContentsLength` | **retirée** de Qt 6 | `…AdjustToMinimumContentsLengthWithIcon`, valable sur les deux |
+
+`tools/verifie_qt6.py` rejoue les **119** formes employées par le plugin dans
+un PyQt5 réel, puis les confronte aux déclarations `.pyi` livrées par PyQt5
+**et** PyQt6. Résultat : **119 acceptées par Qt 5**, **119 par Qt 6**.
+
+### La fenêtre déclarée, et ce qu'elle ne dit pas
+
+`qgisMaximumVersion` passe de `3.99` à `4.99` — le code ne contient plus une
+seule forme que Qt 6 refuse, et les 119 formes employées ont été vérifiées
+contre les deux jeux de déclarations.
+
+**Ce qui n'est toujours pas prouvé** : que le plugin *fonctionne* dans un
+QGIS 4. Aucun QGIS 4 n'a été ouvert ici — ni ici, ni ailleurs dans ce
+dépôt. `specs/data/qt6.json` porte `"epreuve_reelle_qgis4": false`, et un
+test refuse que ce drapeau devienne vrai sans que l'épreuve ait eu lieu.
+La fenêtre annonce une **compatibilité de formes**, pas un essai clinique.
+
+### Les règles
+
+**R-64 · Une promesse de compatibilité se mesure.** Une version maximale
+déclarée engage l'auteur ; elle ne s'écrit pas pour figurer sur une liste.
+`compatible_qgis4()` refuse la promesse tant qu'il reste un membre
+d'énumération à l'ancienne forme, un `exec_()` ou un type de champ à
+l'ancienne forme — et l'épreuve dans un QGIS 4 réel reste **dite à part**,
+parce qu'elle ne se déduit pas d'un compte de formes.
+
+**R-65 · Une extension embarque ce qu'elle lit.** Ni fichier compilé (il
+vient du poste de l'auteur), ni banc d'essai (il pointe vers ses dossiers), ni
+dossier de développement. Le paquet est vérifié par `paquet_propre()`, et un
+test interdit qu'une chaîne `/home/` revienne dans le plugin.
+
+**R-66 · Un fichier cherché au-dessus du paquet est introuvable.** Un chemin
+relatif au dépôt ne désigne rien chez l'utilisateur. Tout fichier livré se
+cherche **dans** le paquet ; la licence, la fiche et le lexique suivent la
+même règle.
+
+### Ce qui reste, nommé
+
+| Reste | Pourquoi ce n'est pas fait ici |
+|---|---|
+| l'essai dans un QGIS 4 réel | ne se mesure pas dans un dépôt : s'éprouve chez un utilisateur. On le dit, on ne l'affirme pas |
+| le type des champs de couche | `type_de_champ()` choisit à l'exécution (`Qgis.FieldType` ou `QVariant`) : c'est le seul endroit où l'ancienne forme subsiste, et c'est nommé une fois au lieu de 53 |
+| pas d'archive d'installation générée | une archive est une décision de version, pas de nettoyage ; le contenu du paquet est mesuré, l'archive reste à faire au moment de la livraison |
+| la catégorie de menu | aucune catégorie admise ne correspond à un atelier de forages ; mieux vaut aucune catégorie qu'une catégorie fausse |

@@ -192,9 +192,9 @@ def compose_scaled_page(scene, src: QRectF, paper: str, ratio_text: str,
     z = dpi / 96.0
     p = QPainter(img)
     try:
-        p.setRenderHint(QPainter.Antialiasing, True)
-        p.setRenderHint(QPainter.TextAntialiasing, True)
-        p.setRenderHint(QPainter.SmoothPixmapTransform, True)
+        p.setRenderHint(QPainter.RenderHint.Antialiasing, True)
+        p.setRenderHint(QPainter.RenderHint.TextAntialiasing, True)
+        p.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform, True)
         p.scale(z, z)                           # unités = px CSS (1/96 po)
         mm = lambda v: v / SCENE_PX_MM          # noqa: E731  mm -> px CSS
         # --- cartouche : barre de titre (identique à l'export habituel) --
@@ -205,13 +205,13 @@ def compose_scaled_page(scene, src: QRectF, paper: str, ratio_text: str,
         ox = px + max(pwid - sw_mm, 0.0) / 2.0
         oy = py + max(phei - sh_mm, 0.0) / 2.0
         scene.render(p, QRectF(mm(ox), mm(oy), src.width(), src.height()), src,
-                     Qt.IgnoreAspectRatio)
+                     Qt.AspectRatioMode.IgnoreAspectRatio)
         # --- légendes + mini-carte -----------------------------------------
         _draw_fit(p, legend_img, layout.legend, mm)
         if locator_img is not None and layout.locator is not None:
             lx, ly, lw, lh = layout.locator
             p.setPen(QPen(QColor("#B0B8C0"), 0.8))
-            p.setBrush(Qt.NoBrush)
+            p.setBrush(Qt.BrushStyle.NoBrush)
             p.drawRect(QRectF(mm(lx) - 1, mm(ly) - 1, mm(lw) + 2, mm(lh) + 2))
             _draw_fit(p, locator_img, layout.locator, mm)
         # --- barre de contrôle 100 mm (optionnelle, sans phrase) ----------
@@ -238,7 +238,7 @@ def compose_scaled_page(scene, src: QRectF, paper: str, ratio_text: str,
         p.setPen(QColor("#1b2430"))
         sx_, sy_, sw_, sh_ = layout.scale_txt
         p.drawText(QRectF(mm(sx_), mm(sy_), mm(sw_), mm(7.0)),
-                   Qt.AlignRight | Qt.AlignVCenter,
+                   Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter,
                    _tr("Échelle {r}").format(r=ratio_text))
         exag = float(v_exag or 1.0)
         if abs(exag - 1.0) > 1e-6 and v_ratio_text:
@@ -246,12 +246,12 @@ def compose_scaled_page(scene, src: QRectF, paper: str, ratio_text: str,
             f.setPixelSize(int(mm(3.4)))
             p.setFont(f)
             p.drawText(QRectF(mm(sx_), mm(sy_ + 7.0), mm(sw_), mm(6.0)),
-                       Qt.AlignRight | Qt.AlignVCenter,
+                       Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter,
                        _tr("Vertical {r} (exagération ×{e:g})").format(
                            r=v_ratio_text, e=exag))
         # --- cadre fin autour de la page ---------------------------------
         p.setPen(QPen(QColor("#9aa4b0"), 0.8))
-        p.setBrush(Qt.NoBrush)
+        p.setBrush(Qt.BrushStyle.NoBrush)
         p.drawRect(QRectF(mm(MARGIN_MM / 2), mm(MARGIN_MM / 2),
                           mm(pw - MARGIN_MM), mm(ph - MARGIN_MM)))
     finally:
@@ -594,11 +594,11 @@ def export_scaled_dialog(dock):
     prow.addWidget(browse)
     lay.addLayout(prow)
 
-    bb = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+    bb = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
     bb.accepted.connect(dlg.accept)
     bb.rejected.connect(dlg.reject)
     lay.addWidget(bb)
-    if dlg.exec_() != QDialog.Accepted:
+    if dlg.exec() != QDialog.DialogCode.Accepted:
         return
 
     base = path_edit.text().strip()

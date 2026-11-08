@@ -27,14 +27,14 @@ class SectionMapTool(QgsMapTool):
         self.canvas = canvas
         self._points = []
         self._rubber = None
-        self.setCursor(Qt.CrossCursor)
+        self.setCursor(Qt.CursorShape.CrossCursor)
 
     def canvasPressEvent(self, event):
         # Clic droit = annuler le tracé en cours
-        if event.button() == Qt.RightButton:
+        if event.button() == Qt.MouseButton.RightButton:
             self._cancel()
             return
-        if event.button() != Qt.LeftButton:
+        if event.button() != Qt.MouseButton.LeftButton:
             return
         pt = self.toMapCoordinates(event.pos())
         self._points.append(QgsPointXY(pt.x(), pt.y()))
@@ -45,7 +45,7 @@ class SectionMapTool(QgsMapTool):
                 self._rubber = QgsRubberBand(self.canvas, QgsWkbTypes.LineGeometry)
                 self._rubber.setColor(QColor("#C0392B"))
                 self._rubber.setWidth(2)
-                self._rubber.setLineStyle(Qt.DashLine)
+                self._rubber.setLineStyle(Qt.PenStyle.DashLine)
             self._rubber.addPoint(pt)
         elif len(self._points) == 2:
             p1 = self._points[0]
@@ -64,7 +64,7 @@ class SectionMapTool(QgsMapTool):
 
     def keyPressEvent(self, event):
         # Escape = annuler
-        if event.key() == Qt.Key_Escape:
+        if event.key() == Qt.Key.Key_Escape:
             self._cancel()
             event.accept()
             return
@@ -337,8 +337,8 @@ class Step4Section(QWidget):
 
     def keyPressEvent(self, event):
         # v2.9.25 — Ctrl+Z annule la dernière ligne de coupe créée
-        if (event.modifiers() & Qt.ControlModifier
-                and event.key() == Qt.Key_Z):
+        if (event.modifiers() & Qt.KeyboardModifier.ControlModifier
+                and event.key() == Qt.Key.Key_Z):
             if getattr(self, "undo_line_btn", None) is not None \
                     and self.undo_line_btn.isEnabled():
                 self._undo_last_line()

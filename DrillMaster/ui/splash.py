@@ -43,7 +43,7 @@ class PluginSplash(QDialog):
         # marches pour 6 étapes : la barre s'arrêtait à 75 %).
         super().__init__(parent)
         self.setWindowFlags(
-            Qt.FramelessWindowHint | Qt.Dialog | Qt.WindowStaysOnTopHint)
+            Qt.WindowType.FramelessWindowHint | Qt.WindowType.Dialog | Qt.WindowType.WindowStaysOnTopHint)
         # v2.9.221 — FOND PLEIN, RECTANGLE NET (retour écran : « je
         # croyais qu'il allait être plus visible — mets-lui un fond
         # visible, rectangle avec le logo »).  La transparence de la
@@ -77,12 +77,12 @@ class PluginSplash(QDialog):
             if not pm.isNull():
                 icon_label.setPixmap(
                     pm.scaled(128, 128,
-                              Qt.KeepAspectRatio, Qt.SmoothTransformation))
-        icon_label.setAlignment(Qt.AlignCenter)
+                              Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
+        icon_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         lay.addWidget(icon_label)
 
         title = QLabel(self.tr("DrillMaster"))
-        title.setAlignment(Qt.AlignCenter)
+        title.setAlignment(Qt.AlignmentFlag.AlignCenter)
         title.setStyleSheet(
             "color: #FDFEFE; font-size: 24pt; font-weight: bold; "
             "letter-spacing: 2px;")
@@ -93,14 +93,14 @@ class PluginSplash(QDialog):
         from qgis.PyQt.QtCore import QCoreApplication as _QCA
         sub = QLabel(_QCA.translate(
             "PluginSplash", "Modélisation de forages miniers"))
-        sub.setAlignment(Qt.AlignCenter)
+        sub.setAlignment(Qt.AlignmentFlag.AlignCenter)
         sub.setStyleSheet(
             f"color: {BRAND_TEXT_DIM}; font-size: 8.5pt;")
         lay.addWidget(sub)
 
         if version:
             ver = QLabel(f"v{version}")
-            ver.setAlignment(Qt.AlignCenter)
+            ver.setAlignment(Qt.AlignmentFlag.AlignCenter)
             # v2.9.226 — cyan SIGNAL : lisible sur le fond de marque
             # (contraste ~13:1) — plus jamais COLORS['accent']
             ver.setStyleSheet(
@@ -124,7 +124,7 @@ class PluginSplash(QDialog):
         lay.addWidget(self.bar)
 
         self.status = QLabel(self.tr("Initialisation…"))
-        self.status.setAlignment(Qt.AlignCenter)
+        self.status.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.status.setStyleSheet(
             f"color: {BRAND_TEXT_DIM}; font-size: 8pt;")
         lay.addWidget(self.status)
@@ -164,7 +164,7 @@ class PluginSplash(QDialog):
         # 356 — chargé = plus « au-dessus de tout » : même si un
         # reliquat tardait, il ne couvre plus les autres fenêtres.
         try:
-            self.setWindowFlag(Qt.WindowStaysOnTopHint, False)
+            self.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint, False)
         except Exception as _exc:
             # cosmétique : si le backend refuse, le watchdog et la
             # fermeture planifiée restent les filets principaux.

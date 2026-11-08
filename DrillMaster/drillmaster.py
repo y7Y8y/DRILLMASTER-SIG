@@ -244,7 +244,7 @@ class DrillMasterPlugin:
         try:
             from .ui.about_dialog import AboutDialog
             dialog = AboutDialog(self.iface.mainWindow())
-            dialog.exec_()
+            dialog.exec()
         except Exception as _exc:
             from .core.diagnostics import log_swallowed
             log_swallowed("À propos : ouverture du dialogue "
@@ -303,10 +303,10 @@ class DrillMasterPlugin:
             if _splash is not None:
                 _splash.step(_tr("Ouverture de l'atelier…"))
             window = self.iface.mainWindow()
-            window.addDockWidget(Qt.RightDockWidgetArea, self.dock)
+            window.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, self.dock)
             # Wide visual workspace defaults above the map; users may redock
             # or float it, and QSettings preserves that choice afterwards.
-            window.addDockWidget(Qt.TopDockWidgetArea, self.visualization_dock)
+            window.addDockWidget(Qt.DockWidgetArea.TopDockWidgetArea, self.visualization_dock)
             self._restore_layout()
             self.dock.show()
             self.dock.raise_()
@@ -403,7 +403,7 @@ class DrillMasterPlugin:
                 saved_height if saved_height > 0
                 else max(int(self.iface.mainWindow().height() * 0.42), 260))
             self.iface.mainWindow().resizeDocks(
-                [self.visualization_dock], [target_height], Qt.Vertical)
+                [self.visualization_dock], [target_height], Qt.Orientation.Vertical)
         visible = settings.value(
             "DrillMaster/visualizationDockVisible", False, type=bool)
         self._visualization_was_visible = visible

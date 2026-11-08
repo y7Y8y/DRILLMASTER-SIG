@@ -21,7 +21,7 @@ def mouse_press(canvas, event):
     canvas._mouse_button = event.button()
     canvas._is_dragging = False
 
-    if event.button() == Qt.LeftButton:
+    if event.button() == Qt.MouseButton.LeftButton:
         for r, code, _txt in canvas._legend_rects:
             if r.contains(QPointF(event.pos())):
                 new_code = None if (canvas._highlight_code and canvas._highlight_code.upper() == code.upper()) else code
@@ -39,12 +39,12 @@ def mouse_move(canvas, event):
             canvas._is_dragging = True
 
         if canvas._is_dragging:
-            if canvas._mouse_button == Qt.LeftButton:
+            if canvas._mouse_button == Qt.MouseButton.LeftButton:
                 canvas.yaw_deg = (canvas.yaw_deg + delta.x() * 0.5) % 360.0
                 canvas.pitch_deg = max(-89.0, min(89.0, canvas.pitch_deg - delta.y() * 0.5))
                 # v2.9.141 — l'orbite manuelle invalide le preset affiché
                 canvas._clear_cam_preset()
-            elif canvas._mouse_button in (Qt.RightButton, Qt.MiddleButton):
+            elif canvas._mouse_button in (Qt.MouseButton.RightButton, Qt.MouseButton.MiddleButton):
                 canvas.pan_x += delta.x()
                 canvas.pan_y += delta.y()
             canvas._mouse_press_pos = event.pos()
@@ -77,7 +77,7 @@ def mouse_move(canvas, event):
 
 def mouse_release(canvas, event):
     was_dragging = canvas._is_dragging
-    if not canvas._is_dragging and event.button() == Qt.LeftButton:
+    if not canvas._is_dragging and event.button() == Qt.MouseButton.LeftButton:
         canvas._handle_click_selection(event.pos())
     canvas._mouse_press_pos = None
     canvas._mouse_button = None

@@ -84,7 +84,7 @@ class _StructureRoseWidget(QWidget):
         self._center = QPointF(0.0, 0.0)
         self._wedge_paths = []
         self.setMinimumSize(260, 260)
-        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.setMouseTracking(True)
 
     def set_bins(self, bins, bin_size: float = 10.0):
@@ -134,7 +134,7 @@ class _StructureRoseWidget(QWidget):
 
     def paintEvent(self, _event):
         painter = QPainter(self)
-        painter.setRenderHint(QPainter.Antialiasing)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         self._draw_grid(painter)
         if self._wedge_paths:
             pen = QPen(QColor(COLORS["border_dark"]), 1.0)
@@ -153,7 +153,7 @@ class _StructureRoseWidget(QWidget):
         r = self._radius
         painter.setPen(QPen(QColor(COLORS["border_dark"]), 1.0))
         painter.drawEllipse(self._center, r, r)
-        painter.setPen(QPen(QColor(COLORS["border"]), 1.0, Qt.DashLine))
+        painter.setPen(QPen(QColor(COLORS["border"]), 1.0, Qt.PenStyle.DashLine))
         painter.drawLine(QPointF(cx - r, cy), QPointF(cx + r, cy))
         painter.drawLine(QPointF(cx, cy - r), QPointF(cx, cy + r))
 
@@ -193,7 +193,7 @@ class _StructureStereonetWidget(QWidget):
         self._density_raster = []
         self._density_cache_size = (0, 0)
         self.setMinimumSize(260, 260)
-        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.setMouseTracking(True)
 
     def set_model(self, unit_points):
@@ -383,7 +383,7 @@ class _StructureStereonetWidget(QWidget):
         painter.setClipPath(self._circle_clip_path())
         pen = QPen(QColor(*_DENSITY_CONTOUR_COLOR), 0.8)
         painter.setPen(pen)
-        painter.setBrush(QBrush(Qt.NoBrush))
+        painter.setBrush(QBrush(Qt.BrushStyle.NoBrush))
         for level in _DENSITY_CONTOUR_LEVELS:
             for x0, y0, x1, y1 in self._density_contour_segments(level):
                 painter.drawLine(QPointF(x0, y0), QPointF(x1, y1))
@@ -412,7 +412,7 @@ class _StructureStereonetWidget(QWidget):
         clip = QPainterPath()
         clip.addEllipse(rect)
         painter.save()
-        painter.setRenderHint(QPainter.SmoothPixmapTransform, True)
+        painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform, True)
         painter.setClipPath(clip)
         painter.drawImage(rect, image)
         painter.restore()
@@ -424,9 +424,9 @@ class _StructureStereonetWidget(QWidget):
         if (w, h) == self._grid_cache_size and not self._grid_cache.isNull():
             return
         pixmap = QPixmap(w, h)
-        pixmap.fill(Qt.transparent)
+        pixmap.fill(Qt.GlobalColor.transparent)
         painter = QPainter(pixmap)
-        painter.setRenderHint(QPainter.Antialiasing)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         self._draw_density(painter)
         self._draw_grid(painter)
         painter.end()
@@ -438,13 +438,13 @@ class _StructureStereonetWidget(QWidget):
         r = self._radius
         painter.setPen(QPen(QColor(COLORS["border_dark"]), 1.2))
         painter.drawEllipse(self._center, r, r)
-        painter.setPen(QPen(QColor(COLORS["border"]), 1.0, Qt.DashLine))
+        painter.setPen(QPen(QColor(COLORS["border"]), 1.0, Qt.PenStyle.DashLine))
         painter.drawLine(QPointF(cx - r, cy), QPointF(cx + r, cy))
         painter.drawLine(QPointF(cx, cy - r), QPointF(cx, cy + r))
         for i in range(1, _GRID_TICKS):
             frac = float(i) / float(_GRID_TICKS)
             rr = r * frac
-            painter.setPen(QPen(QColor(COLORS["border"]), 0.7, Qt.DotLine))
+            painter.setPen(QPen(QColor(COLORS["border"]), 0.7, Qt.PenStyle.DotLine))
             painter.drawEllipse(self._center, rr, rr)
         # Quadrillage cardinal : N/E/S/O comme labels.
         font = QFont(self.font())
@@ -459,7 +459,7 @@ class _StructureStereonetWidget(QWidget):
 
     def paintEvent(self, _event):
         painter = QPainter(self)
-        painter.setRenderHint(QPainter.Antialiasing)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         if not self._grid_cache.isNull():
             painter.drawPixmap(0, 0, self._grid_cache)
         for index, sample, tooltip, sx, sy, colour in self._screen_points:
@@ -469,7 +469,7 @@ class _StructureStereonetWidget(QWidget):
                 halo = QColor(_SELECTION_COLOR)
                 halo.setAlpha(70)
                 painter.setPen(QPen(halo, 5.0))
-                painter.setBrush(QBrush(Qt.NoBrush))
+                painter.setBrush(QBrush(Qt.BrushStyle.NoBrush))
                 painter.drawEllipse(
                     QPointF(sx, sy), _SELECTED_POINT_RADIUS_PX + 3.0,
                     _SELECTED_POINT_RADIUS_PX + 3.0)
@@ -528,7 +528,7 @@ class _StructureStereonetWidget(QWidget):
         super().mouseMoveEvent(event)
 
     def mousePressEvent(self, event):
-        if event.button() == Qt.LeftButton:
+        if event.button() == Qt.MouseButton.LeftButton:
             pos = event.position() if hasattr(event, "position") else event.pos()
             index = self._hit_index_for_pos(float(pos.x()), float(pos.y()))
             if index == _EMPTY_HIT:
@@ -618,9 +618,9 @@ class StructureAnalysisDialog(QDialog):
             f"color:{COLORS['accent']}; font-weight:bold; padding:2px 0;")
 
         rose_title = QLabel(self.tr("Rose"))
-        rose_title.setAlignment(Qt.AlignHCenter)
+        rose_title.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         stereonet_title = QLabel(self.tr("Stéréonet"))
-        stereonet_title.setAlignment(Qt.AlignHCenter)
+        stereonet_title.setAlignment(Qt.AlignmentFlag.AlignHCenter)
 
         left = QVBoxLayout()
         left.addWidget(rose_title)
@@ -650,8 +650,8 @@ class StructureAnalysisDialog(QDialog):
         filters.setColumnStretch(1, 1)
         filters.setColumnStretch(3, 1)
 
-        buttons = QDialogButtonBox(QDialogButtonBox.Close)
-        buttons.button(QDialogButtonBox.Close).setText(self.tr("Fermer"))
+        buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Close)
+        buttons.button(QDialogButtonBox.StandardButton.Close).setText(self.tr("Fermer"))
         buttons.rejected.connect(self.reject)
 
         layout = QVBoxLayout(self)

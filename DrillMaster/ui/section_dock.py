@@ -122,15 +122,15 @@ class CollapsibleGroup(QWidget):
         self.header.setText(title)
         self.header.setCheckable(True)
         self.header.setChecked(expanded)
-        self.header.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
-        self.header.setArrowType(Qt.DownArrow if expanded else Qt.RightArrow)
+        self.header.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
+        self.header.setArrowType(Qt.ArrowType.DownArrow if expanded else Qt.ArrowType.RightArrow)
         # v2.7.12.14 — REVUE ÉCRAN (onglet Coupe 2D) : la politique
         # horizontale de QToolButton est Fixed (taille sizeHint) — les
         # titres « flottent » à moitié dans le panneau (barre bleue et
         # fond tronqués). En Expanding, le titre fait toute la largeur :
         # un vrai accordéon, lisible et cohérent partout (panneau coupes
         # ET historique de l'étape 4).
-        self.header.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        self.header.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         if level == 0:
             self.header.setStyleSheet(f"""
                 QToolButton {{
@@ -161,7 +161,7 @@ class CollapsibleGroup(QWidget):
         layout.addWidget(self.content, 1)
 
     def _toggle(self, expanded):
-        self.header.setArrowType(Qt.DownArrow if expanded else Qt.RightArrow)
+        self.header.setArrowType(Qt.ArrowType.DownArrow if expanded else Qt.ArrowType.RightArrow)
         self.content.setVisible(expanded)
         # v2.7.12.14 — REVUE ÉCRAN (onglet Coupe 2D) : changer la
         # visibilité change la sizeHint du groupe — sans
@@ -191,15 +191,15 @@ class SectionCanvas(QGraphicsView):
         # v2.9.28 — AA pour courbes/textes ; les hachures Qt (bitmaps)
         # sont dessinées SANS AA (sinon flou « gratté »).  SmoothPixmap
         # off pour ne pas interpoler les pastilles de motif.
-        self.setRenderHint(QPainter.Antialiasing, True)
-        self.setRenderHint(QPainter.TextAntialiasing, True)
-        self.setRenderHint(QPainter.SmoothPixmapTransform, False)
+        self.setRenderHint(QPainter.RenderHint.Antialiasing, True)
+        self.setRenderHint(QPainter.RenderHint.TextAntialiasing, True)
+        self.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform, False)
         # v2.9.13 — pan ÉVIDENT : glisser clic gauche = déplacer
         # (seuil 4 px pour ne pas voler le clic / le survol).
         # Au repos : flèche (viser micro-bandes + infobulles).
         # ScrollHandDrag permanent était trop agressif (main partout).
         self.setDragMode(QGraphicsView.NoDrag)
-        self.viewport().setCursor(Qt.ArrowCursor)
+        self.viewport().setCursor(Qt.CursorShape.ArrowCursor)
         self._panning = False
         self._pan_last = None
         self._pan_press = None          # pos au press (seuil)
@@ -807,7 +807,7 @@ class SectionCanvas(QGraphicsView):
         # v2.9.121 — halo sombre IDENTIQUE pour cyan / magenta / ambre
         # (dock + export) : les 3 couleurs restent lisibles sur toute rampe.
         halo_pen = _selection_highlight_pen(pen_w + 0.55, color="#1A252F")
-        no_fill = QBrush(Qt.NoBrush)
+        no_fill = QBrush(Qt.BrushStyle.NoBrush)
         item = None
         halo_item = None
         try:
@@ -843,14 +843,14 @@ class SectionCanvas(QGraphicsView):
         if halo_item is not None:
             try:
                 halo_item.setParentItem(item)
-                halo_item.setAcceptedMouseButtons(Qt.NoButton)
+                halo_item.setAcceptedMouseButtons(Qt.MouseButton.NoButton)
             except Exception as _exc:
                 from ..core.diagnostics import log_swallowed
                 log_swallowed("État/sélection : _draw_selection_outline", _exc)
                 # parentage optionnel — halo orphelin mieux que crash
                 pass
         item.setZValue(float(z_value))
-        item.setAcceptedMouseButtons(Qt.NoButton)
+        item.setAcceptedMouseButtons(Qt.MouseButton.NoButton)
         try:
             item.setFlag(item.GraphicsItemFlag.ItemIsSelectable, False)
         except Exception as _exc:
@@ -983,8 +983,8 @@ class SectionCanvas(QGraphicsView):
         try:
             stroker = QPainterPathStroker()
             stroker.setWidth(expand * 2.0)
-            stroker.setJoinStyle(Qt.MiterJoin)
-            stroker.setCapStyle(Qt.FlatCap)
+            stroker.setJoinStyle(Qt.PenJoinStyle.MiterJoin)
+            stroker.setCapStyle(Qt.PenCapStyle.FlatCap)
             rim = stroker.createStroke(src)
             outer = src.united(rim)
             if outer is None or outer.isEmpty():
@@ -1045,9 +1045,9 @@ class SectionCanvas(QGraphicsView):
             if kind == "poly" and fill is not None:
                 try:
                     top = self.scene.addPolygon(
-                        payload, QPen(Qt.NoPen), QBrush(fill))
+                        payload, QPen(Qt.PenStyle.NoPen), QBrush(fill))
                     top.setZValue(79.0)
-                    top.setAcceptedMouseButtons(Qt.NoButton)
+                    top.setAcceptedMouseButtons(Qt.MouseButton.NoButton)
                     self._legend_highlight_items.append(top)
                 except Exception as _exc:
                     from ..core.diagnostics import log_swallowed
@@ -1274,7 +1274,7 @@ class SectionCanvas(QGraphicsView):
                 continue
             item.setZValue(z_base)
             try:
-                item.setAcceptedMouseButtons(Qt.NoButton)
+                item.setAcceptedMouseButtons(Qt.MouseButton.NoButton)
             except Exception as _exc:
                 from ..core.diagnostics import log_swallowed
                 log_swallowed("Intercepts/seuils : _apply_one_threshold_rule", _exc)
@@ -1863,7 +1863,7 @@ class SectionCanvas(QGraphicsView):
         if len(pts) < 2:
             return
         source = sr.surface_source
-        style = (Qt.DashLine if source == "collars" else Qt.SolidLine)
+        style = (Qt.PenStyle.DashLine if source == "collars" else Qt.PenStyle.SolidLine)
         pen = QPen(QColor(self._surface_color), 2.0, style)  # v2.9.57 lisible
         # Une SEULE item QGraphicsPathItem (addPath) : polyligne OUVERTE
         # (QPainterPath, pas de segment de fermeture), un seul pinceau,
@@ -1872,7 +1872,7 @@ class SectionCanvas(QGraphicsView):
         path = QPainterPath(pts[0])
         for point in pts[1:]:
             path.lineTo(point)
-        item = self.scene.addPath(path, pen, QBrush(Qt.NoBrush))
+        item = self.scene.addPath(path, pen, QBrush(Qt.BrushStyle.NoBrush))
         item.setZValue(3.5)
         if self._surface_tooltip:
             item.setToolTip(self._surface_tooltip)
@@ -1883,13 +1883,13 @@ class SectionCanvas(QGraphicsView):
         grid_colour = QColor(self._grid_color)
         grid_colour.setAlpha(round(255 * self._grid_opacity / 100.0))
         line_styles = {
-            "solid": Qt.SolidLine, "dash": Qt.DashLine, "dot": Qt.DotLine,
+            "solid": Qt.PenStyle.SolidLine, "dash": Qt.PenStyle.DashLine, "dot": Qt.PenStyle.DotLine,
         }
         pen = QPen(
             grid_colour, float(self._grid_width),
-            line_styles.get(self._grid_style, Qt.DashLine))
+            line_styles.get(self._grid_style, Qt.PenStyle.DashLine))
         axis_pen = QPen(QColor(self._axis_title_color),
-                        max(float(self._grid_width), 0.8), Qt.SolidLine)
+                        max(float(self._grid_width), 0.8), Qt.PenStyle.SolidLine)
         value_font = QFont("Segoe UI", int(self._axis_value_font_size))
         value_font.setBold(bool(self._axis_value_bold))
         value_colour = QColor(self._axis_value_color)
@@ -2133,7 +2133,7 @@ class SectionCanvas(QGraphicsView):
         over transparency : two different colours then look identical
         (feedback 18/08/2026).  Never needed for the plain solid fill."""
         brush_style = (pattern_map or _LITHO_BRUSH_PATTERNS).get(
-            normalise_pattern(pattern_key) or pattern_key, Qt.SolidPattern)
+            normalise_pattern(pattern_key) or pattern_key, Qt.BrushStyle.SolidPattern)
         # v2.7.12.0 — CM-05 : famille composite → remplissage en DÉGRADÉ
         # horizontal des couleurs parentes (décision utilisateur), le motif
         # éventuel reste dessiné dessus, bordure inchangée.  Ne s'active
@@ -2150,12 +2150,12 @@ class SectionCanvas(QGraphicsView):
                 stop_colour.setAlpha(colour.alpha())
                 grad.setColorAt(i / (n - 1), stop_colour)
             fill_brush = QBrush(grad)
-        if brush_style != Qt.SolidPattern:
+        if brush_style != Qt.BrushStyle.SolidPattern:
             underlay = QColor(colour)
             underlay.setAlpha(round(
                 colour.alpha() * PATTERN_UNDERLAY_ALPHA_RATIO))
             if fill_brush is None:
-                base_brush = QBrush(underlay, Qt.SolidPattern)
+                base_brush = QBrush(underlay, Qt.BrushStyle.SolidPattern)
             else:
                 # Sous-couche : le dégradé atténué sous le motif.
                 from qgis.PyQt.QtGui import QLinearGradient
@@ -2169,7 +2169,7 @@ class SectionCanvas(QGraphicsView):
                     grad.setColorAt(i / (n - 1), stop_colour)
                 base_brush = QBrush(grad)
             base_item = self.scene.addPolygon(
-                poly, QPen(Qt.NoPen), base_brush)
+                poly, QPen(Qt.PenStyle.NoPen), base_brush)
             base_item.setZValue(z_value - 0.05)
             base_item._is_band = True  # 345 : monté si trou sélectionné
             if legend_tags:
@@ -2183,7 +2183,7 @@ class SectionCanvas(QGraphicsView):
         # (_pattern_ink_colour) : la coupe et la légende ne peuvent plus
         # afficher le même motif dans deux couleurs différentes.
         dense_pattern = (brush_style not in _LINE_BRUSH_STYLES
-                         and brush_style != Qt.SolidPattern)
+                         and brush_style != Qt.BrushStyle.SolidPattern)
         # v2.7.10.28 — « on doit VOIR le motif complet » (retour écran) :
         # une maille de motif vaut ~10 px à l'échelle 1 ; l'échelle est
         # choisie pour loger au moins ~2 mailles dans la portée de la
@@ -2207,7 +2207,7 @@ class SectionCanvas(QGraphicsView):
 
         motif_ok = False
         span_px = width_px = 0.0
-        if brush_style != Qt.SolidPattern and len(poly) >= 3:
+        if brush_style != Qt.BrushStyle.SolidPattern and len(poly) >= 3:
             span_px = math.hypot(
                 float(poly[2].x() - poly[1].x()),
                 float(poly[2].y() - poly[1].y()))
@@ -2220,7 +2220,7 @@ class SectionCanvas(QGraphicsView):
                 span_px = width_px
             if min(span_px, width_px) >= 4.0:
                 motif_ok = True
-        if brush_style != Qt.SolidPattern and not motif_ok:
+        if brush_style != Qt.BrushStyle.SolidPattern and not motif_ok:
             item = self.scene.addPolygon(
                 poly, border_pen,
                 QBrush(fill_brush if fill_brush is not None
@@ -2248,7 +2248,7 @@ class SectionCanvas(QGraphicsView):
         if brush_style in _LINE_BRUSH_STYLES:
             item = _PatternPolygonItem(poly)
             item.setPen(border_pen)
-            item.setBrush(QBrush(Qt.NoBrush))
+            item.setBrush(QBrush(Qt.BrushStyle.NoBrush))
             item.setZValue(z_value)
             self.scene.addItem(item)
             if tooltip:
@@ -2331,13 +2331,13 @@ class SectionCanvas(QGraphicsView):
             strokes.lineTo(x1, y1)
 
         kinds = []
-        if brush_style in (Qt.HorPattern, Qt.CrossPattern):
+        if brush_style in (Qt.BrushStyle.HorPattern, Qt.BrushStyle.CrossPattern):
             kinds.append("H")  # // normale = « horizontal » log
-        if brush_style in (Qt.VerPattern, Qt.CrossPattern):
+        if brush_style in (Qt.BrushStyle.VerPattern, Qt.BrushStyle.CrossPattern):
             kinds.append("V")  # // axe = « vertical » log
-        if brush_style in (Qt.FDiagPattern, Qt.DiagCrossPattern):
+        if brush_style in (Qt.BrushStyle.FDiagPattern, Qt.BrushStyle.DiagCrossPattern):
             kinds.append("FD")
-        if brush_style in (Qt.BDiagPattern, Qt.DiagCrossPattern):
+        if brush_style in (Qt.BrushStyle.BDiagPattern, Qt.BrushStyle.DiagCrossPattern):
             kinds.append("BD")
 
         for kind in kinds:
@@ -2405,7 +2405,7 @@ class SectionCanvas(QGraphicsView):
             return
         pen = QPen(ink_colour, 1.0)
         pen.setCosmetic(True)
-        pen.setCapStyle(Qt.FlatCap)
+        pen.setCapStyle(Qt.PenCapStyle.FlatCap)
         clip_item = _ClippedStrokeItem(poly, strokes, pen)
         clip_item.setZValue(float(z_value) + 0.01)
         self.scene.addItem(clip_item)
@@ -2428,18 +2428,18 @@ class SectionCanvas(QGraphicsView):
             path.addPolygon(poly)
             stroker = QPainterPathStroker()
             stroker.setWidth(8.0)
-            stroker.setJoinStyle(Qt.RoundJoin)
-            stroker.setCapStyle(Qt.RoundCap)
+            stroker.setJoinStyle(Qt.PenJoinStyle.RoundJoin)
+            stroker.setCapStyle(Qt.PenCapStyle.RoundCap)
             fat = stroker.createStroke(path)
             # united with original so the interior still hits
             fat = fat.united(path)
             # brush quasi-invisible mais « solide » pour le hit-test
             brush = QBrush(QColor(0, 0, 0, 1))
-            hit = self.scene.addPath(fat, QPen(Qt.NoPen), brush)
+            hit = self.scene.addPath(fat, QPen(Qt.PenStyle.NoPen), brush)
             hit.setZValue(float(z_value))
             hit.setToolTip(tooltip)
             # ne pas voler les clics de sélection de forage
-            hit.setAcceptedMouseButtons(Qt.NoButton)
+            hit.setAcceptedMouseButtons(Qt.MouseButton.NoButton)
             items.append(hit)
         except Exception as _exc:
             from ..core.diagnostics import log_swallowed
@@ -2828,7 +2828,7 @@ class SectionCanvas(QGraphicsView):
                     style = self._style_for(domain, code)
                     c = QColor(style["color"])
                     c.setAlpha(alpha)
-                    rim_pen = (QPen(Qt.NoPen) if getattr(
+                    rim_pen = (QPen(Qt.PenStyle.NoPen) if getattr(
                         self, "_comfort_mode", True)
                         else QPen(QColor("#566573"), 0.2))  # 355
                     # v2.9.89 — registre légende (altération / domaine)
@@ -3064,7 +3064,7 @@ class SectionCanvas(QGraphicsView):
                         ph, iv, [code], domain, singular,
                         extra_attribute, extra_label)
                     band_item = self.scene.addPolygon(
-                        poly, (QPen(Qt.NoPen) if getattr(
+                        poly, (QPen(Qt.PenStyle.NoPen) if getattr(
                             self, "_comfort_mode", True)
                             else QPen(QColor(MINERALIZATION_INK), 0.5)),
                         QBrush(neutral_fill))  # 355
@@ -3313,8 +3313,8 @@ class SectionCanvas(QGraphicsView):
                     end_x = float(pos_x) - ux * max(fw / 2.0 - 0.5, 0.0)
                     end_y = float(pos_y) - uy * max(fh / 2.0 - 0.5, 0.0)
                     leader_pen = QPen(ink, 1.0)
-                    leader_pen.setStyle(Qt.SolidLine)
-                    leader_pen.setCapStyle(Qt.RoundCap)
+                    leader_pen.setStyle(Qt.PenStyle.SolidLine)
+                    leader_pen.setCapStyle(Qt.PenCapStyle.RoundCap)
                     leader_item = self.scene.addLine(
                         start_x, start_y, end_x, end_y, leader_pen)
                     leader_item.setZValue(15.4)
@@ -3324,7 +3324,7 @@ class SectionCanvas(QGraphicsView):
                     anchor = self.scene.addEllipse(
                         start_x - anchor_r, start_y - anchor_r,
                         anchor_r * 2.0, anchor_r * 2.0,
-                        QPen(Qt.NoPen), QBrush(ink))
+                        QPen(Qt.PenStyle.NoPen), QBrush(ink))
                     anchor.setZValue(15.45)
                     tip_base = run.get("tooltip") or ""
                     tip_lead = (
@@ -3836,7 +3836,7 @@ class SectionCanvas(QGraphicsView):
                     col = QColor(assay_ramp_rgb(ratio, pal))
                     col.setAlpha(alpha)
                     item = self.scene.addPolygon(
-                        poly, QPen(Qt.NoPen), QBrush(col))
+                        poly, QPen(Qt.PenStyle.NoPen), QBrush(col))
                     # 345 — teneurs = données dures : toujours
                     # au-dessus des bandes litho/alté/miné (qui sont
                     # de l'interprétation), même aux chevauchements.
@@ -3992,7 +3992,7 @@ class SectionCanvas(QGraphicsView):
                 item = self.scene.addSimpleText(caption, font)
                 item.setBrush(brush)
                 try:
-                    item.setAcceptedMouseButtons(Qt.NoButton)
+                    item.setAcceptedMouseButtons(Qt.MouseButton.NoButton)
                 except Exception as _exc:
                     from ..core.diagnostics import log_swallowed
                     log_swallowed("Piste teneurs : étiquette 388", _exc)
@@ -4330,7 +4330,7 @@ class SectionCanvas(QGraphicsView):
                     if label_rect_free(self._depth_placed, lx, ly, rect.width(), rect.height()):
                         if getattr(self, "_depth_label_bg", False):
                             self.scene.addRect(lx - 0.4, ly - 0.2, rect.width() + 0.8, rect.height() + 0.4,
-                                               QPen(Qt.NoPen), QBrush(QColor(255, 255, 255, 215))).setZValue(7)
+                                               QPen(Qt.PenStyle.NoPen), QBrush(QColor(255, 255, 255, 215))).setZValue(7)
                         lbl.setPos(lx, ly)
                     else:
                         self.scene.removeItem(lbl)
@@ -4738,7 +4738,7 @@ class SectionCanvas(QGraphicsView):
         north.setZValue(17)
         items.extend([south, north])
 
-        label = self.scene.addText("N", QFont("Segoe UI", 7, QFont.Bold))
+        label = self.scene.addText("N", QFont("Segoe UI", 7, QFont.Weight.Bold))
         label.setDefaultTextColor(QColor(COLORS['primary']))
         label_x, label_y = needle["label"]
         label.setPos(label_x - label.boundingRect().width() / 2,
@@ -5027,7 +5027,7 @@ class SectionCanvas(QGraphicsView):
         painter.save()
         try:
             painter.resetTransform()
-            painter.setRenderHint(QPainter.Antialiasing, True)
+            painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
             x0, y0, fw, fh = frame
             painter.setPen(QPen(QColor("#999999"), 1))
             painter.setBrush(QColor(255, 255, 255, 235))
@@ -5052,7 +5052,7 @@ class SectionCanvas(QGraphicsView):
     def mousePressEvent(self, event):
         # v2.9.13 — clic gauche OU molette : on mémorise ; le pan ne
         # démarre qu'après 4 px de glisser (évident, sans modificateur).
-        if event.button() in (Qt.LeftButton, Qt.MiddleButton):
+        if event.button() in (Qt.MouseButton.LeftButton, Qt.MouseButton.MiddleButton):
             self._pan_press = event.pos()
             self._pan_last = event.pos()
             self._pan_button = event.button()
@@ -5069,7 +5069,7 @@ class SectionCanvas(QGraphicsView):
                     # Glisser détecté → pan (main fermée). Tout le monde
                     # sait « cliquer-glisser pour déplacer ».
                     self._panning = True
-                    self.viewport().setCursor(Qt.ClosedHandCursor)
+                    self.viewport().setCursor(Qt.CursorShape.ClosedHandCursor)
             if self._panning:
                 delta = event.pos() - self._pan_last
                 self._pan_last = event.pos()
@@ -5088,12 +5088,12 @@ class SectionCanvas(QGraphicsView):
             self._pan_press = None
             self._pan_last = None
             self._pan_button = None
-            self.viewport().setCursor(Qt.ArrowCursor)
+            self.viewport().setCursor(Qt.CursorShape.ArrowCursor)
         super().mouseReleaseEvent(event)
         if was_panning:
             # Le glisser a déplacé la vue : ne pas traiter comme un clic.
             event.accept()
-        elif event.button() == Qt.LeftButton:
+        elif event.button() == Qt.MouseButton.LeftButton:
             self._handle_interval_click(event.pos())
 
     def mouseDoubleClickEvent(self, event):
@@ -5101,7 +5101,7 @@ class SectionCanvas(QGraphicsView):
         (re-double-clic = rend la place).  C'est LE geste attendu
         depuis le début : « 9 cache 5 au croisement » → double-clic 5.
         """
-        if event.button() == Qt.LeftButton:
+        if event.button() == Qt.MouseButton.LeftButton:
             try:
                 from .section_holes import hole_id_at
                 hid = hole_id_at(self, event.pos())
@@ -5152,7 +5152,7 @@ class SectionCanvas(QGraphicsView):
 
         for item in items_at_pos:
             # Ne pas utiliser les hit-pads élargis (AcceptedMouseButtons == NoButton)
-            if hasattr(item, "acceptedMouseButtons") and item.acceptedMouseButtons() == Qt.NoButton:
+            if hasattr(item, "acceptedMouseButtons") and item.acceptedMouseButtons() == Qt.MouseButton.NoButton:
                 continue
             tip = item.toolTip() or ""
             if not tip:
@@ -5161,7 +5161,7 @@ class SectionCanvas(QGraphicsView):
             if m:
                 is_inside = True
                 if hasattr(item, "polygon"):
-                    is_inside = item.polygon().containsPoint(scene_pos, Qt.OddEvenFill)
+                    is_inside = item.polygon().containsPoint(scene_pos, Qt.FillRule.OddEvenFill)
                 elif hasattr(item, "path"):
                     is_inside = item.path().contains(scene_pos)
                 if is_inside:
@@ -5209,7 +5209,7 @@ class SectionCanvas(QGraphicsView):
     def leaveEvent(self, event):
         super().leaveEvent(event)
         if not self._panning:
-            self.viewport().setCursor(Qt.ArrowCursor)
+            self.viewport().setCursor(Qt.CursorShape.ArrowCursor)
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
@@ -5293,7 +5293,7 @@ class SectionWidget(QWidget):
         # suppression de la barre bleu nuit redondante, gain de 30 px de hauteur utile.
         self.info_label = QLabel()
 
-        self.splitter = QSplitter(Qt.Horizontal)
+        self.splitter = QSplitter(Qt.Orientation.Horizontal)
         self.splitter.setChildrenCollapsible(True)
         self.canvas = SectionCanvas()
         self.canvas._parent_section = self
@@ -5317,7 +5317,7 @@ class SectionWidget(QWidget):
 
         panel_scroll = QScrollArea()
         panel_scroll.setWidgetResizable(True)
-        panel_scroll.setFrameShape(QFrame.NoFrame)
+        panel_scroll.setFrameShape(QFrame.Shape.NoFrame)
         panel_scroll.setMinimumWidth(0)
         panel_scroll.setMaximumWidth(300)
         panel = QWidget()
@@ -5509,14 +5509,14 @@ class SectionWidget(QWidget):
                 current_group = grp
                 head = QListWidgetItem(
                     _GROUP_TITLES.get(grp, self.tr("Autres")))
-                head.setFlags(Qt.NoItemFlags)
+                head.setFlags(Qt.ItemFlag.NoItemFlags)
                 head.setForeground(QColor(COLORS["text_medium"]))
                 self.track_list.addItem(head)
             item = QListWidgetItem(name)
-            item.setData(Qt.UserRole, index)
-            item.setData(Qt.UserRole + 1, key)
-            item.setFlags(item.flags() | Qt.ItemIsUserCheckable)
-            item.setCheckState(Qt.Checked)
+            item.setData(Qt.ItemDataRole.UserRole, index)
+            item.setData(Qt.ItemDataRole.UserRole + 1, key)
+            item.setFlags(item.flags() | Qt.ItemFlag.ItemIsUserCheckable)
+            item.setCheckState(Qt.CheckState.Checked)
             item.setToolTip(track_tips.get(key, name))
             self.track_list.addItem(item)
             if data_dep:
@@ -5538,15 +5538,15 @@ class SectionWidget(QWidget):
         self._syncing_tracks = False
         self.track_list.itemClicked.connect(
             lambda item: self.track_pages.setCurrentIndex(
-                int(item.data(Qt.UserRole)))
-            if item.data(Qt.UserRole) is not None else None)
+                int(item.data(Qt.ItemDataRole.UserRole)))
+            if item.data(Qt.ItemDataRole.UserRole) is not None else None)
         self.track_list.itemChanged.connect(self._on_track_item_changed)
         for checkbox in self._track_checkboxes.values():
             if checkbox is None:
                 continue
             checkbox.stateChanged.connect(self._sync_track_checks)
         for _r in range(self.track_list.count()):  # 1re piste, pas un titre
-            if self.track_list.item(_r).data(Qt.UserRole) is not None:
+            if self.track_list.item(_r).data(Qt.ItemDataRole.UserRole) is not None:
                 self.track_list.setCurrentRow(_r)
                 break
         layout.addWidget(self.track_pages)
@@ -5556,16 +5556,16 @@ class SectionWidget(QWidget):
         if self._syncing_tracks:
             return
         # piste sans données : ignorer la recoché manuelle
-        if not (item.flags() & Qt.ItemIsUserCheckable):
+        if not (item.flags() & Qt.ItemFlag.ItemIsUserCheckable):
             return
-        if not (item.flags() & Qt.ItemIsEnabled):
+        if not (item.flags() & Qt.ItemFlag.ItemIsEnabled):
             return
-        if item.data(Qt.UserRole) is None:  # ligne de titre
+        if item.data(Qt.ItemDataRole.UserRole) is None:  # ligne de titre
             return
         checkbox = self._track_checkboxes.get(
-            str(item.data(Qt.UserRole + 1) or ""))
+            str(item.data(Qt.ItemDataRole.UserRole + 1) or ""))
         if checkbox and checkbox.isEnabled():
-            checkbox.setChecked(item.checkState() == Qt.Checked)
+            checkbox.setChecked(item.checkState() == Qt.CheckState.Checked)
 
     def _sync_track_checks(self, *_args):
         if not hasattr(self, "track_list"):
@@ -5573,18 +5573,18 @@ class SectionWidget(QWidget):
         self._syncing_tracks = True
         for index in range(self.track_list.count()):
             item = self.track_list.item(index)
-            if item is None or item.data(Qt.UserRole) is None:
+            if item is None or item.data(Qt.ItemDataRole.UserRole) is None:
                 continue  # ligne de titre
             checkbox = self._track_checkboxes.get(
-                str(item.data(Qt.UserRole + 1) or ""))
+                str(item.data(Qt.ItemDataRole.UserRole + 1) or ""))
             if checkbox is None:
                 continue
             if not checkbox.isEnabled():
                 # pas de données → forcer décoché + non interactif
-                item.setCheckState(Qt.Unchecked)
+                item.setCheckState(Qt.CheckState.Unchecked)
             else:
                 item.setCheckState(
-                    Qt.Checked if checkbox.isChecked() else Qt.Unchecked)
+                    Qt.CheckState.Checked if checkbox.isChecked() else Qt.CheckState.Unchecked)
         self._syncing_tracks = False
 
     def _domain_file_imported(self, key: str) -> bool:
@@ -5793,7 +5793,7 @@ class SectionWidget(QWidget):
         # v2.9.120 — pas label_hint (gris) : texte BLANC sur ardoise.
         banner.setObjectName("label_nodata_banner")
         banner.setWordWrap(True)
-        banner.setTextFormat(Qt.RichText)
+        banner.setTextFormat(Qt.TextFormat.RichText)
         banner.setStyleSheet(
             f"background:{COLORS.get('bg_header', '#2C3E50')}; "
             f"color:{COLORS.get('text_white', '#FFFFFF')}; "
@@ -5874,9 +5874,9 @@ class SectionWidget(QWidget):
             for index in range(self.track_list.count()):
                 item = self.track_list.item(index)
                 # v2.9.270 — ligne de titre (UserRole None) : ignorée.
-                if item is None or item.data(Qt.UserRole) is None:
+                if item is None or item.data(Qt.ItemDataRole.UserRole) is None:
                     continue
-                key = str(item.data(Qt.UserRole + 1) or "")
+                key = str(item.data(Qt.ItemDataRole.UserRole + 1) or "")
                 if not key:
                     continue
                 has = self._project_has_domain_data(key)
@@ -5888,8 +5888,8 @@ class SectionWidget(QWidget):
                                    self.main_dock, "drillholes", None))
                                or has)
                 # item flags
-                flags = item.flags() | Qt.ItemIsSelectable | Qt.ItemIsEnabled
-                flags |= Qt.ItemIsUserCheckable
+                flags = item.flags() | Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled
+                flags |= Qt.ItemFlag.ItemIsUserCheckable
                 if not has:
                     # sélectionnable (pour lire le bandeau) mais non coché
                     if chk is not None:
@@ -5897,7 +5897,7 @@ class SectionWidget(QWidget):
                         chk.setChecked(False)
                         chk.setEnabled(False)
                         chk.blockSignals(False)
-                    item.setCheckState(Qt.Unchecked)
+                    item.setCheckState(Qt.CheckState.Unchecked)
                     try:
                         item.setForeground(QColor(
                             COLORS.get("text_light", "#95A5A6")))
@@ -5928,7 +5928,7 @@ class SectionWidget(QWidget):
                     # v2.9.133 — ne pas forcer text_dark (écraserait le
                     # blanc de la sélection bleue).
                     try:
-                        item.setData(Qt.ForegroundRole, None)
+                        item.setData(Qt.ItemDataRole.ForegroundRole, None)
                     except Exception as _exc:
                         from ..core.diagnostics import log_swallowed
                         log_swallowed("Pistes : _refresh_track_availability", _exc)
@@ -5942,7 +5942,7 @@ class SectionWidget(QWidget):
                         chk.setChecked(bool(want))
                         chk.blockSignals(False)
                         item.setCheckState(
-                            Qt.Checked if want else Qt.Unchecked)
+                            Qt.CheckState.Checked if want else Qt.CheckState.Unchecked)
                 item.setFlags(flags)
                 # v2.9.118 — page props : editable IFF has data
                 if key in (getattr(self, "_track_page_bodies", None) or {}):
@@ -6006,15 +6006,15 @@ class SectionWidget(QWidget):
             self.tr("Longueur"), self.tr("Buffer"),
         ])
         self.section_table.horizontalHeader().setSectionResizeMode(
-            0, QHeaderView.Stretch)
+            0, QHeaderView.ResizeMode.Stretch)
         for column in (1, 2, 3):
             self.section_table.horizontalHeader().setSectionResizeMode(
-                column, QHeaderView.ResizeToContents)
+                column, QHeaderView.ResizeMode.ResizeToContents)
         self.section_table.verticalHeader().setVisible(False)
-        self.section_table.setSelectionBehavior(QAbstractItemView.SelectRows)
-        self.section_table.setSelectionMode(QAbstractItemView.SingleSelection)
-        self.section_table.setEditTriggers(QAbstractItemView.DoubleClicked)
-        self.section_table.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.section_table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+        self.section_table.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
+        self.section_table.setEditTriggers(QAbstractItemView.EditTrigger.DoubleClicked)
+        self.section_table.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         # v2.7.12.13 — REVUE ÉCRAN (étape 4) : le plafond de 130 px était
         # un reliquat de l'ancienne place de l'historique (bas du panneau
         # coupes). Depuis v2.7.10.34 l'historique vit en permanence dans
@@ -6022,7 +6022,7 @@ class SectionWidget(QWidget):
         # avec beaucoup de coupes elle défile à l'intérieur.
         self.section_table.setMinimumHeight(84)
         self.section_table.setSizePolicy(
-            QSizePolicy.Expanding, QSizePolicy.Expanding)
+            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.section_table.setStyleSheet(TABLE_STYLE)
         # itemClicked fires even when the row was already selected, so a
         # single click always reopens the optional visualization dock.
@@ -6083,7 +6083,7 @@ class SectionWidget(QWidget):
         form.addRow(self.chk_buffer_map)
         self.buffer_diagnostics = QLabel(self.tr("Aucune coupe active."))
         self.buffer_diagnostics.setWordWrap(True)
-        self.buffer_diagnostics.setTextFormat(Qt.RichText)
+        self.buffer_diagnostics.setTextFormat(Qt.TextFormat.RichText)
         self.buffer_diagnostics.setStyleSheet(
             f"font-size:8pt; color:{COLORS['text_medium']};")
         form.addRow(self.tr("Distances"), self.buffer_diagnostics)
@@ -6311,7 +6311,7 @@ class SectionWidget(QWidget):
         self.edit_litho_symbols = QPushButton(self.tr("Libellés et symboles…"))
         self.edit_litho_symbols.setStyleSheet(BUTTON_SECONDARY)
         self.edit_litho_symbols.setSizePolicy(
-            QSizePolicy.Expanding, QSizePolicy.Fixed)
+            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         self.edit_litho_symbols.setToolTip(self.tr("Référentiel · lithologie"))
         self.edit_litho_symbols.clicked.connect(self._open_lithology_reference)
         layout.addWidget(self.edit_litho_symbols)
@@ -6368,7 +6368,7 @@ class SectionWidget(QWidget):
         edit_symbols = QPushButton(self.tr("Libellés et symboles…"))
         edit_symbols.setStyleSheet(BUTTON_SECONDARY)
         edit_symbols.setSizePolicy(
-            QSizePolicy.Expanding, QSizePolicy.Fixed)
+            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         edit_symbols.setToolTip(self.tr("Référentiel · ce domaine"))
         edit_symbols.clicked.connect(
             lambda _checked=False, d=reference_domain:
@@ -6461,7 +6461,7 @@ class SectionWidget(QWidget):
             self.tr("Unités, décimales, limite de détection…"))
         self.edit_assay_elements.setStyleSheet(BUTTON_SECONDARY)
         self.edit_assay_elements.setSizePolicy(
-            QSizePolicy.Expanding, QSizePolicy.Fixed)
+            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         self.edit_assay_elements.setToolTip(self.tr(
             "Référentiel · Éléments mesurés\nCorriger libellés, unités (ppm / %), décimales et LD."))
         self.edit_assay_elements.clicked.connect(
@@ -6556,7 +6556,7 @@ class SectionWidget(QWidget):
         f3.addRow(self.tr("Palette 3"), self.ramp3_combo)
 
         self.ramp_preview = QLabel()
-        self.ramp_preview.setTextFormat(Qt.RichText)
+        self.ramp_preview.setTextFormat(Qt.TextFormat.RichText)
         self.ramp_preview.setToolTip(self.tr("Aperçu palette 1 · faible → forte"))
         f3.addRow(self.tr("Aperçu"), self.ramp_preview)
 
@@ -6640,15 +6640,15 @@ class SectionWidget(QWidget):
         help_btn.setText(self.tr("ⓘ Aide"))
         help_btn.setCheckable(True)
         help_btn.setChecked(False)
-        help_btn.setToolButtonStyle(Qt.ToolButtonTextOnly)
-        help_btn.setCursor(Qt.PointingHandCursor)
+        help_btn.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextOnly)
+        help_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         help_btn.setToolTip(self.tr("Afficher l'aide des règles de seuil"))
         help_btn.setStyleSheet(
             f"QToolButton {{ color:{COLORS['text_medium']}; border:none; "
             f"padding:2px 0; font-size:8pt; text-align:left; }}"
             f"QToolButton:checked {{ font-weight:bold; }}")
         self.threshold_help_btn = help_btn
-        outer.addWidget(help_btn, 0, Qt.AlignLeft)
+        outer.addWidget(help_btn, 0, Qt.AlignmentFlag.AlignLeft)
 
         help_body = QLabel(
             self.tr(
@@ -6690,12 +6690,12 @@ class SectionWidget(QWidget):
             toggle = QToolButton()
             toggle.setCheckable(True)
             toggle.setChecked(False)
-            toggle.setArrowType(Qt.RightArrow)
-            toggle.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
+            toggle.setArrowType(Qt.ArrowType.RightArrow)
+            toggle.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
             toggle.setText(
                 self.tr("Règle {} · {}").format(ri + 1, slot['name']))
-            toggle.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
-            toggle.setCursor(Qt.PointingHandCursor)
+            toggle.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+            toggle.setCursor(Qt.CursorShape.PointingHandCursor)
             toggle.setToolTip(self.tr(
                 "Cliquer pour afficher ou masquer les critères. Indépendant de la case Activer."))
             toggle.setStyleSheet(
@@ -6726,7 +6726,7 @@ class SectionWidget(QWidget):
             body.setVisible(False)
 
             def _on_rule_toggle(checked, t=toggle, b=body):
-                t.setArrowType(Qt.DownArrow if checked else Qt.RightArrow)
+                t.setArrowType(Qt.ArrowType.DownArrow if checked else Qt.ArrowType.RightArrow)
                 b.setVisible(bool(checked))
 
             toggle.toggled.connect(_on_rule_toggle)
@@ -6775,7 +6775,7 @@ class SectionWidget(QWidget):
             litho_scroll = QScrollArea()
             litho_scroll.setWidgetResizable(True)
             litho_scroll.setMaximumHeight(88)
-            litho_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+            litho_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
             litho_scroll.setStyleSheet(
                 TOOLTIP_STYLE
                 + f"QScrollArea {{ background:transparent; "
@@ -6940,7 +6940,7 @@ class SectionWidget(QWidget):
         exag_row = QWidget()
         exag_layout = QHBoxLayout(exag_row)
         exag_layout.setContentsMargins(0, 0, 0, 0)
-        self.exag_slider = QSlider(Qt.Horizontal)
+        self.exag_slider = QSlider(Qt.Orientation.Horizontal)
         # v2.9.275 — retour écran : trous de 5 m ici, 120 m ailleurs.  Le
         # curseur montait à 10x : trop peu pour des forages peu profonds sur
         # une longue coupe.  On monte à 100x et on ajoute un mode « Auto ».
@@ -7157,7 +7157,7 @@ class SectionWidget(QWidget):
         layout.addWidget(assay_title)
         self.assay_legend = QLabel(self.tr("Aucune échelle de teneur disponible."))
         self.assay_legend.setWordWrap(True)
-        self.assay_legend.setTextFormat(Qt.RichText)
+        self.assay_legend.setTextFormat(Qt.TextFormat.RichText)
         layout.addWidget(self.assay_legend)
 
         # v2.9.134 — Intercepts = bloc légende frère (même poids que Teneurs)
@@ -7887,9 +7887,9 @@ class SectionWidget(QWidget):
         row.addWidget(self.export_scaled_btn)
         # Raccourcis sur le SectionWidget (toujours actifs en Coupe 2D)
         if not hasattr(self, "_undo_shortcut") or self._undo_shortcut is None:
-            self._undo_shortcut = QShortcut(QKeySequence.Undo, self)
+            self._undo_shortcut = QShortcut(QKeySequence.StandardKey.Undo, self)
             self._undo_shortcut.activated.connect(self._undo)
-            self._redo_shortcut = QShortcut(QKeySequence.Redo, self)
+            self._redo_shortcut = QShortcut(QKeySequence.StandardKey.Redo, self)
             self._redo_shortcut.activated.connect(self._redo)
             self._redo_shortcut_y = QShortcut(QKeySequence("Ctrl+Y"), self)
             self._redo_shortcut_y.activated.connect(self._redo)
@@ -9094,12 +9094,12 @@ class SectionWidget(QWidget):
             try:
                 w, h = 32, 18
                 pixmap = QPixmap(w, h)
-                pixmap.fill(Qt.transparent)
+                pixmap.fill(Qt.GlobalColor.transparent)
                 painter = QPainter(pixmap)
                 base = QColor((style or {}).get("color") or "#CCCCCC")
-                painter.fillRect(0, 0, w - 1, h - 1, QBrush(base, Qt.SolidPattern))
+                painter.fillRect(0, 0, w - 1, h - 1, QBrush(base, Qt.BrushStyle.SolidPattern))
                 painter.setPen(QPen(QColor("#888888"), 1))
-                painter.setBrush(QBrush(Qt.NoBrush))
+                painter.setBrush(QBrush(Qt.BrushStyle.NoBrush))
                 painter.drawRect(0, 0, w - 1, h - 1)
                 painter.end()
                 return pixmap
@@ -9113,12 +9113,12 @@ class SectionWidget(QWidget):
         """Pastille légende = rendu motifs 2.9.33 (coupe=légende)."""
         data = style or {}
         brush_style = _LITHO_BRUSH_PATTERNS.get(
-            normalise_pattern(data.get("pattern", "")), Qt.SolidPattern)
+            normalise_pattern(data.get("pattern", "")), Qt.BrushStyle.SolidPattern)
         w, h = 32, 18
         pixmap = QPixmap(w, h)
-        pixmap.fill(Qt.transparent)
+        pixmap.fill(Qt.GlobalColor.transparent)
         painter = QPainter(pixmap)
-        painter.setRenderHint(QPainter.Antialiasing, False)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, False)
         gradient = data.get("gradient")
         base = QColor(data.get("color") or "#CCCCCC")
         if gradient and len(gradient) >= 2:
@@ -9128,46 +9128,46 @@ class SectionWidget(QWidget):
             for i, hexs in enumerate(gradient):
                 grad.setColorAt(i / max(n - 1, 1), QColor(hexs))
             painter.fillRect(0, 0, w - 1, h - 1, QBrush(grad))
-        elif brush_style != Qt.SolidPattern:
+        elif brush_style != Qt.BrushStyle.SolidPattern:
             underlay = QColor(base)
             underlay.setAlpha(round(255 * PATTERN_UNDERLAY_ALPHA_RATIO))
             painter.fillRect(0, 0, w - 1, h - 1,
-                             QBrush(underlay, Qt.SolidPattern))
+                             QBrush(underlay, Qt.BrushStyle.SolidPattern))
         else:
-            painter.fillRect(0, 0, w - 1, h - 1, QBrush(base, Qt.SolidPattern))
+            painter.fillRect(0, 0, w - 1, h - 1, QBrush(base, Qt.BrushStyle.SolidPattern))
         legend_ink = _pattern_ink_colour(base, brush_style)
         if brush_style in _LINE_BRUSH_STYLES:
             legend_ink.setAlpha(min(max(legend_ink.alpha(), 180), 230))
-        elif brush_style != Qt.SolidPattern:
+        elif brush_style != Qt.BrushStyle.SolidPattern:
             legend_ink.setAlpha(max(legend_ink.alpha(), 200))
-        if brush_style != Qt.SolidPattern:
+        if brush_style != Qt.BrushStyle.SolidPattern:
             if brush_style in _LINE_BRUSH_STYLES:
-                painter.setPen(QPen(Qt.NoPen))
-                painter.setBrush(QBrush(Qt.NoBrush))
+                painter.setPen(QPen(Qt.PenStyle.NoPen))
+                painter.setBrush(QBrush(Qt.BrushStyle.NoBrush))
                 pen = QPen(legend_ink, 1.0)
                 painter.setPen(pen)
-                if brush_style in (Qt.HorPattern, Qt.CrossPattern):
+                if brush_style in (Qt.BrushStyle.HorPattern, Qt.BrushStyle.CrossPattern):
                     for frac in (0.33, 0.66):
                         y = h * frac
                         painter.drawLine(1, int(y), w - 2, int(y))
-                if brush_style in (Qt.VerPattern, Qt.CrossPattern):
+                if brush_style in (Qt.BrushStyle.VerPattern, Qt.BrushStyle.CrossPattern):
                     for frac in (0.33, 0.66):
                         x = w * frac
                         painter.drawLine(int(x), 1, int(x), h - 2)
-                if brush_style in (Qt.FDiagPattern, Qt.DiagCrossPattern):
+                if brush_style in (Qt.BrushStyle.FDiagPattern, Qt.BrushStyle.DiagCrossPattern):
                     painter.drawLine(1, 1, w - 2, h - 2)
                     painter.drawLine(1, h // 3, w * 2 // 3, h - 2)
                     painter.drawLine(w // 3, 1, w - 2, h * 2 // 3)
-                if brush_style in (Qt.BDiagPattern, Qt.DiagCrossPattern):
+                if brush_style in (Qt.BrushStyle.BDiagPattern, Qt.BrushStyle.DiagCrossPattern):
                     painter.drawLine(1, h - 2, w - 2, 1)
                     painter.drawLine(1, h * 2 // 3, w * 2 // 3, 1)
                     painter.drawLine(w // 3, h - 2, w - 2, h // 3)
             else:
-                painter.setPen(QPen(Qt.NoPen))
+                painter.setPen(QPen(Qt.PenStyle.NoPen))
                 painter.setBrush(QBrush(legend_ink, brush_style))
                 painter.drawRect(0, 0, w - 1, h - 1)
         painter.setPen(QPen(QColor(COLORS.get("border_dark", "#7F8C8D")), 1))
-        painter.setBrush(QBrush(Qt.NoBrush))
+        painter.setBrush(QBrush(Qt.BrushStyle.NoBrush))
         painter.drawRect(0, 0, w - 1, h - 1)
         painter.end()
         return pixmap
@@ -9483,7 +9483,7 @@ class SectionWidget(QWidget):
                 self.tr("Forage (trajectoire)"),
                 self.canvas._trajectory_color,
                 max(1.2, float(self.canvas._trajectory_width)),
-                Qt.SolidLine), "trajectory"))
+                Qt.PenStyle.SolidLine), "trajectory"))
         if self.canvas._result and self.canvas._result.holes:
             rows.append((self._symbol_collar_row(), "collar"))
         # v2.9.20 — clé de lecture litho composite (H)
@@ -9518,7 +9518,7 @@ class SectionWidget(QWidget):
             }
             rows.append((self._symbol_line_row(
                 labels[source], self.canvas._surface_color, 1.4,
-                Qt.DashLine if source == "collars" else Qt.SolidLine,
+                Qt.PenStyle.DashLine if source == "collars" else Qt.PenStyle.SolidLine,
                 tooltip=(self.tr("Pointillé · collets") if source == "collars"
                          else self.tr("Plein · mesuré (MNT/CSV)"))),
                 "surface"))
@@ -9538,9 +9538,9 @@ class SectionWidget(QWidget):
         swatch = QLabel()
         swatch.setFixedSize(24, 14)
         pixmap = QPixmap(24, 14)
-        pixmap.fill(Qt.transparent)
+        pixmap.fill(Qt.GlobalColor.transparent)
         painter = QPainter(pixmap)
-        painter.setRenderHint(QPainter.Antialiasing)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         painter.setPen(QPen(QColor(color), float(width), style))
         painter.drawLine(2, 7, 22, 7)
         painter.end()
@@ -9564,9 +9564,9 @@ class SectionWidget(QWidget):
         swatch = QLabel()
         swatch.setFixedSize(24, 14)
         pixmap = QPixmap(24, 14)
-        pixmap.fill(Qt.transparent)
+        pixmap.fill(Qt.GlobalColor.transparent)
         painter = QPainter(pixmap)
-        painter.setRenderHint(QPainter.Antialiasing)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         painter.setBrush(QBrush(QColor("#C0392B")))
         painter.setPen(QPen(QColor("#000000"), 0.5))
         painter.drawEllipse(QPointF(12, 7), 3.0, 3.0)
@@ -9589,14 +9589,14 @@ class SectionWidget(QWidget):
         swatch = QLabel()
         swatch.setFixedSize(24, 14)
         pixmap = QPixmap(24, 14)
-        pixmap.fill(Qt.transparent)
+        pixmap.fill(Qt.GlobalColor.transparent)
         painter = QPainter(pixmap)
-        painter.setRenderHint(QPainter.Antialiasing)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         painter.setPen(QPen(QColor("#566573"), 0.5))
         painter.setBrush(QBrush(QColor("#AED6F1")))
         painter.drawRect(2, 2, 20, 10)
         painter.setBrush(QBrush(QColor("#F5B041")))
-        painter.setPen(QPen(Qt.NoPen))
+        painter.setPen(QPen(Qt.PenStyle.NoPen))
         painter.drawRect(3, 3, 6, 8)
         painter.end()
         swatch.setPixmap(pixmap)
@@ -9620,9 +9620,9 @@ class SectionWidget(QWidget):
         swatch = QLabel()
         swatch.setFixedSize(24, 14)
         pixmap = QPixmap(24, 14)
-        pixmap.fill(Qt.transparent)
+        pixmap.fill(Qt.GlobalColor.transparent)
         painter = QPainter(pixmap)
-        painter.setRenderHint(QPainter.Antialiasing)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         painter.setPen(QPen(QColor("#566573"), 0.5))
         painter.setBrush(QBrush(QColor("#D5D8DC")))
         painter.drawRect(2, 2, 20, 10)
@@ -9650,7 +9650,7 @@ class SectionWidget(QWidget):
 
     def _wire_legend_highlight_entry(self, entry: QWidget, domain: str, code: str) -> None:
         """Rend une row de légende cliquable (surlignage coupe uniquement)."""
-        entry.setCursor(Qt.PointingHandCursor)
+        entry.setCursor(Qt.CursorShape.PointingHandCursor)
         entry.setProperty("dm_legend_domain", str(domain or ""))
         entry.setProperty("dm_legend_code", str(code or ""))
         tip_extra = self.tr("Clic · surligne sur la coupe · re-clic efface")
@@ -9665,9 +9665,9 @@ class SectionWidget(QWidget):
 
         def _on_click(event, d=domain, c=code, w=entry):
             try:
-                if event.button() == Qt.LeftButton:
+                if event.button() == Qt.MouseButton.LeftButton:
                     self._on_legend_highlight_clicked(
-                        d, c, bool(event.modifiers() & Qt.ControlModifier))
+                        d, c, bool(event.modifiers() & Qt.KeyboardModifier.ControlModifier))
                     event.accept()
                     return
             except Exception as _exc:
@@ -9798,17 +9798,17 @@ class SectionWidget(QWidget):
             if pattern_identity:
                 if not_drawn:
                     pixmap = QPixmap(24, 14)
-                    pixmap.fill(Qt.transparent)
+                    pixmap.fill(Qt.GlobalColor.transparent)
                     painter = QPainter(pixmap)
                     painter.setPen(QPen(
-                        QColor(COLORS["text_light"]), 1, Qt.DashLine))
+                        QColor(COLORS["text_light"]), 1, Qt.PenStyle.DashLine))
                     painter.drawRect(0, 0, 23, 13)
                     painter.end()
                     swatch.setPixmap(pixmap)
                     swatch.setToolTip(self.tr("{} · transparent").format(code))
                 else:
                     swatch.setText(style_key)
-                    swatch.setAlignment(Qt.AlignCenter)
+                    swatch.setAlignment(Qt.AlignmentFlag.AlignCenter)
                     # v2.7.13.1 — la pastille stylée en propre est son
                     # propre contexte d'infobulle : elle porte la règle.
                     swatch.setStyleSheet(
@@ -9852,12 +9852,12 @@ class SectionWidget(QWidget):
         row = self.section_table.rowCount()
         self.section_table.insertRow(row)
         name_item = QTableWidgetItem(line.name or f"Section {line.section_id:03d}")
-        name_item.setData(Qt.UserRole, line.section_id)
+        name_item.setData(Qt.ItemDataRole.UserRole, line.section_id)
         direction_item = QTableWidgetItem(line.direction_label)
         length_item = QTableWidgetItem(f"{line.length:.0f} m")
         buffer_item = QTableWidgetItem(
             f"{buffer_value:.0f} {self._buffer_unit}")
-        readonly = Qt.ItemIsSelectable | Qt.ItemIsEnabled
+        readonly = Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled
         for item in (direction_item, length_item, buffer_item):
             item.setFlags(readonly)
         self.section_table.setItem(row, 0, name_item)
@@ -9878,7 +9878,7 @@ class SectionWidget(QWidget):
     def _history_row_for_id(self, section_id):
         for row in range(self.section_table.rowCount()):
             item = self.section_table.item(row, 0)
-            if item and item.data(Qt.UserRole) == section_id:
+            if item and item.data(Qt.ItemDataRole.UserRole) == section_id:
                 return row
         return -1
 
@@ -9979,14 +9979,14 @@ class SectionWidget(QWidget):
         row = self.section_table.currentRow()
         item = self.section_table.item(row, 0) if row >= 0 else None
         if item:
-            self._activate_section(item.data(Qt.UserRole))
+            self._activate_section(item.data(Qt.ItemDataRole.UserRole))
             if self.main_dock:
                 self.main_dock.show_section_tab()
 
     def _on_history_item_changed(self, item):
         if self._updating_history or item.column() != 0:
             return
-        section_id = item.data(Qt.UserRole)
+        section_id = item.data(Qt.ItemDataRole.UserRole)
         line = self._sections.get(section_id)
         if not line:
             return
@@ -10064,7 +10064,7 @@ class SectionWidget(QWidget):
         flip_action = menu.addAction(
             self.tr("Inverser P1/P2 (retourner la coupe)"))
         delete_action = menu.addAction(self.tr("Supprimer"))
-        selected = menu.exec_(self.section_table.viewport().mapToGlobal(point))
+        selected = menu.exec(self.section_table.viewport().mapToGlobal(point))
         if selected == open_action:
             self._on_history_selection()
         elif selected == flip_action:
@@ -10118,7 +10118,7 @@ class SectionWidget(QWidget):
         item = self.section_table.item(row, 0) if row >= 0 else None
         if not item:
             return
-        section_id = item.data(Qt.UserRole)
+        section_id = item.data(Qt.ItemDataRole.UserRole)
         section_name = item.text()
         self._updating_history = True
         self.section_table.removeRow(row)
@@ -10147,7 +10147,7 @@ class SectionWidget(QWidget):
                 self.section_table.selectRow(next_row)
                 self._updating_history = False
                 next_item = self.section_table.item(next_row, 0)
-                self._activate_section(next_item.data(Qt.UserRole))
+                self._activate_section(next_item.data(Qt.ItemDataRole.UserRole))
             elif self.main_dock:
                 self.main_dock.update_section_buffer_preview(None, 0, False)
                 self.buffer_diagnostics.setText(self.tr("Aucune coupe active."))

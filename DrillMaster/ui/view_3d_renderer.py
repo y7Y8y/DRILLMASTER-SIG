@@ -310,7 +310,7 @@ def _aa_layer(canvas, label, fn, *args):
     painter = args[0] if args else None
     if painter is not None:
         painter.save()
-        painter.setRenderHint(QPainter.Antialiasing, True)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
     try:
         fn(*args)
     except Exception as _exc:
@@ -358,7 +358,7 @@ def _render_scene(canvas, painter):
         painter.setPen(QColor(COLORS["text_medium"]))
         painter.setFont(QFont("Segoe UI", 10))
         painter.drawText(
-            canvas.rect(), Qt.AlignCenter,
+            canvas.rect(), Qt.AlignmentFlag.AlignCenter,
             _tr("Aucun forage dans le modèle spatial 3D.\n"
                 "Importez des données et calculez la géométrie à "
                 "l’étape 3."),
@@ -626,8 +626,8 @@ def draw_topography_surface(canvas, painter: QPainter, min_x: float, max_x: floa
     # couture entre facettes, et plus rapide pendant l'orbite.
     quads.sort(key=lambda q: q[0], reverse=True)
     painter.save()
-    painter.setRenderHint(QPainter.Antialiasing, False)
-    painter.setPen(QPen(Qt.NoPen))
+    painter.setRenderHint(QPainter.RenderHint.Antialiasing, False)
+    painter.setPen(QPen(Qt.PenStyle.NoPen))
     for _depth, quad_color, poly in quads:
         painter.setBrush(QBrush(quad_color))
         painter.drawPolygon(poly)
@@ -654,7 +654,7 @@ def draw_topography_surface(canvas, painter: QPainter, min_x: float, max_x: floa
 
     # Isocontours (isohypses) activables.
     if canvas.show_contours:
-        contour_pen = QPen(QColor(255, 255, 255, 150), 0.9, Qt.SolidLine)
+        contour_pen = QPen(QColor(255, 255, 255, 150), 0.9, Qt.PenStyle.SolidLine)
         painter.setPen(contour_pen)
         segs = canvas._surface_contours(grid_3d, zmin, zmax)
         for lv, segments in segs.items():
@@ -674,7 +674,7 @@ def draw_bounding_box(canvas, painter: QPainter, min_x: float, max_x: float, min
     ]
     sc = [canvas.project_3d(x, y, z, scale) for x, y, z in corners]
 
-    grid_pen = QPen(QColor("#2C3A44"), 1, Qt.DashLine)
+    grid_pen = QPen(QColor("#2C3A44"), 1, Qt.PenStyle.DashLine)
     painter.setPen(grid_pen)
     for i in range(4):
         painter.drawLine(QPointF(sc[i][0], sc[i][1]), QPointF(sc[(i + 1) % 4][0], sc[(i + 1) % 4][1]))
@@ -757,7 +757,7 @@ def draw_bounding_box(canvas, painter: QPainter, min_x: float, max_x: float, min
 
     # v2.9.142 — légende d'axe UNE SEULE FOIS par axe (lettre + unité),
     # au milieu de chaque axe, décalée au-delà des valeurs.
-    painter.setFont(QFont("Segoe UI", 6, QFont.Bold))
+    painter.setFont(QFont("Segoe UI", 6, QFont.Weight.Bold))
     cap_pen = QColor("#AEB6BF")
     mid_x = (min_x + max_x) / 2.0
     mid_y = (min_y + max_y) / 2.0
@@ -835,7 +835,7 @@ def draw_section_plane_and_corridor(canvas, painter: QPainter, min_z: float, max
             [0, 1, 2, 3],
         ]
         painter.setBrush(QBrush(QColor(230, 126, 34, 26)))
-        painter.setPen(QPen(QColor(230, 126, 34, 130), 1, Qt.DotLine))
+        painter.setPen(QPen(QColor(230, 126, 34, 130), 1, Qt.PenStyle.DotLine))
         for f in faces:
             poly = QPolygonF([QPointF(sc_c[idx][0], sc_c[idx][1]) for idx in f])
             painter.drawPolygon(poly)
@@ -852,13 +852,13 @@ def draw_section_plane_and_corridor(canvas, painter: QPainter, min_z: float, max
             QPointF(c3[0], c3[1]), QPointF(c4[0], c4[1]),
         ])
         painter.setBrush(QBrush(QColor(189, 195, 199, 60)))
-        painter.setPen(QPen(QColor(52, 152, 219, 210), 1.8, Qt.DashLine))
+        painter.setPen(QPen(QColor(52, 152, 219, 210), 1.8, Qt.PenStyle.DashLine))
         painter.drawPolygon(poly)
 
         mid_x = (c1[0] + c2[0]) / 2.0
         mid_y = (c1[1] + c2[1]) / 2.0
         painter.setPen(QColor("#5DADE2"))
-        painter.setFont(QFont("Segoe UI", 8, QFont.Bold))
+        painter.setFont(QFont("Segoe UI", 8, QFont.Weight.Bold))
         sec_title = getattr(line, "name", _tr("Plan de coupe"))
         painter.drawText(QPointF(mid_x + 5, mid_y - 4), _tr("Coupe : {}").format(sec_title))
 
@@ -908,8 +908,8 @@ def _pattern_tube_marks(canvas, painter, code, domain, base_color,
         axial = geo["axial"]
         mark_w = geo["mark_w"]
         dot_r = geo["dot_r"]
-        painter.setPen(QPen(ink, mark_w, Qt.SolidLine, Qt.RoundCap))
-        painter.setBrush(QBrush(Qt.NoBrush))
+        painter.setPen(QPen(ink, mark_w, Qt.PenStyle.SolidLine, Qt.PenCapStyle.RoundCap))
+        painter.setBrush(QBrush(Qt.BrushStyle.NoBrush))
         kind = spec.get("kind")
         for i in range(n_marks):
             f = (i + 0.5) / n_marks
@@ -981,7 +981,7 @@ def _cached_pen(canvas, color, width, style, alpha=255):
     pen = cache.get(key)
     if pen is None:
         from qgis.PyQt.QtGui import QPen as _QP
-        pen = _QP(color, width, style, Qt.RoundCap)
+        pen = _QP(color, width, style, Qt.PenCapStyle.RoundCap)
         cache[key] = pen
     return pen
 
@@ -1075,12 +1075,12 @@ def _draw_component_bands(canvas, painter, inv, p_top, p_bot, w, alpha):
             fw = max(1.6, w * 0.30)
             painter.setPen(QPen(
                 QColor(15, 20, 25, int(220 * comp_dim)),
-                fw + 1.0, Qt.SolidLine, Qt.RoundCap))
+                fw + 1.0, Qt.PenStyle.SolidLine, Qt.PenCapStyle.RoundCap))
             painter.drawLine(a, b)
             fc = s_col.lighter(115)
             fc.setAlpha(comp_alpha)
             painter.setPen(QPen(fc, max(1.2, fw - 0.6),
-                                Qt.SolidLine, Qt.RoundCap))
+                                Qt.PenStyle.SolidLine, Qt.PenCapStyle.RoundCap))
             painter.drawLine(a, b)
         else:
             # BARRETTE (secondaire) — bande fine parallèle
@@ -1094,11 +1094,11 @@ def _draw_component_bands(canvas, painter, inv, p_top, p_bot, w, alpha):
             bar_w = max(2.5, w * 0.35)
             painter.setPen(QPen(
                 QColor(15, 20, 25, int(220 * comp_dim)),
-                bar_w + 1.0, Qt.SolidLine, Qt.RoundCap))
+                bar_w + 1.0, Qt.PenStyle.SolidLine, Qt.PenCapStyle.RoundCap))
             painter.drawLine(sp_top, sp_bot)
             s_col.setAlpha(comp_alpha)
             painter.setPen(QPen(s_col, bar_w,
-                                Qt.SolidLine, Qt.RoundCap))
+                                Qt.PenStyle.SolidLine, Qt.PenCapStyle.RoundCap))
             painter.drawLine(sp_top, sp_bot)
 
 
@@ -1151,10 +1151,10 @@ def _draw_intercept_sleeves(canvas, painter, dh: DrillHole, scale: float,
             q_top = QPointF(p_top.x() + nx * off, p_top.y() + ny * off)
             q_bot = QPointF(p_bot.x() + nx * off, p_bot.y() + ny * off)
             rcol = QColor(rule.get("color") or "#00E5FF")
-            painter.setPen(QPen(rcol, ring_w, Qt.SolidLine, Qt.RoundCap))
+            painter.setPen(QPen(rcol, ring_w, Qt.PenStyle.SolidLine, Qt.PenCapStyle.RoundCap))
             painter.drawLine(q_top, q_bot)
             # anneaux aux extrémités (repère From/To)
-            painter.setBrush(QBrush(Qt.NoBrush))
+            painter.setBrush(QBrush(Qt.BrushStyle.NoBrush))
             painter.setPen(QPen(rcol, 1.2))
             painter.drawEllipse(q_top, ring_w * 0.9, ring_w * 0.9)
             painter.drawEllipse(q_bot, ring_w * 0.9, ring_w * 0.9)
@@ -1337,7 +1337,7 @@ def _draw_structure_marker(
             wz + down[2] * seg_world, scale)
         e = QPointF(ex + offset[0], ey + offset[1])
         painter.setPen(QPen(ink_light, max(2.4, 3.0),
-                            Qt.SolidLine, Qt.RoundCap))
+                            Qt.PenStyle.SolidLine, Qt.PenCapStyle.RoundCap))
         painter.drawLine(m, e)
 
     elif family == "linear" and down is not None:
@@ -1351,7 +1351,7 @@ def _draw_structure_marker(
         if ulen > 1e-6:
             u = u / ulen
         painter.setPen(QPen(ink_light, max(2.4, 3.0),
-                            Qt.SolidLine, Qt.RoundCap))
+                            Qt.PenStyle.SolidLine, Qt.PenCapStyle.RoundCap))
         painter.drawLine(m, e)
         head = max(6.5, radius_px * 1.9)
         side = head * 0.5
@@ -1632,7 +1632,7 @@ def _draw_imagery_badge(painter, mid_xy, record, has_image):
                       size, size)
         color = QColor("#5D6D7E") if has_image else QColor("#F39C12")
         painter.save()
-        pen = QPen(color, 1.4, Qt.DashLine)
+        pen = QPen(color, 1.4, Qt.PenStyle.DashLine)
         pen.setCosmetic(True)
         painter.setPen(pen)
         painter.setBrush(QBrush(QColor(18, 20, 26, 205)))
@@ -1642,7 +1642,7 @@ def _draw_imagery_badge(painter, mid_xy, record, has_image):
         font.setPixelSize(max(8, int(size * 0.58)))
         painter.setFont(font)
         painter.setPen(QColor("#FFFFFF"))
-        painter.drawText(rect, Qt.AlignCenter, letter)
+        painter.drawText(rect, Qt.AlignmentFlag.AlignCenter, letter)
         painter.restore()
     except Exception as _exc:
         from ..core.diagnostics import log_swallowed
@@ -2082,19 +2082,19 @@ def draw_drillhole(canvas, painter: QPainter, dh: DrillHole, scale: float):
                             _lc2 = _lcol.lighter(115)
                             _lc2.setAlpha(_ivl_alpha)
                             painter.setPen(_cached_pen(
-                                canvas, _lc2, _lw, Qt.SolidLine))
+                                canvas, _lc2, _lw, Qt.PenStyle.SolidLine))
                             painter.drawLine(_lt, _lb)
                         else:
                             _lb2 = _lcol.darker(135)
                             _lb2.setAlpha(_ivl_alpha)
                             painter.setPen(_cached_pen(
-                                canvas, _lb2, _lw + 0.6, Qt.SolidLine))
+                                canvas, _lb2, _lw + 0.6, Qt.PenStyle.SolidLine))
                             painter.drawLine(_lt, _lb)
                             _lc2 = _lcol.lighter(115)
                             _lc2.setAlpha(_ivl_alpha)
                             painter.setPen(_cached_pen(
                                 canvas, _lc2, max(0.8, _lw - 0.4),
-                                Qt.SolidLine))
+                                Qt.PenStyle.SolidLine))
                             painter.drawLine(_lt, _lb)
                         # MOTIF sur CHAQUE voie (v2.9.173 : restauré) —
                         # v2.9.176 : plancher 7 px pour la GÉOMÉTRIE des
@@ -2114,19 +2114,19 @@ def draw_drillhole(canvas, painter: QPainter, dh: DrillHole, scale: float):
                         cc = col.lighter(115)
                         cc.setAlpha(_ivl_alpha)
                         painter.setPen(_cached_pen(
-                            canvas, cc, _cw_eff, Qt.SolidLine))
+                            canvas, cc, _cw_eff, Qt.PenStyle.SolidLine))
                         painter.drawLine(p_top, p_bot)
                     else:
                         cb = col.darker(135)
                         cb.setAlpha(_ivl_alpha)
                         painter.setPen(_cached_pen(
-                            canvas, cb, _cw_eff + 0.6, Qt.SolidLine))
+                            canvas, cb, _cw_eff + 0.6, Qt.PenStyle.SolidLine))
                         painter.drawLine(p_top, p_bot)
                         cc = col.lighter(115)
                         cc.setAlpha(_ivl_alpha)
                         painter.setPen(_cached_pen(
                             canvas, cc, max(0.8, _cw_eff - 0.3),
-                            Qt.SolidLine))
+                            Qt.PenStyle.SolidLine))
                         painter.drawLine(p_top, p_bot)
                     # MOTIF du code principal de l'intervalle (v2.9.173)
                     # v2.9.176 : plancher 7 px (marques lisibles).
@@ -2282,19 +2282,19 @@ def draw_drillhole(canvas, painter: QPainter, dh: DrillHole, scale: float):
                         if _dragging:
                             cc = mcol.lighter(115)
                             cc.setAlpha(lane_alpha)
-                            painter.setPen(QPen(cc, lane_w, Qt.SolidLine, Qt.RoundCap))
+                            painter.setPen(QPen(cc, lane_w, Qt.PenStyle.SolidLine, Qt.PenCapStyle.RoundCap))
                             painter.drawLine(mt_top, mt_bot)
                         else:
                             painter.setPen(QPen(QColor(15, 20, 25, lane_alpha),
-                                                lane_w + 1.4, Qt.SolidLine, Qt.RoundCap))
+                                                lane_w + 1.4, Qt.PenStyle.SolidLine, Qt.PenCapStyle.RoundCap))
                             painter.drawLine(mt_top, mt_bot)
                             cb = mcol.darker(135)
                             cb.setAlpha(lane_alpha)
-                            painter.setPen(QPen(cb, lane_w + 0.6, Qt.SolidLine, Qt.RoundCap))
+                            painter.setPen(QPen(cb, lane_w + 0.6, Qt.PenStyle.SolidLine, Qt.PenCapStyle.RoundCap))
                             painter.drawLine(mt_top, mt_bot)
                             cc = mcol.lighter(115)
                             cc.setAlpha(lane_alpha)
-                            painter.setPen(QPen(cc, max(1.0, lane_w - 0.6), Qt.SolidLine, Qt.RoundCap))
+                            painter.setPen(QPen(cc, max(1.0, lane_w - 0.6), Qt.PenStyle.SolidLine, Qt.PenCapStyle.RoundCap))
                             painter.drawLine(mt_top, mt_bot)
                         # v2.9.158 — MOTIF SUR CHAQUE VOIE (son code, sa
                         # couleur) : avant, le ``continue`` des voies
@@ -2331,20 +2331,20 @@ def draw_drillhole(canvas, painter: QPainter, dh: DrillHole, scale: float):
                     c_core = color.lighter(115)
                     c_core.setAlpha(alpha_dim)
                     painter.setPen(_cached_pen(
-                        canvas, c_core, w_eff, Qt.SolidLine))
+                        canvas, c_core, w_eff, Qt.PenStyle.SolidLine))
                     painter.drawLine(p_top, p_bot)
                 else:
                     c_border = color.darker(135)
                     c_border.setAlpha(alpha_dim)
                     painter.setPen(_cached_pen(
-                        canvas, c_border, w_eff + 1.2, Qt.SolidLine))
+                        canvas, c_border, w_eff + 1.2, Qt.PenStyle.SolidLine))
                     painter.drawLine(p_top, p_bot)
 
                     c_core = color.lighter(115)
                     c_core.setAlpha(alpha_dim)
                     painter.setPen(_cached_pen(
                         canvas, c_core, max(1.0, w_eff - 0.8),
-                        Qt.SolidLine))
+                        Qt.PenStyle.SolidLine))
                     painter.drawLine(p_top, p_bot)
 
                 # v2.9.150 (SPEC B-2/D2) — MOTIF du Référentiel sur le tube :
@@ -2437,7 +2437,7 @@ def draw_drillhole(canvas, painter: QPainter, dh: DrillHole, scale: float):
         if canvas.show_labels and not _dragging:
             try:
                 painter.setPen(QColor("#FFFFFF"))
-                painter.setFont(QFont("Segoe UI", 8, QFont.Bold))
+                painter.setFont(QFont("Segoe UI", 8, QFont.Weight.Bold))
                 fm = painter.fontMetrics()
                 label = _short_label(canvas, dh.hole_id)
                 tw = fm.horizontalAdvance(label)
@@ -2494,7 +2494,7 @@ def _draw_element_key(canvas, painter, elems, p_top):
     try:
         from ..core.multi_assay import column_caption
         f = QFont("Segoe UI", 6)
-        f.setCapitalization(QFont.SmallCaps)
+        f.setCapitalization(QFont.Capitalization.SmallCaps)
         painter.setFont(f)
         fm = painter.fontMetrics()
         line_h = fm.height() + 1.0
@@ -2581,13 +2581,13 @@ def draw_selection_highlight(canvas, painter: QPainter, scale: float):
     p1 = QPointF(s_bot[0], s_bot[1])
 
     # 1. Subtle, non-invasive glow
-    painter.setPen(QPen(QColor(241, 196, 15, 60), canvas.stroke_width + 7.0, Qt.SolidLine, Qt.RoundCap))
+    painter.setPen(QPen(QColor(241, 196, 15, 60), canvas.stroke_width + 7.0, Qt.PenStyle.SolidLine, Qt.PenCapStyle.RoundCap))
     painter.drawLine(p0, p1)
 
     # 2. Golden caliper rings at FROM and TO
     gold_c = QColor("#F1C40F")
-    painter.setBrush(QBrush(Qt.NoBrush))
-    painter.setPen(QPen(gold_c, 2.0, Qt.SolidLine))
+    painter.setBrush(QBrush(Qt.BrushStyle.NoBrush))
+    painter.setPen(QPen(gold_c, 2.0, Qt.PenStyle.SolidLine))
     painter.drawEllipse(p0, 5.0, 5.0)
     painter.drawEllipse(p1, 5.0, 5.0)
 
@@ -2597,18 +2597,18 @@ def draw_selection_highlight(canvas, painter: QPainter, scale: float):
     if v_len > 1e-4:
         nx = -vec.y() / v_len * 6.0
         ny = vec.x() / v_len * 6.0
-        painter.setPen(QPen(gold_c, 1.2, Qt.DashLine))
+        painter.setPen(QPen(gold_c, 1.2, Qt.PenStyle.DashLine))
         painter.drawLine(p0 + QPointF(nx, ny), p1 + QPointF(nx, ny))
         painter.drawLine(p0 - QPointF(nx, ny), p1 - QPointF(nx, ny))
 
     # 4. Clean dark badge tag with depth
     mid_pt = (p0 + p1) / 2.0
     tag_text = f"★ {canvas._selected_hole_id} [{canvas._selected_from_m:.1f}–{canvas._selected_to_m:.1f} m]"
-    painter.setPen(QPen(Qt.NoPen))
+    painter.setPen(QPen(Qt.PenStyle.NoPen))
     painter.setBrush(QBrush(QColor(23, 29, 34, 210)))
     fm = painter.fontMetrics()
     txt_w = fm.horizontalAdvance(tag_text) + 8
     painter.drawRoundedRect(QRectF(mid_pt.x() + 8, mid_pt.y() - 10, txt_w, 18), 3, 3)
     painter.setPen(QColor("#F1C40F"))
-    painter.setFont(QFont("Segoe UI", 8, QFont.Bold))
+    painter.setFont(QFont("Segoe UI", 8, QFont.Weight.Bold))
     painter.drawText(mid_pt + QPointF(12, 3), tag_text)

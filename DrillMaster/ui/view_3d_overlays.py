@@ -307,7 +307,7 @@ def _draw_multi_domain_legend(canvas, painter):
 
     fm = painter.fontMetrics()
     font_rows = QFont("Segoe UI", 7)
-    font_head = QFont("Segoe UI", 7, QFont.Bold)
+    font_head = QFont("Segoe UI", 7, QFont.Weight.Bold)
     fm_rows = QFontMetrics(font_rows)
     fm_head = QFontMetrics(font_head)
     row_h = 15
@@ -358,7 +358,7 @@ def _draw_multi_domain_legend(canvas, painter):
 
     # Titre global
     painter.setPen(QColor("#F1C40F"))
-    painter.setFont(QFont("Segoe UI", 7, QFont.Bold))
+    painter.setFont(QFont("Segoe UI", 7, QFont.Weight.Bold))
     painter.drawText(QPointF(gx + 6, gy + 13), _tr("Domaines actifs"))
     painter.setPen(QPen(QColor("#4A5F70"), 0.8))
     painter.drawLine(QPointF(gx + 5, gy + 17), QPointF(gx + card_w - 5, gy + 17))
@@ -441,11 +441,11 @@ def _draw_legend_pattern(canvas, painter, rect, code, base_color, domain):
         w, h = rect.width(), rect.height()
         cy = y + h / 2.0
         kind = spec.get("kind")
-        painter.setPen(QPen(ink, 1.1, Qt.SolidLine, Qt.RoundCap))
-        painter.setBrush(QBrush(Qt.NoBrush))
+        painter.setPen(QPen(ink, 1.1, Qt.PenStyle.SolidLine, Qt.PenCapStyle.RoundCap))
+        painter.setBrush(QBrush(Qt.BrushStyle.NoBrush))
         if kind == "dot":
             painter.setBrush(QBrush(ink))
-            painter.setPen(QPen(Qt.NoPen))
+            painter.setPen(QPen(Qt.PenStyle.NoPen))
             r = max(0.7, spec.get("radius", 0.8))
             n = max(2, int(w // max(2.6, spec.get("period", 5.0) * 0.5)))
             for i in range(n):
@@ -516,7 +516,7 @@ def _draw_structure_legend_swatch(canvas, painter, rect, code,
         ux, uy = vx / norm, vy / norm
         bx, by = ex - ux * 3.0, ey - uy * 3.0
         painter.setBrush(QBrush(ink))
-        painter.setPen(QPen(Qt.NoPen))
+        painter.setPen(QPen(Qt.PenStyle.NoPen))
         painter.drawPolygon(QPolygonF([
             QPointF(ex, ey),
             QPointF(bx - uy * 1.6, by + ux * 1.6),
@@ -681,7 +681,7 @@ def draw_floating_legend(canvas, painter):
     row_h = 15
     header_h = 20
     font_rows = QFont("Segoe UI", 7)
-    font_head = QFont("Segoe UI", 7, QFont.Bold)
+    font_head = QFont("Segoe UI", 7, QFont.Weight.Bold)
     fm_rows = QFontMetrics(font_rows)
     fm_head = QFontMetrics(font_head)
 
@@ -805,8 +805,8 @@ def draw_exag_badge(canvas, painter):
     painter.drawRoundedRect(badge_rect, 3, 3)
 
     painter.setPen(QColor("#F39C12"))
-    painter.setFont(QFont("Segoe UI", 8, QFont.Bold))
-    painter.drawText(badge_rect, Qt.AlignCenter, _tr("Z × {}").format(f"{canvas.v_exag:.1f}"))
+    painter.setFont(QFont("Segoe UI", 8, QFont.Weight.Bold))
+    painter.drawText(badge_rect, Qt.AlignmentFlag.AlignCenter, _tr("Z × {}").format(f"{canvas.v_exag:.1f}"))
 
 # v2.9.188 — l'infobulle : L'ESSENTIEL, replié (retour écran : « doit
 # revenir à la ligne pour éviter qu'elle soit trop longue — que
@@ -861,10 +861,10 @@ def draw_hover_tooltip(canvas, painter):
     # 3D (dessinée au QPainter : la police QToolTip ne s'y applique
     # pas — retour écran : « partout, je dis bien partout »).
     f_body = QFont("Segoe UI", 8)
-    f_body.setCapitalization(QFont.SmallCaps)
+    f_body.setCapitalization(QFont.Capitalization.SmallCaps)
     f_head = QFont("Segoe UI", 8)
     f_head.setBold(True)
-    f_head.setCapitalization(QFont.SmallCaps)
+    f_head.setCapitalization(QFont.Capitalization.SmallCaps)
     fm_body = QFontMetrics(f_body)
     fm_head = QFontMetrics(f_head)
     # v2.9.188 — RETOUR À LA LIGNE + plafond : la bulle ne dépasse

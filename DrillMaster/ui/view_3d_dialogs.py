@@ -55,10 +55,10 @@ class _AssayElementDialog(QDialog):
         checked_set = set(checked or [])
         for el in (elements or []):
             item = QListWidgetItem(str(el))
-            item.setFlags(item.flags() | Qt.ItemIsUserCheckable)
+            item.setFlags(item.flags() | Qt.ItemFlag.ItemIsUserCheckable)
             item.setCheckState(
-                Qt.Checked if (checked and str(el) in checked_set)
-                else Qt.Unchecked)
+                Qt.CheckState.Checked if (checked and str(el) in checked_set)
+                else Qt.CheckState.Unchecked)
             self.listw.addItem(item)
         layout.addWidget(self.listw)
 
@@ -70,7 +70,7 @@ class _AssayElementDialog(QDialog):
         layout.addWidget(hint)
 
         buttons = QDialogButtonBox(
-            QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
         buttons.accepted.connect(self.accept)
         buttons.rejected.connect(self.reject)
         layout.addWidget(buttons)
@@ -86,12 +86,12 @@ class _AssayElementDialog(QDialog):
     def _item_changed(self, item):
         if self._updating or item is None:
             return
-        if item.checkState() == Qt.Checked:
+        if item.checkState() == Qt.CheckState.Checked:
             if self._checked_count() > self._max_checked:
                 # Plafond atteint : la case est refusée, message gardé
                 # pour la barre de statut du dock.
                 self._updating = True
-                item.setCheckState(Qt.Unchecked)
+                item.setCheckState(Qt.CheckState.Unchecked)
                 self._updating = False
                 self._limit_message = self.tr(
                     "{} éléments maximum en 3D (même limite que la coupe 2D)"
@@ -100,7 +100,7 @@ class _AssayElementDialog(QDialog):
     def _checked_count(self) -> int:
         n = 0
         for i in range(self.listw.count()):
-            if self.listw.item(i).checkState() == Qt.Checked:
+            if self.listw.item(i).checkState() == Qt.CheckState.Checked:
                 n += 1
         return n
 
@@ -111,7 +111,7 @@ class _AssayElementDialog(QDialog):
         out = []
         for i in range(self.listw.count()):
             item = self.listw.item(i)
-            if item.checkState() == Qt.Checked:
+            if item.checkState() == Qt.CheckState.Checked:
                 out.append(str(item.text()))
         return out
 

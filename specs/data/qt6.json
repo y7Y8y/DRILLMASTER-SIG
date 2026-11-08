@@ -1,0 +1,16 @@
+{
+  "execution_qt5": {
+    "etat": "PyQt5 dans un environnement jetable (Qt 5.15.14)",
+    "formes": 119,
+    "refusees": {}
+  },
+  "declarations": {
+    "formes": 119,
+    "qt5_refusees": {},
+    "qt6_refusees": {},
+    "qt5_acceptees": 119,
+    "qt6_acceptees": 119,
+    "verdicts": []
+  },
+  "epreuve_reelle_qgis4": false
+}

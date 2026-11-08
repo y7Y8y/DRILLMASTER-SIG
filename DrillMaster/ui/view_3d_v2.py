@@ -57,7 +57,7 @@ class _Viewport(QWidget):
         self.owner = owner
         self.setMinimumSize(320, 240)
         self.setMouseTracking(False)
-        self.setFocusPolicy(Qt.StrongFocus)
+        self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self._last = None
         self._moved = False
         self._frame = None
@@ -75,8 +75,8 @@ class _Viewport(QWidget):
         self._last = ev.pos()
         self._moved = True
         cam = self.owner.cam
-        pan = (ev.buttons() & (Qt.RightButton | Qt.MiddleButton)
-               or (ev.modifiers() & Qt.ShiftModifier))
+        pan = (ev.buttons() & (Qt.MouseButton.RightButton | Qt.MouseButton.MiddleButton)
+               or (ev.modifiers() & Qt.KeyboardModifier.ShiftModifier))
         if pan:
             cam.pan(dx, dy, self.height())
         else:
@@ -108,7 +108,7 @@ class _Viewport(QWidget):
         if o.scene is None:
             p.fillRect(self.rect(), QColor(*o.style.bg))
             p.setPen(QColor(*o.style.text_rgb))
-            p.drawText(self.rect(), Qt.AlignCenter | Qt.TextWordWrap,
+            p.drawText(self.rect(), Qt.AlignmentFlag.AlignCenter | Qt.TextFlag.TextWordWrap,
                        o.status_text())
             p.end()
             return
@@ -180,7 +180,7 @@ class View3DV2(QWidget):
         self.zone_combo = QComboBox()
         self.zone_combo.setToolTip(self.tr("Aller à une zone du projet "
                                            "(Nord, Centre, Est…)"))
-        self.zone_combo.setSizeAdjustPolicy(QComboBox.AdjustToMinimumContentsLength)
+        self.zone_combo.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToMinimumContentsLengthWithIcon)
         self.zone_combo.setMinimumContentsLength(14)
         self.zone_combo.currentIndexChanged.connect(self._on_zone)
         row1.addWidget(self.zone_combo)
@@ -651,7 +651,7 @@ class View3DV2(QWidget):
 
     # -------------------------------------------------------- overlays
     def _paint_overlays(self, p, w, h):
-        p.setRenderHint(QPainter.Antialiasing, True)
+        p.setRenderHint(QPainter.RenderHint.Antialiasing, True)
         small = QFont(p.font())
         small.setPointSizeF(float(self.name_pt))
         p.setFont(small)

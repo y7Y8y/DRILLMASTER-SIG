@@ -272,7 +272,7 @@ def _draw_missing_band(canvas, ph, inner, outer, alpha, kind, items):
         grey.setAlpha(alpha)
     item = QGraphicsPolygonItem(poly)
     item.setBrush(QBrush(grey))
-    pen = QPen(QColor(GEOTECH_MISSING_EDGE), 1.0, Qt.DashLine)
+    pen = QPen(QColor(GEOTECH_MISSING_EDGE), 1.0, Qt.PenStyle.DashLine)
     if alpha < 255:
         pen.setColor(QColor(GEOTECH_MISSING_EDGE))
     item.setPen(pen)
@@ -438,12 +438,12 @@ def create_legend_widgets(widget, layout, kind: str):
         domain=widget.tr(geotech_label(kind))))
     label.setObjectName("label_hint")
     label.setWordWrap(True)
-    label.setTextFormat(Qt.RichText)
+    label.setTextFormat(Qt.TextFormat.RichText)
     setattr(widget, f"{kind}_legend_label", label)
     layout.addWidget(label)
 
     ramp = QLabel()
-    ramp.setTextFormat(Qt.RichText)
+    ramp.setTextFormat(Qt.TextFormat.RichText)
     ramp.setWordWrap(True)
     setattr(widget, f"{kind}_legend_ramp", ramp)
     layout.addWidget(ramp)

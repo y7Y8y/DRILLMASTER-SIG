@@ -52,7 +52,7 @@ def _load_photo_any_size(path: str) -> QPixmap | None:
                 and (src_size.width() > _VIEWER_MAX_PX
                      or src_size.height() > _VIEWER_MAX_PX)):
             reader.setScaledSize(src_size.scaled(
-                target, Qt.KeepAspectRatio))
+                target, Qt.AspectRatioMode.KeepAspectRatio))
         image = reader.read()
         if image is not None and not image.isNull():
             pixmap = QPixmap.fromImage(image)
@@ -70,7 +70,7 @@ def _load_photo_any_size(path: str) -> QPixmap | None:
                     or image.height() > _VIEWER_MAX_PX):
                 scaled = image.scaled(
                     _VIEWER_MAX_PX, _VIEWER_MAX_PX,
-                    Qt.KeepAspectRatio, Qt.SmoothTransformation)
+                    Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
             pixmap = QPixmap.fromImage(scaled)
             if not pixmap.isNull():
                 return pixmap
@@ -148,25 +148,25 @@ class _ImageryPhotoDialog(QDialog):
         layout.addWidget(self._info)
 
         self._image_label = QLabel(self.tr("Chargement de l'image…"))
-        self._image_label.setAlignment(Qt.AlignCenter)
+        self._image_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self._image_label.setStyleSheet(
             "color:#7F8C8D; background:#F4F6F7; border:1px solid #D5DBDB;")
         self._image_label.setSizePolicy(
-            QSizePolicy.Expanding, QSizePolicy.Expanding)
+            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self._scroll = QScrollArea()
         self._scroll.setWidgetResizable(True)
-        self._scroll.setAlignment(Qt.AlignCenter)
+        self._scroll.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self._scroll.setWidget(self._image_label)
         layout.addWidget(self._scroll, 1)
 
-        buttons = QDialogButtonBox(QDialogButtonBox.Close)
+        buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Close)
         buttons.rejected.connect(self.reject)
         buttons.accepted.connect(self.accept)
         layout.addWidget(buttons)
 
         self._open_external = buttons.addButton(
             self.tr("Ouvrir dans le visualiseur système"),
-            QDialogButtonBox.ActionRole)
+            QDialogButtonBox.ButtonRole.ActionRole)
         self._open_external.clicked.connect(self._open_system_viewer)
         self._open_external.setEnabled(False)
 
@@ -271,6 +271,6 @@ def show_imagery_photo(canvas, hole_id, from_m, to_m, record=None):
         parent = canvas.window() if hasattr(canvas, "window") else None
         dialog = _ImageryPhotoDialog(
             parent, canvas, hole_id, from_m, to_m, record=record)
-        dialog.exec_()
+        dialog.exec()
     except Exception as _exc:
         log_swallowed("view_3d_imagery_viewer : ouverture photo", _exc)

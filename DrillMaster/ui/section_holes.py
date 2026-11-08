@@ -62,7 +62,7 @@ def hole_id_at(canvas, pos):
     scene_pos = canvas.mapToScene(pos)
     for item in canvas.items(pos):
         if (hasattr(item, "acceptedMouseButtons")
-                and item.acceptedMouseButtons() == Qt.NoButton):
+                and item.acceptedMouseButtons() == Qt.MouseButton.NoButton):
             continue
         tip = item.toolTip() or ""
         m = _HOLE_TIP_RE.search(tip)
@@ -71,7 +71,7 @@ def hole_id_at(canvas, pos):
         is_inside = True
         if hasattr(item, "polygon"):
             is_inside = item.polygon().containsPoint(
-                scene_pos, Qt.OddEvenFill)
+                scene_pos, Qt.FillRule.OddEvenFill)
         elif hasattr(item, "path"):
             is_inside = item.path().contains(scene_pos)
         if is_inside:
@@ -126,7 +126,7 @@ def canvas_context_menu(canvas, event):
     else:
         select_action = menu.addAction(
             _tr("Sélectionner {} (passer devant)").format(hole_id))
-    chosen = menu.exec_(event.globalPos())
+    chosen = menu.exec(event.globalPos())
     if chosen is exclude_action:
         exclude_hole(dock, hole_id)
     elif chosen is select_action:
@@ -273,10 +273,10 @@ def _toggle_list(dock):
 
 
 def _on_item_changed(dock, item):
-    hole_id = item.data(Qt.UserRole)
+    hole_id = item.data(Qt.ItemDataRole.UserRole)
     if hole_id is None:
         return
-    if item.checkState() == Qt.Checked:
+    if item.checkState() == Qt.CheckState.Checked:
         include_hole(dock, hole_id)
     else:
         exclude_hole(dock, hole_id)
@@ -303,10 +303,10 @@ def refresh_hole_filter_ui(dock):
     lst.clear()
     for hole_id, dist in candidates:
         item = QListWidgetItem(f"{hole_id} · {dist:.0f} m")
-        item.setData(Qt.UserRole, hole_id)
-        item.setFlags(item.flags() | Qt.ItemIsUserCheckable)
+        item.setData(Qt.ItemDataRole.UserRole, hole_id)
+        item.setFlags(item.flags() | Qt.ItemFlag.ItemIsUserCheckable)
         item.setCheckState(
-            Qt.Unchecked if hole_id in excluded else Qt.Checked)
+            Qt.CheckState.Unchecked if hole_id in excluded else Qt.CheckState.Checked)
         if hole_id in excluded:
             f = QFont(item.font())
             f.setStrikeOut(True)

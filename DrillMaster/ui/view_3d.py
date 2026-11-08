@@ -62,7 +62,7 @@ class View3DWidget(QWidget):
         # ------------------------------------------------------------------
         # Center Splitter: Canvas 3D (stretch 1) + Side Panel (240 px)
         # ------------------------------------------------------------------
-        splitter = QSplitter(Qt.Horizontal)
+        splitter = QSplitter(Qt.Orientation.Horizontal)
         splitter.setChildrenCollapsible(True)
 
         # Container for Canvas (seamless full height, no redundant top bar)
@@ -352,7 +352,7 @@ class View3DWidget(QWidget):
         dialog = _AssayElementDialog(
             elems, self._assay_mirror_label,
             list(self.canvas.assay_display_elements or []), self)
-        if dialog.exec_():
+        if dialog.exec():
             self._apply_assay_elements_display(dialog.selected_elements())
             if dialog._limit_message:
                 self.status_bar.setText(dialog._limit_message)

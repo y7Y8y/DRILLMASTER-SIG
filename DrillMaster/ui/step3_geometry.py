@@ -112,7 +112,7 @@ class Step3Geometry(QWidget):
         # (pas le stretch) absorbait l'espace libre : 3 forages = ~350 px
         # de blanc sous le tableau dans le cadre. Politique Maximum : le
         # groupe épouse son contenu, le vide va dans le stretch.
-        rg.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Maximum)
+        rg.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
         rl = QVBoxLayout(rg)
         rl.setContentsMargins(5, 5, 5, 5)
         self.results_table = QTableWidget(0, 6)
@@ -127,10 +127,10 @@ class Step3Geometry(QWidget):
         for column, tooltip in enumerate(full_headers):
             self.results_table.horizontalHeaderItem(column).setToolTip(tooltip)
         header = self.results_table.horizontalHeader()
-        header.setSectionResizeMode(0, QHeaderView.Stretch)
+        header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
         for column in range(1, 6):
-            header.setSectionResizeMode(column, QHeaderView.ResizeToContents)
-        self.results_table.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+            header.setSectionResizeMode(column, QHeaderView.ResizeMode.ResizeToContents)
+        self.results_table.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
         self.results_table.setStyleSheet(TABLE_STYLE)
         # v2.7.12.10 — revue écran (« certains éléments prennent trop
         # d'espaces ») : avant, la table avait 140 px de HAUTEUR MINIMUM

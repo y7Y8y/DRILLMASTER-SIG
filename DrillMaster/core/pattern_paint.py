@@ -262,12 +262,12 @@ def paint_style(
         return
 
     if style.kind == "solid" or not style.has_motif:
-        painter.setPen(QPen(Qt.NoPen))
-        painter.setBrush(QBrush(fill, Qt.SolidPattern))
+        painter.setPen(QPen(Qt.PenStyle.NoPen))
+        painter.setBrush(QBrush(fill, Qt.BrushStyle.SolidPattern))
         painter.drawPath(clip)
         if draw_border:
             painter.setPen(QPen(QColor(border_color), 1))
-            painter.setBrush(QBrush(Qt.NoBrush))
+            painter.setBrush(QBrush(Qt.BrushStyle.NoBrush))
             painter.drawPath(clip)
         painter.restore()
         return
@@ -277,20 +277,20 @@ def paint_style(
         under = QColor(fill)
         under.setAlpha(int(round(
             fill.alpha() * float(style.underlay_alpha or DEFAULT_UNDERLAY_ALPHA))))
-        painter.setPen(QPen(Qt.NoPen))
-        painter.setBrush(QBrush(under, Qt.SolidPattern))
+        painter.setPen(QPen(Qt.PenStyle.NoPen))
+        painter.setBrush(QBrush(under, Qt.BrushStyle.SolidPattern))
         painter.drawPath(clip)
 
     kind, ok, segs, dots, _sp = _layout_geometry(
         style, corners, axis_dx, axis_dy)
     if not ok:
         # trop petit : aplat plein (honnête)
-        painter.setPen(QPen(Qt.NoPen))
-        painter.setBrush(QBrush(fill, Qt.SolidPattern))
+        painter.setPen(QPen(Qt.PenStyle.NoPen))
+        painter.setBrush(QBrush(fill, Qt.BrushStyle.SolidPattern))
         painter.drawPath(clip)
         if draw_border:
             painter.setPen(QPen(QColor(border_color), 1))
-            painter.setBrush(QBrush(Qt.NoBrush))
+            painter.setBrush(QBrush(Qt.BrushStyle.NoBrush))
             painter.drawPath(clip)
         painter.restore()
         return
@@ -301,12 +301,12 @@ def paint_style(
     if kind == "lines" and segs:
         pen = QPen(ink, float(style.stroke_px or 1.0))
         pen.setCosmetic(True)
-        pen.setCapStyle(Qt.FlatCap)
+        pen.setCapStyle(Qt.PenCapStyle.FlatCap)
         dash = tuple(getattr(style, "dash", ()) or ())
         if dash:
             # tireté cosmétique — rythme propre à la clé (╱≠╲, +≠×)
             try:
-                pen.setStyle(Qt.CustomDashLine)
+                pen.setStyle(Qt.PenStyle.CustomDashLine)
                 pen.setDashPattern([float(v) for v in dash])
             except Exception as _exc:
                 from .diagnostics import log_swallowed
@@ -314,18 +314,18 @@ def paint_style(
                 # setDashPattern indisponible — trait continu
                 pass
         painter.setPen(pen)
-        painter.setBrush(QBrush(Qt.NoBrush))
+        painter.setBrush(QBrush(Qt.BrushStyle.NoBrush))
         for x0, y0, x1, y1 in segs:
             painter.drawLine(QPointF(x0, y0), QPointF(x1, y1))
     elif kind == "dots" and dots:
-        painter.setPen(QPen(Qt.NoPen))
+        painter.setPen(QPen(Qt.PenStyle.NoPen))
         painter.setBrush(QBrush(ink))
         for x, y, r in dots:
             painter.drawEllipse(QPointF(x, y), r, r)
 
     if draw_border:
         painter.setPen(QPen(QColor(border_color), 1))
-        painter.setBrush(QBrush(Qt.NoBrush))
+        painter.setBrush(QBrush(Qt.BrushStyle.NoBrush))
         painter.drawPath(clip)
 
     painter.restore()

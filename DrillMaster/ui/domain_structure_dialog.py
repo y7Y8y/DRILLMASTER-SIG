@@ -103,8 +103,8 @@ class DomainStructureDialog(QDialog):
         self.wide_list = QListWidget()
         for header in self.headers:
             item = QListWidgetItem(header)
-            item.setFlags(item.flags() | Qt.ItemIsUserCheckable)
-            item.setCheckState(Qt.Unchecked)
+            item.setFlags(item.flags() | Qt.ItemFlag.ItemIsUserCheckable)
+            item.setCheckState(Qt.CheckState.Unchecked)
             self.wide_list.addItem(item)
         lay1.addWidget(self.wide_list)
         self.pages.addWidget(p1)
@@ -129,9 +129,9 @@ class DomainStructureDialog(QDialog):
         self.pages.addWidget(p2)
 
         buttons = QDialogButtonBox(
-            QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
-        buttons.button(QDialogButtonBox.Ok).setText(self.tr("Enregistrer l'organisation"))
-        buttons.button(QDialogButtonBox.Cancel).setText(self.tr("Annuler"))
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+        buttons.button(QDialogButtonBox.StandardButton.Ok).setText(self.tr("Enregistrer l'organisation"))
+        buttons.button(QDialogButtonBox.StandardButton.Cancel).setText(self.tr("Annuler"))
         buttons.accepted.connect(self._accept)
         buttons.rejected.connect(self.reject)
         layout.addWidget(buttons)
@@ -162,7 +162,7 @@ class DomainStructureDialog(QDialog):
             for row in range(self.wide_list.count()):
                 item = self.wide_list.item(row)
                 item.setCheckState(
-                    Qt.Checked if item.text() in chosen else Qt.Unchecked)
+                    Qt.CheckState.Checked if item.text() in chosen else Qt.CheckState.Unchecked)
         if mode == "delimited_components":
             idx = self.delimited_code.findData(profile.code_column)
             if idx >= 0:
@@ -177,7 +177,7 @@ class DomainStructureDialog(QDialog):
             chosen = [
                 self.wide_list.item(row).text()
                 for row in range(self.wide_list.count())
-                if self.wide_list.item(row).checkState() == Qt.Checked]
+                if self.wide_list.item(row).checkState() == Qt.CheckState.Checked]
             if not chosen:
                 self.error_label.setText(
                     self.tr("Cochez au moins une colonne de codes."))

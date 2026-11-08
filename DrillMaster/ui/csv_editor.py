@@ -90,14 +90,14 @@ class CsvEditorDialog(QDialog):
         toolbar.addStretch()
         layout.addLayout(toolbar)
 
-        splitter = QSplitter(Qt.Vertical)
+        splitter = QSplitter(Qt.Orientation.Vertical)
         self.table = QTableWidget(0, len(self.pr.raw_headers))
         self.table.setHorizontalHeaderLabels(self.pr.raw_headers)
-        self.table.horizontalHeader().setSectionResizeMode(QHeaderView.Interactive)
+        self.table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Interactive)
         self.table.horizontalHeader().setDefaultSectionSize(130)
         self.table.verticalHeader().setDefaultSectionSize(22)
-        self.table.setSelectionBehavior(QAbstractItemView.SelectItems)
-        self.table.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        self.table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectItems)
+        self.table.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
         self.table.setStyleSheet(TABLE_STYLE)
         self.table.itemChanged.connect(self._on_item_changed)
         splitter.addWidget(self.table)
@@ -121,7 +121,7 @@ class CsvEditorDialog(QDialog):
         footer.addWidget(self.status_label, 1)
         self.save_project_btn = QPushButton(self.tr("Enregistrer la copie du projet"))
         self.save_project_btn.setStyleSheet(BUTTON_PRIMARY)
-        self.save_project_btn.setShortcut(QKeySequence.Save)
+        self.save_project_btn.setShortcut(QKeySequence.StandardKey.Save)
         self.save_project_btn.clicked.connect(self._save_project_copy)
         footer.addWidget(self.save_project_btn)
         self.save_as_btn = QPushButton(self.tr("Enregistrer sous..."))
@@ -156,7 +156,7 @@ class CsvEditorDialog(QDialog):
     def _fill_table_row(self, row_index, values):
         for column, value in enumerate(values):
             item = QTableWidgetItem(value)
-            item.setData(Qt.UserRole, value)
+            item.setData(Qt.ItemDataRole.UserRole, value)
             self.table.setItem(row_index, column, item)
 
     def _normalise_numeric_text(self, column, text):
@@ -174,7 +174,7 @@ class CsvEditorDialog(QDialog):
         if self._updating:
             return
         row, column = item.row(), item.column()
-        old_value = item.data(Qt.UserRole)
+        old_value = item.data(Qt.ItemDataRole.UserRole)
         old_value = "" if old_value is None else str(old_value)
         new_value = self._normalise_numeric_text(column, item.text())
         if new_value != item.text():
@@ -187,7 +187,7 @@ class CsvEditorDialog(QDialog):
         self._redo_stack.clear()
         self.rows[row][column] = new_value
         self._updating = True
-        item.setData(Qt.UserRole, new_value)
+        item.setData(Qt.ItemDataRole.UserRole, new_value)
         self._updating = False
         self._mark_dirty()
 
@@ -196,7 +196,7 @@ class CsvEditorDialog(QDialog):
         item = self.table.item(row, column)
         self._updating = True
         item.setText(value)
-        item.setData(Qt.UserRole, value)
+        item.setData(Qt.ItemDataRole.UserRole, value)
         self._updating = False
 
     def _insert_row(self, row, values):
@@ -332,7 +332,7 @@ class CsvEditorDialog(QDialog):
             }]
             primary = locations[0] if locations else {"row": None, "column": None}
             item = QListWidgetItem(text)
-            item.setData(Qt.UserRole, (
+            item.setData(Qt.ItemDataRole.UserRole, (
                 primary.get("row"), primary.get("column")))
             self.error_list.addItem(item)
         self.error_panel.setVisible(bool(self._issues))
@@ -424,7 +424,7 @@ class CsvEditorDialog(QDialog):
             self.table.setRowHidden(row, only_errors and row not in error_rows)
 
     def _go_to_error_item(self, item):
-        row, column = item.data(Qt.UserRole)
+        row, column = item.data(Qt.ItemDataRole.UserRole)
         if row is None or not (0 <= row < self.table.rowCount()):
             return
         self.table.setRowHidden(row, False)
@@ -460,7 +460,7 @@ class CsvEditorDialog(QDialog):
         if row < 0:
             return -1
         for index in range(self.error_list.count()):
-            issue_row, _column = self.error_list.item(index).data(Qt.UserRole)
+            issue_row, _column = self.error_list.item(index).data(Qt.ItemDataRole.UserRole)
             if issue_row is not None and issue_row >= row:
                 return index
         return 0
@@ -559,14 +559,14 @@ class CsvEditorDialog(QDialog):
         answer = QMessageBox.question(
             self, self.tr("Modifications non enregistrées"),
             self.tr("Enregistrer les modifications dans la copie du projet avant de fermer ?"),
-            QMessageBox.Save | QMessageBox.Discard | QMessageBox.Cancel,
-            QMessageBox.Save)
-        if answer == QMessageBox.Save:
+            QMessageBox.StandardButton.Save | QMessageBox.StandardButton.Discard | QMessageBox.StandardButton.Cancel,
+            QMessageBox.StandardButton.Save)
+        if answer == QMessageBox.StandardButton.Save:
             if self._save_project_copy():
                 event.accept()
             else:
                 event.ignore()
-        elif answer == QMessageBox.Discard:
+        elif answer == QMessageBox.StandardButton.Discard:
             self._restore_initial()
             event.accept()
         else:

@@ -54,8 +54,8 @@ class VisualizationDock(QgsDockWidget):
         self.main_dock = main_dock
         self.workspace_state = workspace_state
         self.setAllowedAreas(
-            Qt.BottomDockWidgetArea | Qt.TopDockWidgetArea
-            | Qt.LeftDockWidgetArea | Qt.RightDockWidgetArea)
+            Qt.DockWidgetArea.BottomDockWidgetArea | Qt.DockWidgetArea.TopDockWidgetArea
+            | Qt.DockWidgetArea.LeftDockWidgetArea | Qt.DockWidgetArea.RightDockWidgetArea)
         self.setFeatures(
             QDockWidget.DockWidgetClosable
             | QDockWidget.DockWidgetMovable
@@ -180,8 +180,8 @@ class VisualizationDock(QgsDockWidget):
                 "(ou la désactivation) sans passer par ce bouton."))
             btn.clicked.connect(self._enable_view3d)
             vlay.addStretch(1)
-            vlay.addWidget(msg, 0, Qt.AlignHCenter)
-            vlay.addWidget(btn, 0, Qt.AlignHCenter)
+            vlay.addWidget(msg, 0, Qt.AlignmentFlag.AlignHCenter)
+            vlay.addWidget(btn, 0, Qt.AlignmentFlag.AlignHCenter)
             vlay.addStretch(1)
             self.tabs.addTab(ph, self.tr("Vue 3D"))
         # v2.9.178 — l'ancienne bulle d'attente de la 3D datait d'avant
@@ -202,7 +202,7 @@ class VisualizationDock(QgsDockWidget):
         # sur cet onglet.
         undo_bar = self.section_widget.build_global_undo_bar(self.tabs)
         self._undo_bar = undo_bar
-        self.tabs.setCornerWidget(undo_bar, Qt.TopRightCorner)
+        self.tabs.setCornerWidget(undo_bar, Qt.Corner.TopRightCorner)
 
         layout.addWidget(self.tabs, 1)
         self.setWidget(central)
