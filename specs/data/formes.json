@@ -1,0 +1,167 @@
+{
+  "fonctions": 1836,
+  "courtes_moins_de_40": 1548,
+  "part_courtes": 0.8431,
+  "par_seuil": {
+    "80": 106,
+    "150": 31,
+    "250": 12,
+    "400": 5
+  },
+  "plus_grandes": [
+    {
+      "nom": "paint_legends_image_impl",
+      "fichier": "ui/section_export.py",
+      "ligne": 493,
+      "lignes": 782
+    },
+    {
+      "nom": "_draw_style_identity_track",
+      "fichier": "ui/section_dock.py",
+      "ligne": 2642,
+      "lignes": 673
+    },
+    {
+      "nom": "draw_drillhole",
+      "fichier": "ui/view_3d_renderer.py",
+      "ligne": 1829,
+      "lignes": 638
+    },
+    {
+      "nom": "validate_intervals",
+      "fichier": "core/validation.py",
+      "ligne": 1555,
+      "lignes": 520
+    },
+    {
+      "nom": "step2_validate_all",
+      "fichier": "ui/step2_import.py",
+      "ligne": 2353,
+      "lignes": 439
+    },
+    {
+      "nom": "build_side_panel",
+      "fichier": "ui/view_3d_panel.py",
+      "ligne": 30,
+      "lignes": 343
+    },
+    {
+      "nom": "validate_lithology",
+      "fichier": "core/validation.py",
+      "ligne": 1211,
+      "lignes": 339
+    },
+    {
+      "nom": "paint_locator_map",
+      "fichier": "ui/section_export.py",
+      "ligne": 1425,
+      "lignes": 298
+    },
+    {
+      "nom": "sample_raster_along_line",
+      "fichier": "ui/section_surface.py",
+      "ligne": 195,
+      "lignes": 287
+    },
+    {
+      "nom": "load_drillholes_from_gpkg",
+      "fichier": "core/layers.py",
+      "ligne": 745,
+      "lignes": 279
+    },
+    {
+      "nom": "render_canvas_to_png",
+      "fichier": "ui/section_export.py",
+      "ligne": 1879,
+      "lignes": 267
+    },
+    {
+      "nom": "__init__",
+      "fichier": "ui/section_dock.py",
+      "ligne": 205,
+      "lignes": 257
+    }
+  ],
+  "plus_grosse_classe": {
+    "nom": "SectionWidget",
+    "fichier": "ui/section_dock.py",
+    "lignes": 5296
+  },
+  "classe_la_plus_de_methodes": {
+    "nom": "SectionWidget",
+    "fichier": "ui/section_dock.py",
+    "methodes": 172
+  },
+  "fonctions_repliees": [
+    {
+      "nom": "_draw_style_identity_track",
+      "fichier": "ui/section_dock.py",
+      "ligne": 2642,
+      "lignes": 673,
+      "fonctions_nommees": 9
+    },
+    {
+      "nom": "paint_locator_map",
+      "fichier": "ui/section_export.py",
+      "ligne": 1425,
+      "lignes": 298,
+      "fonctions_nommees": 6
+    },
+    {
+      "nom": "paint_legends_image_impl",
+      "fichier": "ui/section_export.py",
+      "ligne": 493,
+      "lignes": 782,
+      "fonctions_nommees": 5
+    },
+    {
+      "nom": "export_png_dialog",
+      "fichier": "ui/section_export.py",
+      "ligne": 195,
+      "lignes": 184,
+      "fonctions_nommees": 4
+    },
+    {
+      "nom": "crop_white_margins",
+      "fichier": "ui/section_export.py",
+      "ligne": 406,
+      "lignes": 70,
+      "fonctions_nommees": 3
+    },
+    {
+      "nom": "conversion_between",
+      "fichier": "core/crs_math.py",
+      "ligne": 142,
+      "lignes": 27,
+      "fonctions_nommees": 2
+    },
+    {
+      "nom": "install_translator",
+      "fichier": "core/i18n.py",
+      "ligne": 111,
+      "lignes": 48,
+      "fonctions_nommees": 2
+    },
+    {
+      "nom": "_layout_geometry",
+      "fichier": "core/pattern_paint.py",
+      "ligne": 66,
+      "lignes": 133,
+      "fonctions_nommees": 2
+    },
+    {
+      "nom": "obb_intersects",
+      "fichier": "core/track_layout.py",
+      "ligne": 622,
+      "lignes": 45,
+      "fonctions_nommees": 2
+    },
+    {
+      "nom": "_draw_axis_aligned_pattern_lines",
+      "fichier": "ui/coupe_contours.py",
+      "ligne": 208,
+      "lignes": 130,
+      "fonctions_nommees": 2
+    }
+  ]
+}

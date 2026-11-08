@@ -1,8 +1,8 @@
 {
   "coupe": {
-    "median_ms": 1.25,
-    "min_ms": 1.14,
-    "max_ms": 1.82,
+    "median_ms": 1.16,
+    "min_ms": 1.09,
+    "max_ms": 1.74,
     "forages": 64,
     "intercepts": 294,
     "analyses": 3200

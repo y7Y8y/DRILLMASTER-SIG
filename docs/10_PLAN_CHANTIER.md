@@ -227,6 +227,7 @@ changé : tout est ré-exporté ou rattaché à la classe.
 | `docs/HISTORIQUE_section_dock.md` | journal intégral, hors du code |
 | `tools/audit_rangement.py` | `specs/data/rangement.json`, relancé à chaque tranche |
 | `specs/tests/test_rangement.py` — 25 tests | cliquets (10 195 max, 1 seul géant) + 14 tests qui **exécutent** le code déplacé |
+| `specs/tests/test_forme.py` — 10 tests · `tools/audit_formes.py` | forme des fonctions : 106 / 31 / 12 / 5 · `maquettes/34_formes.png` |
 | `maquettes/27_rangements.png` | relue |
 | R-52, R-53 (docs/07 §17) | — |
 
@@ -243,9 +244,29 @@ les items : huit items dans l'ordre (disque, trace, pointe, aiguille sud et
 nord, quatre textes), la légende qui dit « N290° · WNW → ESE », une
 infobulle commune, et rien du tout sans ligne de coupe.
 
+#### La forme des fonctions — mesurée le 8 novembre 2026
+
+Le rangement par fichiers ne disait que la moitié de l'histoire. `tools/audit_formes.py`
+mesure l'autre, et la planche `maquettes/34_formes.png` la montre.
+
+| Mesure | Valeur | Lecture |
+|---|---|---|
+| fonctions du plugin | **1 836** | — |
+| fonctions de moins de 40 lignes | **1 548 (84,3 %)** | la taille n'est pas le défaut principal |
+| fonctions de 80 lignes et plus | **106** | plafond posé |
+| de 150 et plus · de 250 et plus · de 400 et plus | **31 · 12 · 5** | trois familles : export, 3D, validation |
+| la plus grosse classe | **`SectionWidget` — 5 296 lignes, 172 méthodes** | le vrai défaut : trop de voisines, pas des fonctions trop longues |
+| fonctions nommées repliées dans une fonction | **9** dans `_draw_style_identity_track`, 6 dans `paint_locator_map`, 5 dans `paint_legends_image_impl` | du code écrit sur place faute d'être nommé |
+
+Quatre cliquets (R-67 à R-70), tenus par `specs/tests/test_forme.py` — 10 tests.
+`specs/data/formes.json` est vérifié contre la mesure, de sorte que la planche
+ne puisse pas mentir.
+
 **Ce qui reste, chiffré** : 1 fichier > 3 000 lignes (le monolithe) · 6
 fichiers > 1 500 lignes · 995 lignes de commentaire d'historique encore dans
-le code · 38 noms partagés entre fichiers · 119 boucles de dessin imbriquées.
+le code · 38 noms partagés entre fichiers · 119 boucles de dessin imbriquées ·
+5 fonctions de 400 lignes et plus · 9 fonctions repliées au maximum dans une
+seule.
 Prochains candidats mesurés dans la classe : `_draw_grid` (111 lignes, 25
 lectures de `self` — il ne sortira pas seul), `_draw_eoh_labels` (131
 lignes, 9 lectures), `_draw_style_identity_track` (673 lignes, 12 lectures,

@@ -960,3 +960,61 @@ même règle.
 | le type des champs de couche | `type_de_champ()` choisit à l'exécution (`Qgis.FieldType` ou `QVariant`) : c'est le seul endroit où l'ancienne forme subsiste, et c'est nommé une fois au lieu de 53 |
 | pas d'archive d'installation générée | une archive est une décision de version, pas de nettoyage ; le contenu du paquet est mesuré, l'archive reste à faire au moment de la livraison |
 | la catégorie de menu | aucune catégorie admise ne correspond à un atelier de forages ; mieux vaut aucune catégorie qu'une catégorie fausse |
+
+## 24. Chantier 6 bis — la forme des fonctions
+
+Le rangement par fichiers (`test_rangement.py`) ne mesurait que la moitié de
+l'histoire. Un fichier de 2 000 lignes fait de vingt fonctions de 100 lignes
+se lit ; un fichier de 600 lignes contenant une fonction de 500 lignes ne se
+lit pas. La mesure existe désormais : `tools/audit_formes.py`, données dans
+`specs/data/formes.json`, planche `maquettes/34_formes.png`.
+
+### Ce que la mesure a trouvé
+
+**1 836 fonctions** dans le plugin. **84,3 %** tiennent en moins de 40 lignes :
+la taille des fonctions n'est donc pas le défaut principal, et c'est une
+bonne nouvelle qu'il faut dire aussi.
+
+| Seuil | Fonctions | Où elles sont |
+|---|---|---|
+| 400 lignes et plus | **5** | `section_export` (2), `section_dock`, `view_3d_renderer`, `core/validation` |
+| 250 lignes et plus | **12** | les mêmes, plus `step2_import`, `view_3d_panel` |
+| 150 lignes et plus | **31** | — |
+| 80 lignes et plus | **106** | — |
+
+Le vrai défaut est ailleurs, et il est net : **`SectionWidget` porte 172
+méthodes et 5 296 lignes à elle seule**. Ce n'est pas la longueur d'une
+fonction qui gêne la lecture, c'est le nombre de voisines dans la même
+portée.
+
+Second défaut, invisible jusqu'ici : le **code replié**. Neuf fonctions
+nommées vivent à l'intérieur de `_draw_style_identity_track`, six dans
+`paint_locator_map`, cinq dans `paint_legends_image_impl`. Ce ne sont pas des
+générateurs : ce sont des fonctions écrites sur place, faute de les avoir
+nommées et posées à côté.
+
+### Les règles
+
+**R-67 · La forme d'une fonction se mesure, comme sa place.** Quatre
+cliquets : 106 fonctions au-dessus de 80 lignes, 31 au-dessus de 150, 12
+au-dessus de 250, 5 au-dessus de 400. Aucun ne peut monter.
+
+**R-68 · Une fonction courte reste la règle.** 84,3 % des fonctions tiennent
+en moins de 40 lignes ; ce taux ne peut pas descendre. Une contribution qui
+l'abaisse doit découper, pas allonger.
+
+**R-69 · Une classe ne grossit pas indéfiniment.** 172 méthodes et 5 296
+lignes pour `SectionWidget` sont le **plafond mesuré**, pas une permission.
+
+**R-70 · Une fonction ne replie pas plus de neuf fonctions nommées.** Une
+fonction de 673 lignes qui contient neuf fonctions est un fichier déguisé :
+elle se découpe, ou elle ne grandit plus.
+
+### Ce qui reste, nommé
+
+| Reste | Pourquoi ce n'est pas fait ici |
+|---|---|
+| `paint_legends_image_impl` (782 lignes) | cinq fonctions internes déjà nommées : il suffit de les sortir et de leur passer l'état, mais cela demande une tranche à part, vérifiée | 
+| `draw_drillhole` (638 lignes) | dépend de 8 aides de module et d'un état de mouvement : le démêler avant de le découper, comme `_draw_style_identity_track` |
+| `SectionWidget`, 172 méthodes | c'est le chantier 6, tranche par tranche, selon le critère « ne lit rien de l'état » |
+| les trois fonctions de `core/validation` | elles valident des fichiers réels : un découpage se prouve par les mêmes jeux d'essai, pas par la lecture |
