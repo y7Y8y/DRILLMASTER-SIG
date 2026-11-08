@@ -1,0 +1,5 @@
+hole_id,depth,azimuth,dip
+DM-001,0,0,-90
+DM-001,110,0,-90
+INCONNU,0,0,-90
+DM-002,0,400,-45
