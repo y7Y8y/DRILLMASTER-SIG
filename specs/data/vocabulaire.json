@@ -13,8 +13,8 @@
       "assay": 1
     },
     "coupe": {
-      "section": 24,
       "coupe": 133,
+      "section": 24,
       "profil": 7
     },
     "collet": {
@@ -22,8 +22,8 @@
       "collar": 1
     },
     "pendage": {
-      "pendage": 4,
-      "dip": 9
+      "dip": 9,
+      "pendage": 4
     },
     "piste": {
       "piste": 30,

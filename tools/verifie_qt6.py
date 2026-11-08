@@ -180,8 +180,26 @@ def main(argv):
     # À l'exécution, QtCore seul est importable ici : QtGui et QtWidgets
     # exigent libGL, absent du bac à sable. Un « AttributeError » sur ces
     # classes veut donc dire « non éprouvable ici », jamais « refusé ».
+    # Sur un poste sans PyQt du tout, l'outil ne casse pas : il dit qu'il
+    # n'a rien pu éprouver et s'arrête là.
     import importlib.util
-    spec_core = importlib.util.find_spec("PyQt5.QtCore")
+    try:
+        spec_core = importlib.util.find_spec("PyQt5.QtCore")
+    except ModuleNotFoundError:
+        spec_core = None
+    if spec_core is None:
+        print("── Qt 5, à l'exécution")
+        print(f"  {etat}")
+        if execution:
+            print(f"  {len(execution)} forme(s) éprouvée(s) dans "
+                  f"l'environnement jetable · "
+                  f"{len(formes) - len(execution)} non éprouvable(s) ici")
+        print("  PyQt5 n'est pas installé sur ce poste : les déclarations "
+              "livrées ne sont pas lisibles, donc rien n'est affirmé sur "
+              "les formes non éprouvables")
+        print("\n  « ça tourne sur QGIS 4 » n'est PAS prouvé ici : aucun QGIS 4 "
+              "n'a été ouvert.")
+        return 2
     formes_qtcore = [f for f in formes if f.split(".")[0] == "Qt"]
     refus_execution = {f: e for f, e in execution.items()
                        if e != "ok" and f in formes_qtcore}

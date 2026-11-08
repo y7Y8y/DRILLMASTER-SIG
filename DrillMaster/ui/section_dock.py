@@ -12,6 +12,8 @@ Tranches déjà sorties :
 ============================  ==============================================
 ``ui/coupe_socle.py``         couleurs d'interaction, motifs, encres,
                               petites capitales, items graphiques
+``ui/coupe_contours.py``      contours de sélection, survol, traits de motif
+``ui/coupe_rose.py``          la rose de localisation (badge du nord)
 ``ui/section_export.py``      la mécanique d'export
 ``ui/section_surface.py``     lecture du sol (raster, profil)
 ``ui/section_holes.py``       exclusion et filtrage des forages
@@ -114,6 +116,13 @@ from .coupe_contours import (  # noqa: F401
     _exterior_outline_path_from_poly,
     _inset_band_depth_ends,
 )
+
+# ── Chantier 6, tranche 4 — la rose de localisation ────────────────────
+# Le badge du nord (disque, trace P1→P2, aiguille, étiquettes, légende)
+# vit dans `ui/coupe_rose.py`. Il ne lisait que trois choses de la vue :
+# la ligne de coupe, la scène et le service de traduction ; les voici
+# passées en arguments. Le nom reste attaché à la classe, plus bas.
+from .coupe_rose import _draw_north_badge  # noqa: F401
 
 
 
@@ -4406,102 +4415,6 @@ class SectionCanvas(QGraphicsView):
     # v2.7.6.9 : badges uniquement à l'écran — l'export a été retiré
     # définitivement (AUDIT_V2.7.6.9.md), la machinerie de masquage des
     # badges pendant le rendu export n'existe plus.
-    def _draw_north_badge(self):
-        """v2.7.6.3 (ORI-03) — rose de localisation en vue de plan.
-
-        Le nord reste en haut et la trace de la coupe est fléchée à son
-        azimut réel, de P1 vers P2. Faire tourner une aiguille dans le plan
-        d'une coupe verticale était trompeur : ce plan n'a pas de nord.
-        """
-        if not self._line:
-            return
-        from ..core.geometry import (
-            azimuth_label, section_azimuth_degrees, section_rose_model)
-        az = section_azimuth_degrees(
-            self._line.x1, self._line.y1, self._line.x2, self._line.y2)
-        radius = 11.0
-        cx, cy = 30.0, 32.0
-        model = section_rose_model(az, cx, cy, radius)
-        items = []
-
-        disc = self.scene.addEllipse(
-            cx - radius * 1.35, cy - radius * 1.35,
-            radius * 2.7, radius * 2.7,
-            QPen(QColor(COLORS['border']), 0.7),
-            QBrush(QColor(255, 255, 255, 232)))
-        disc.setZValue(14)
-        items.append(disc)
-
-        trace_pen = QPen(QColor("#B03A2E"), 1.4)
-        trace = self.scene.addLine(
-            model["p1"][0], model["p1"][1], model["p2"][0], model["p2"][1],
-            trace_pen)
-        trace.setZValue(15)
-        head = self.scene.addPolygon(
-            QPolygonF([QPointF(*point) for point in model["arrow"]]),
-            QPen(QColor("#B03A2E"), 0.5), QBrush(QColor("#B03A2E")))
-        head.setZValue(16)
-        items.extend([trace, head])
-
-        needle = model["needle"]
-        south = self.scene.addPolygon(
-            QPolygonF([QPointF(*point) for point in needle["south"]]),
-            QPen(QColor(COLORS['primary']), 0.6), QBrush(QColor(255, 255, 255)))
-        south.setZValue(16)
-        north = self.scene.addPolygon(
-            QPolygonF([QPointF(*point) for point in needle["north"]]),
-            QPen(QColor(COLORS['primary']), 0.6),
-            QBrush(QColor(COLORS['primary'])))
-        north.setZValue(17)
-        items.extend([south, north])
-
-        label = self.scene.addText("N", QFont("Segoe UI", 7, QFont.Weight.Bold))
-        label.setDefaultTextColor(QColor(COLORS['primary']))
-        label_x, label_y = needle["label"]
-        label.setPos(label_x - label.boundingRect().width() / 2,
-                     label_y - label.boundingRect().height() / 2)
-        label.setZValue(17)
-        items.append(label)
-
-        for key, text in (("p1_label", "P1"), ("p2_label", "P2")):
-            mark = self.scene.addText(text, QFont("Segoe UI", 6))
-            mark.setDefaultTextColor(QColor("#B03A2E"))
-            mx, my = model[key]
-            mark.setPos(mx - mark.boundingRect().width() / 2,
-                        my - mark.boundingRect().height() / 2)
-            mark.setZValue(17)
-            items.append(mark)
-
-        # 361 — la direction EN TOUTES LETTRES sous l'azimut : plus
-        # personne ne confond l'axe de la ligne et le sens de lecture
-        # (retour « WNW / ESE ? » + chef « pourquoi 290° »).
-        from ..core.section import compass16
-        sens = f"{compass16(az + 180)} → {compass16(az)}"
-        caption = self.scene.addText(
-            self.tr("coupe {} · {}").format(azimuth_label(az), sens),
-            QFont("Segoe UI", 6))
-        # 361 — infobulle pédagogique : azimut coupe = P1→P2 ; un
-        # forage à ±180° suit le MÊME axe, lu en sens inverse.
-        disc.setToolTip(self.tr(
-            "Nord en haut · flèche rouge = ligne de coupe, sens P1→P2 "
-            "({}).  Un forage dont l'azimut diffère d'environ 180° est "
-            "foré LE LONG de la coupe, en sens inverse : même axe, lu "
-            "P2→P1 — ce n'est pas une erreur.").format(sens))
-        caption.setDefaultTextColor(QColor(COLORS['text_medium']))
-        caption.setPos(cx - caption.boundingRect().width() / 2,
-                       cy + radius * 1.35 + 2)
-        caption.setZValue(17)
-        items.append(caption)
-
-        # 332 — « et ça c'est quoi ? » : la boussole s'explique
-        # elle-même au survol.
-        tip = self.tr(
-            "Boussole de la coupe — flèche noire : Nord ; ligne rouge : "
-            "ta ligne de coupe P1→P2 vue de dessus ; « coupe N…° » : "
-            "azimut de P1 vers P2.")
-        for it in items:
-            it.setToolTip(tip)
-
     def _draw_orientation(self, sr):
         side = self._footer_side(self._orientation_position, "left")
         font = QFont("Segoe UI", int(self._orientation_font_size))
@@ -4947,6 +4860,11 @@ SectionCanvas._add_tooltip_hit_pad = lambda self, *a, **k: (
     _add_tooltip_hit_pad(self.scene, *a, **k))
 SectionCanvas._draw_axis_aligned_pattern_lines = lambda self, *a, **k: (
     _draw_axis_aligned_pattern_lines(self.scene, *a, **k))
+
+# Tranche 4 : la rose ne reçoit que ce qu'elle lisait (ligne, scène,
+# traduction) ; la vue, elle, n'est pas touchée.
+SectionCanvas._draw_north_badge = lambda self, *a, **k: (
+    _draw_north_badge(self, self.scene, self._line, *a, **k))
 
 
 class SectionWidget(QWidget):

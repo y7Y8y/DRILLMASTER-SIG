@@ -138,7 +138,10 @@ def main(argv):
                     if re.search(rf"\b{mot}\w*\b", t.lower()):
                         compte[mot] += 1
             if len(compte) > 1:
-                sortie["couples"][groupe[0]] = dict(compte)
+                # Trié par nombre décroissant puis par mot : sinon le
+                # fichier change d'ordre à chaque exécution à égalité.
+                sortie["couples"][groupe[0]] = dict(
+                    sorted(compte.items(), key=lambda kv: (-kv[1], kv[0])))
         (RACINE / "specs" / "data" / "vocabulaire.json").write_text(
             json.dumps(sortie, ensure_ascii=False, indent=2) + "\n",
             encoding="utf-8")

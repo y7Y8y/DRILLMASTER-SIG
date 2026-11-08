@@ -205,28 +205,51 @@ est corrigé. Preuve : `python3 tools/demo_gestes.py`.
   « annuler » après coup.
 - Tout bouton est relié, ou il n'existe pas ; un bouton désactivé dit pourquoi.
 
-### Chantier 6 — Les rangements — 🟡 **tranches 1 à 3 livrées, le cliquet est posé**
+### Chantier 6 — Les rangements — 🟡 **tranches 1 à 4 livrées, le cliquet est posé**
 
-`section_dock.py` pesait **11 529 lignes**. Il en fait **10 247** (−11,1 %) :
+`section_dock.py` pesait **11 529 lignes**. Il en fait **10 165** (−11,8 %) :
 le socle de la coupe (couleurs d'interaction, motifs, encres, items
 graphiques) est sorti dans `ui/coupe_socle.py`, la géométrie du dessin de
-coupe dans `ui/coupe_contours.py`, et les **801 lignes de journal de
-versions** ont quitté la docstring pour `docs/HISTORIQUE_section_dock.md`.
-Aucun appelant n'a changé : tout est ré-exporté ou rattaché à la classe.
+coupe dans `ui/coupe_contours.py`, la rose de localisation dans
+`ui/coupe_rose.py`, et les **801 lignes de journal de versions** ont quitté
+la docstring pour `docs/HISTORIQUE_section_dock.md`. Aucun appelant n'a
+changé : tout est ré-exporté ou rattaché à la classe.
+
+| Tranche | Sorti vers | Lignes du monolithe |
+|---|---|---|
+| 1 — socle et journal | `ui/coupe_socle.py`, `docs/HISTORIQUE_section_dock.md` | 11 529 → 10 515 |
+| 2 et 3 — contours, survol, traits de motif | `ui/coupe_contours.py` (5 fonctions) | 10 515 → 10 247 |
+| 4 — rose de localisation | `ui/coupe_rose.py` (1 fonction, 95 lignes) | 10 247 → **10 165** |
 
 | Livré | Preuve |
 |---|---|
 | `ui/coupe_socle.py` (288 lignes, 16 noms) | `test_les_noms_vivent_dans_le_socle` |
 | `docs/HISTORIQUE_section_dock.md` | journal intégral, hors du code |
 | `tools/audit_rangement.py` | `specs/data/rangement.json`, relancé à chaque tranche |
-| `ui/coupe_contours.py` (tranches 2 et 3, 5 fonctions) | 10 515 → **10 247** lignes |
-| `specs/tests/test_rangement.py` — 15 tests | cliquets (10 290 max, 1 seul géant) + 8 tests qui **exécutent** la géométrie déplacée |
+| `specs/tests/test_rangement.py` — 25 tests | cliquets (10 195 max, 1 seul géant) + 14 tests qui **exécutent** le code déplacé |
 | `maquettes/27_rangements.png` | relue |
 | R-52, R-53 (docs/07 §17) | — |
 
-**Ce qui reste, chiffré** : 6 fichiers > 1 500 lignes · 996 lignes de
-commentaire d'historique encore dans le code · 39 noms partagés entre
-fichiers. Prochain candidat mesuré : `ui/step2_import.py` (2 860 lignes).
+**Tranche 4 — comment on sait que la rose n'a pas bougé.** Son corps, une
+fois ramené à la forme d'origine (`self` → `widget`, `self.scene` → `scene`,
+`self._line` → `line`, deux imports remontés en tête), est **identique
+instruction pour instruction** à celui de la version précédente : 37
+instructions avant, 37 après, aucune différence à `ast.unparse`. C'est un
+contrôle de plus que pour les tranches 2 et 3, où la géométrie pure ne
+donnait aucune prise à l'état. Le seul gain de lecture est réel : la
+fonction ne lit plus rien de la vue (0 attribut `self`), elle reçoit
+`widget`, `scene` et `line`. Six tests l'exécutent avec une scène qui note
+les items : huit items dans l'ordre (disque, trace, pointe, aiguille sud et
+nord, quatre textes), la légende qui dit « N290° · WNW → ESE », une
+infobulle commune, et rien du tout sans ligne de coupe.
+
+**Ce qui reste, chiffré** : 1 fichier > 3 000 lignes (le monolithe) · 6
+fichiers > 1 500 lignes · 995 lignes de commentaire d'historique encore dans
+le code · 38 noms partagés entre fichiers · 119 boucles de dessin imbriquées.
+Prochains candidats mesurés dans la classe : `_draw_grid` (111 lignes, 25
+lectures de `self` — il ne sortira pas seul), `_draw_eoh_labels` (131
+lignes, 9 lectures), `_draw_style_identity_track` (673 lignes, 12 lectures,
+une vingtaine d'aides de module : à démêler avant d'y toucher).
 
 ### Chantier 7 — Les écrans neufs — 🟡 **confrontés au code, 23 promesses sur 28**
 

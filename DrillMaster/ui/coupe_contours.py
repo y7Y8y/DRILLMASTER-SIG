@@ -33,8 +33,6 @@ from __future__ import annotations
 
 import math
 
-import math
-
 from qgis.PyQt.QtCore import QPointF, Qt
 from qgis.PyQt.QtGui import (
     QBrush, QColor, QPainterPath, QPainterPathStroker, QPen, QPolygonF,

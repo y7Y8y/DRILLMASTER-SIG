@@ -96,7 +96,9 @@ def main(argv):
             "critiques": [x["fichier"] for x in critiques],
             "lignes_de_journal": journal,
             "plus_gros": t[:8],
-            "noms_partages": d,
+            # Trié par nom : sans cela, la moindre insertion de ligne
+            # réordonne le fichier produit et le rend illisible en diff.
+            "noms_partages": {k: d[k] for k in sorted(d)},
         }
         (RACINE / "specs" / "data" / "rangement.json").write_text(
             json.dumps(sortie, ensure_ascii=False, indent=2) + "\n",

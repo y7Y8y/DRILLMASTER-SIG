@@ -364,4 +364,11 @@ class LesDeuxQtSontEprouves(unittest.TestCase):
                            capture_output=True, text=True)
         self.assertIn("Qt 5", r.stdout)
         self.assertIn("n'est PAS prouvé ici", r.stdout)
-        self.assertEqual(r.returncode, 0, r.stdout[-800:] + r.stderr[-400:])
+        # Deux issues acceptables, et deux seulement. « 0 » : les deux PyQt
+        # sont là, les déclarations ont été lues. « 2 » : ce poste n'a pas
+        # de PyQt, l'outil le dit et n'affirme rien — la seule chose
+        # interdite serait de sortir en « 0 » sans avoir rien lu.
+        self.assertIn(r.returncode, (0, 2), r.stdout[-800:] + r.stderr[-400:])
+        if r.returncode == 2:
+            self.assertIn("rien n'est affirmé", r.stdout)
+            self.assertNotIn("acceptées par Qt 6", r.stdout)

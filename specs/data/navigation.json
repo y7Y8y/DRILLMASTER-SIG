@@ -29,28 +29,28 @@
     },
     {
       "fichier": "ui/section_dock.py",
-      "ligne": 7622,
+      "ligne": 7540,
       "genre": "posé sur un widget",
       "touche": "Undo",
       "affiche": false
     },
     {
       "fichier": "ui/section_dock.py",
-      "ligne": 7624,
+      "ligne": 7542,
       "genre": "posé sur un widget",
       "touche": "Redo",
       "affiche": false
     },
     {
       "fichier": "ui/section_dock.py",
-      "ligne": 7626,
+      "ligne": 7544,
       "genre": "posé sur un widget",
       "touche": "Ctrl+Y",
       "affiche": false
     },
     {
       "fichier": "ui/section_dock.py",
-      "ligne": 7628,
+      "ligne": 7546,
       "genre": "posé sur un widget",
       "touche": "Ctrl+E",
       "affiche": false

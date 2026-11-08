@@ -22,7 +22,8 @@ SOCLE = PLUGIN / "ui" / "coupe_socle.py"
 # 11 529 avant le chantier 6
 # → 10 515 après la tranche 1 (socle + journal)
 # → 10 247 après les tranches 2 et 3 (contours, survol, traits de motif)
-PLAFOND_DOCK = 10_290
+# → 10 163 après la tranche 4 (rose de localisation)
+PLAFOND_DOCK = 10_195
 # Un seul fichier du plugin a le droit de dépasser 3 000 lignes. Quand il
 # n'y en aura plus aucun, cette constante passera à 0.
 FICHIERS_GEANTS_AUTORISES = 1
@@ -304,3 +305,249 @@ class LeContourNeChangePasDeForme(unittest.TestCase):
         m = self.charge()
         self.assertIsNone(m._exterior_outline_path_from_poly(None))
         self.assertIsNone(m._exterior_outline_path(None))
+
+
+class Tranche4(unittest.TestCase):
+    """La rose de localisation : sortie, rattachée, et toujours la même.
+
+    Particularité de cette tranche : elle est la première à dépendre de
+    ``styles_qt`` (les couleurs de la charte). C'est ce qui la rend
+    vérifiable sans Qt : on substitue une charte connue et une scène qui
+    **note** ce qu'on lui demande, puis on relit le dessin.
+    """
+
+    ROSE = PLUGIN / "ui" / "coupe_rose.py"
+    SORTIE = "_draw_north_badge"
+
+    def test_la_fonction_vit_dans_le_module_de_tranche(self):
+        self.assertIn(self.SORTIE, noms_du_module(self.ROSE))
+
+    def test_elle_n_est_plus_dans_le_monolithe(self):
+        arbre = ast.parse(DOCK.read_text(encoding="utf-8"))
+        canvas = [c for c in arbre.body
+                  if isinstance(c, ast.ClassDef) and c.name == "SectionCanvas"][0]
+        self.assertNotIn(self.SORTIE,
+                         {n.name for n in canvas.body
+                          if isinstance(n, ast.FunctionDef)})
+
+    def test_la_classe_la_rattache_encore(self):
+        self.assertIn(self.SORTIE, DOCK.read_text(encoding="utf-8")
+                      .replace("SectionCanvas._draw_north_badge", ""))
+
+    def test_elle_ne_lit_plus_la_vue(self):
+        """Le critère de la tranche : plus une seule lecture de ``self``."""
+        arbre = ast.parse(self.ROSE.read_text(encoding="utf-8"))
+        f = [n for n in arbre.body
+             if isinstance(n, ast.FunctionDef) and n.name == self.SORTIE][0]
+        self.assertEqual([a.arg for a in f.args.args], ["widget", "scene", "line"])
+        attrs = {n.attr for n in ast.walk(f)
+                 if isinstance(n, ast.Attribute)
+                 and isinstance(n.value, ast.Name) and n.value.id == "self"}
+        self.assertFalse(attrs, attrs)
+
+
+class LaRoseDessineToujoursLaMemeChose(unittest.TestCase):
+    """On exécute le dessin avec une scène qui note les appels.
+
+    Ce qui est vérifié : le **contrat du dessin** (sept items, leur ordre
+    d'empilement, les textes affichés, l'infobulle commune). Ce qui ne
+    l'est pas : la peinture — Qt n'est pas installé ici.
+    """
+
+    ROSE = PLUGIN / "ui" / "coupe_rose.py"
+
+    @classmethod
+    def setUpClass(cls):
+        cls.ajoutes = []
+
+    @classmethod
+    def tearDownClass(cls):
+        for nom in cls.ajoutes:
+            sys.modules.pop(nom, None)
+
+    # ── doubles ────────────────────────────────────────────────────────
+    class Objet:
+        """Tout ce que la rose touche sur un item de scène."""
+
+        def __init__(self, genre, *args):
+            self.genre = genre
+            self.args = args
+            self.z = None
+            self.tip = None
+            self.pos = None
+            self.texte = args[0] if genre == "texte" else None
+            self.couleur = None
+
+        def setZValue(self, z):
+            self.z = z
+
+        def setToolTip(self, t):
+            self.tip = t
+
+        def setPos(self, x, y):
+            self.pos = (x, y)
+
+        def setDefaultTextColor(self, c):
+            self.couleur = c
+
+        def boundingRect(self):
+            class R:
+                def width(self):
+                    return 10
+
+                def height(self):
+                    return 6
+            return R()
+
+    class Scene:
+        def __init__(self):
+            self.items = []
+
+        def _note(self, genre, *a):
+            o = LaRoseDessineToujoursLaMemeChose.Objet(genre, *a)
+            self.items.append(o)
+            return o
+
+        def addEllipse(self, *a):
+            return self._note("ellipse", *a)
+
+        def addLine(self, *a):
+            return self._note("ligne", *a)
+
+        def addPolygon(self, *a):
+            return self._note("polygone", *a)
+
+        def addText(self, texte, *a):
+            return self._note("texte", texte, *a)
+
+    class Traduction:
+        """``widget.tr`` : la chaîne est rendue telle quelle."""
+
+        def tr(self, texte):
+            return texte
+
+    class Ligne:
+        def __init__(self, x1, y1, x2, y2):
+            self.x1, self.y1, self.x2, self.y2 = x1, y1, x2, y2
+
+    def charge(self):
+        """On charge la tranche avec de faux Qt et une charte connue."""
+        import importlib.util
+        from types import ModuleType
+
+        charte = ModuleType("DrillMaster.ui.styles_qt")
+        charte.COLORS = {"primary": "#PRIMAIRE", "border": "#BORD",
+                         "text_medium": "#TEXTE"}
+        sys.modules["DrillMaster.ui.styles_qt"] = charte
+        self.ajoutes.append("DrillMaster.ui.styles_qt")
+
+        class Point:
+            def __init__(self, x, y):
+                self._x, self._y = x, y
+
+            def x(self):
+                return self._x
+
+            def y(self):
+                return self._y
+
+        import types
+        for nom in ("qgis", "qgis.PyQt", "qgis.PyQt.QtCore", "qgis.PyQt.QtGui"):
+            if nom not in sys.modules:
+                sys.modules[nom] = types.ModuleType(nom)
+                self.ajoutes.append(nom)
+        sys.modules["qgis.PyQt.QtCore"].QPointF = Point
+        gui = sys.modules["qgis.PyQt.QtGui"]
+
+        class Enum:
+            """Une énumération qui accepte n'importe quel nom, comme Qt 5/6."""
+
+            def __getattr__(self, nom):
+                return nom
+
+        class Fonte:
+            Weight = Enum()
+            Style = Enum()
+
+            def __init__(self, *a):
+                self.args = a
+
+        for nom in ("QBrush", "QColor", "QPen"):
+            setattr(gui, nom, type(nom, (), {"__init__": lambda self, *a: None}))
+        gui.QFont = Fonte
+        gui.QPolygonF = lambda points: list(points)
+        sys.modules["qgis"].PyQt = sys.modules["qgis.PyQt"]
+        sys.modules["qgis.PyQt"].QtCore = sys.modules["qgis.PyQt.QtCore"]
+        sys.modules["qgis.PyQt"].QtGui = gui
+
+        nom_module = "DrillMaster.ui.coupe_rose"
+        spec = importlib.util.spec_from_file_location(nom_module, self.ROSE)
+        module = importlib.util.module_from_spec(spec)
+        sys.modules[nom_module] = module
+        spec.loader.exec_module(module)
+        return module
+
+    def dessine(self, azimut_est=290.0):
+        """Une coupe fictive dirigée vers 290° (WNW), dessinée pour de vrai."""
+        module = self.charge()
+        import math
+        rad = math.radians(azimut_est)
+        ligne = self.Ligne(0.0, 0.0, 200 * math.sin(rad), 200 * math.cos(rad))
+        scene = self.Scene()
+        module._draw_north_badge(self.Traduction(), scene, ligne)
+        return scene.items
+
+    # ── tests ──────────────────────────────────────────────────────────
+    def test_huit_items_et_dans_cet_ordre(self):
+        """Disque, trace, pointe, aiguille sud et nord, puis les quatre
+        textes : N, P1, P2 et la légende. L'ordre d'empilement suit
+        l'ordre de création, d'où l'intérêt de le figer ici."""
+        genres = [i.genre for i in self.dessine()]
+        self.assertEqual(genres, ["ellipse", "ligne", "polygone", "polygone",
+                                  "polygone", "texte", "texte", "texte",
+                                  "texte"])
+
+    def test_la_trace_va_de_p1_vers_p2(self):
+        """La rose est une vue de plan **schématique** : la trace ne reprend
+        pas les coordonnées de la ligne, elle va du bout P1 au bout P2 du
+        petit disque. Ce qui compte est le sens : P2 est du côté de
+        l'azimut (ici 290°, donc ouest et nord)."""
+        items = self.dessine()
+        trace = items[1]
+        self.assertEqual(trace.genre, "ligne")
+        x1, y1, x2, y2 = trace.args[:4]
+        # P1 en haut à droite du disque (centre 30, 32), P2 à l'opposé
+        self.assertAlmostEqual(x1, 30.0 + 11 * 1.05 * 0.9397, places=2)
+        self.assertAlmostEqual(y1, 32.0 + 11 * 1.05 * 0.3420, places=2)
+        # cap 290° : P2 est à l'ouest (x plus petit) et au nord (y plus petit)
+        self.assertLess(x2, x1)
+        self.assertLess(y2, y1)
+        # la trace fait exactement le diamètre utile du disque
+        self.assertAlmostEqual(
+            ((x2 - x1) ** 2 + (y2 - y1) ** 2) ** 0.5, 2 * 11 * 1.05, places=6)
+
+    def test_les_trois_textes_restent_ceux_de_la_charte(self):
+        textes = [i.texte for i in self.dessine() if i.genre == "texte"]
+        self.assertIn("N", textes)
+        self.assertIn("P1", textes)
+        self.assertIn("P2", textes)
+
+    def test_la_legende_dit_l_azimut_et_le_sens_en_toutes_lettres(self):
+        textes = [i.texte for i in self.dessine() if i.genre == "texte"]
+        legende = [t for t in textes if t.startswith("coupe ")]
+        self.assertEqual(len(legende), 1, textes)
+        self.assertIn("N290°", legende[0])
+        self.assertIn("WNW", legende[0])
+        self.assertIn("ESE", legende[0])
+
+    def test_l_infobulle_est_la_meme_sur_tous_les_items(self):
+        items = self.dessine()
+        bulles = {i.tip for i in items}
+        self.assertEqual(len(bulles), 1, bulles)
+        self.assertIn("Nord", bulles.pop())
+
+    def test_sans_ligne_de_coupe_rien_n_est_dessine(self):
+        module = self.charge()
+        scene = self.Scene()
+        module._draw_north_badge(self.Traduction(), scene, None)
+        self.assertEqual(scene.items, [])
