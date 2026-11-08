@@ -1,0 +1,47 @@
+{
+  "coupe": {
+    "median_ms": 1.55,
+    "min_ms": 1.5,
+    "max_ms": 2.09,
+    "forages": 64,
+    "intercepts": 294,
+    "analyses": 3200
+  },
+  "budget_frame_ms": 16.0,
+  "boucles_imbriquees": {
+    "csv_editor.py": 3,
+    "main_dock.py": 2,
+    "raster_surface.py": 1,
+    "reference_dialog.py": 2,
+    "section_dock.py": 43,
+    "section_export.py": 4,
+    "section_export_scaled.py": 1,
+    "section_geotech.py": 2,
+    "section_holes.py": 1,
+    "section_imagery.py": 2,
+    "section_structure.py": 2,
+    "step2_import.py": 7,
+    "step3_geometry.py": 1,
+    "structure_analysis_dialog.py": 6,
+    "styles_qt.py": 1,
+    "view_3d.py": 1,
+    "view_3d_canvas.py": 6,
+    "view_3d_imagery_viewer.py": 1,
+    "view_3d_overlays.py": 14,
+    "view_3d_renderer.py": 18,
+    "view_3d_v2.py": 1
+  },
+  "boucles_imbriquees_total": 119,
+  "modules_qui_mesurent": [
+    "core/benchmark.py",
+    "core/scene3d/render.py",
+    "drillmaster.py",
+    "tools/bench_qpainter_draw.py",
+    "tools/bench_scene3d.py",
+    "ui/main_dock.py",
+    "ui/section_dock.py"
+  ],
+  "modules_qui_publient": [
+    "ui/main_dock.py"
+  ]
+}

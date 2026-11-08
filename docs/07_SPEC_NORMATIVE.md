@@ -809,3 +809,56 @@ fichier source par un test.
 | 9 `dip` dans les textes affichés | chaque cas demande de lire la phrase : « dip » seul dans une infobulle n'est pas « pendage » partout |
 | 24 `section` | c'est un nom de classe passé à l'affichage : la correction est un nettoyage d'appels, pas un remplacement de mot |
 | `core.vocabulaire` sans appelant d'écran | il attend le premier écran réécrit ; son absence d'appelant est nommée dans le test d'architecture |
+
+## 22. Chantier 11 — la vitesse, mesurée sur le vrai travail
+
+### Pourquoi « 196 boucles » n'était pas un constat
+
+Une boucle sur 14 forages est gratuite ; une boucle sur 3 180 analyses dans
+un `paintEvent` coûte une frame. Compter les boucles ne dit rien du temps
+perçu. On a donc **exécuté** le calcul réel de la coupe du projet de
+référence (64 forages, 3 200 analyses, 294 intercepts) et mesuré :
+
+| Taille du projet | Médiane du calcul complet | Ce que l'utilisateur ressent |
+|---|---|---|
+| 64 forages · 3 200 analyses | **1,6 ms** | instantané — tient dans une frame |
+| 500 forages · 25 000 analyses | **16,7 ms** | un court silence |
+| 2 000 forages · 100 000 analyses | **79 ms** | une attente visible |
+
+Le calcul du noyau **tient ses promesses** sur le cas de référence. Ce n'est
+pas un problème de vitesse de calcul — c'est un problème de **comportement
+au-delà d'une frame**, et l'interface ne le traitait pas.
+
+### Le vrai défaut, chiffré
+
+**Sept modules chronomètrent le temps. Un seul publie sa mesure.** Une
+mesure qui reste dans une variable locale n'existe ni pour l'utilisateur, ni
+pour la prochaine régression. C'est le défaut que R-62 corrige.
+
+### Ce qui est livré
+
+| Pièce | Rôle |
+|---|---|
+| `drillmaster_v3/core/vitesse.py` | `chronometre()` (mesure et **publie**), `verdict()`, `experience()`, `annonce()`, `doit_passer_en_tache_de_fond()` |
+| `tools/audit_vitesse.py` | mesure le vrai calcul à trois échelles, compte les boucles imbriquées et les points de mesure |
+| `specs/tests/test_vitesse.py` (14 tests) | la coupe de 64 forages tient dans une frame ; 2 000 ne tiennent pas et on le dit |
+| `maquettes/32_vitesse.png` | relue |
+
+### Les règles
+
+**R-62 · Une mesure non publiée n'existe pas.** Un temps chronométré qui
+n'est ni affiché, ni journalisé, ni comparé à un seuil est du code mort. Le
+module `vitesse` rend la mesure visible et lui associe un comportement.
+
+**R-63 · Un travail long s'annonce avant de commencer.** En dessous d'une
+frame : rien à signaler. Entre une frame et 400 ms : tâche de fond, l'écran
+reste utilisable. Au-delà de 400 ms : une phrase qui dit **combien de temps**
+et **qu'on peut continuer à regarder**.
+
+### Ce qui reste, nommé
+
+| Reste | Pourquoi ce n'est pas fait ici |
+|---|---|
+| 119 boucles imbriquées dont **43** dans `section_dock.py` | ce sont des boucles de dessin (tri, placement de codes). Les déplier demande de comprendre chaque géométrie : c'est le chantier 6 (les rangements), pas un compteur |
+| 6 modules qui mesurent sans publier | ils vivent dans l'ancienne interface ; y brancher `chronometre()` est un travail d'écran, pas de noyau |
+| la mesure du rendu Qt | impossible dans ce bac à sable (`libGL` absent) : on mesure le calcul pur et on le dit, au lieu d'inventer un chiffre de frame |
