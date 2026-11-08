@@ -509,3 +509,54 @@ d'un texte (`"QLabel { color: #5D6D7E; ..."`), et un `re.sub` global produit
 `"TOKENS["nom"]"` — du code invalide. **Décision : la conversion se fait
 fichier par fichier, avec compilation vérifiée après chacun.** L'outil de
 mesure reste, lui, définitif.
+
+## 17. Chantier 6 — les rangements (tranche 1 livrée)
+
+### Ce que la mesure a dit, avant de toucher au code
+
+`ui/section_dock.py` pesait **11 529 lignes** : deux classes
+(`SectionCanvas` 122 méthodes, `SectionWidget` 172) et **40 % du plugin à lui
+seul** dans les six fichiers de plus de 1 500 lignes. Mais le défaut le plus
+coûteux n'était pas la taille : c'étaient les **801 lignes de journal de
+versions** en docstring — un bug corrigé en v2.7.4, relu à chaque ouverture du
+fichier pour comprendre du code qui n'existe plus.
+
+### Les deux tranches
+
+| Sortie | Lignes | Nature |
+|---|---|---|
+| `ui/coupe_socle.py` | 288 | couleurs d'interaction, motifs, encres, petites capitales, items graphiques |
+| `docs/HISTORIQUE_section_dock.md` | 801 | le journal de versions, intégral, hors du code |
+
+`section_dock.py` : **11 529 → 10 515 lignes**, sans qu'un seul appelant
+change. `from .section_dock import SELECTION_HIGHLIGHT_COLOR` fonctionne
+toujours (ré-export assumé) ; aucun nom n'est défini deux fois ; aucun nom
+n'a disparu.
+
+### La règle qui en découle
+
+**R-52 · Une tranche sort, un cliquet baisse.** On ne découpe pas « un jour » :
+chaque extraction abaisse le plafond de lignes **dans le même commit**, et un
+test refuse que le fichier remonte. Le monolithe ne peut donc que maigrir.
+
+**R-53 · Une extraction ne change aucun comportement.** Mêmes noms, mêmes
+signatures, ré-exportés depuis le fichier d'origine. Ce qui change est
+l'endroit où l'on lit, jamais ce qui s'exécute.
+
+### Le cliquet, tel qu'il est posé
+
+| Test | Ce qu'il empêche |
+|---|---|
+| `test_le_monolithe_ne_remonte_pas` | `section_dock.py` > 10 560 lignes |
+| `test_un_seul_fichier_geant` | un 2ᵉ fichier au-delà de 3 000 lignes |
+| `test_les_noms_vivent_dans_le_socle` | une tranche qui se défait |
+| `test_le_monolithe_les_reexporte` | un import cassé chez un appelant |
+| `test_aucun_nom_defini_deux_fois` | deux vérités pour un même nom |
+| `test_le_journal_de_versions_a_quitte_le_code` | le retour du journal |
+
+### Ce qui reste, chiffré
+
+6 fichiers au-delà de 1 500 lignes · **996 lignes** de commentaire
+d'historique encore dans le code · **39 noms** de fonctions présents dans
+plusieurs fichiers (invitation à regarder, pas une duplication prouvée).
+Le prochain candidat mesuré est `ui/step2_import.py` (2 860 lignes).

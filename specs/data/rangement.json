@@ -1,0 +1,275 @@
+{
+  "fichiers": 107,
+  "lignes": 56745,
+  "gros_fichiers": [
+    "ui/section_dock.py",
+    "ui/step2_import.py",
+    "ui/view_3d_renderer.py",
+    "ui/section_export.py",
+    "core/validation.py",
+    "ui/view_3d_canvas.py"
+  ],
+  "critiques": [
+    "ui/section_dock.py"
+  ],
+  "lignes_de_journal": 996,
+  "plus_gros": [
+    {
+      "fichier": "ui/section_dock.py",
+      "lignes": 11293,
+      "commentaires_de_version": 250
+    },
+    {
+      "fichier": "ui/step2_import.py",
+      "lignes": 2860,
+      "commentaires_de_version": 99
+    },
+    {
+      "fichier": "ui/view_3d_renderer.py",
+      "lignes": 2614,
+      "commentaires_de_version": 106
+    },
+    {
+      "fichier": "ui/section_export.py",
+      "lignes": 2174,
+      "commentaires_de_version": 25
+    },
+    {
+      "fichier": "core/validation.py",
+      "lignes": 2134,
+      "commentaires_de_version": 33
+    },
+    {
+      "fichier": "ui/view_3d_canvas.py",
+      "lignes": 1523,
+      "commentaires_de_version": 44
+    },
+    {
+      "fichier": "ui/main_dock.py",
+      "lignes": 1457,
+      "commentaires_de_version": 26
+    },
+    {
+      "fichier": "core/project.py",
+      "lignes": 1143,
+      "commentaires_de_version": 33
+    }
+  ],
+  "noms_partages": {
+    "_tr": [
+      "core/step3_summary.py",
+      "drillmaster.py"
+    ],
+    "__init__": [
+      "core/camera3d.py",
+      "core/csv_parser.py",
+      "core/data_registry.py",
+      "core/project.py",
+      "core/reference.py",
+      "core/scene3d/camera.py",
+      "core/scene3d/render.py",
+      "core/spatial_model.py",
+      "drillmaster.py",
+      "ui/about_dialog.py",
+      "ui/coupe_socle.py",
+      "ui/csv_editor.py",
+      "ui/display_profiles_dialog.py",
+      "ui/domain_structure_dialog.py",
+      "ui/lithology_structure_dialog.py",
+      "ui/main_dock.py",
+      "ui/reference_dialog.py",
+      "ui/section_dock.py",
+      "ui/section_export.py",
+      "ui/splash.py",
+      "ui/step2_import.py",
+      "ui/step3_geometry.py",
+      "ui/structure_analysis_dialog.py",
+      "ui/view_3d.py",
+      "ui/view_3d_async.py",
+      "ui/view_3d_canvas.py",
+      "ui/view_3d_dialogs.py",
+      "ui/view_3d_imagery_viewer.py",
+      "ui/view_3d_v2.py",
+      "ui/visualization_dock.py"
+    ],
+    "project": [
+      "core/camera3d.py",
+      "core/scene3d/camera.py"
+    ],
+    "to_dict": [
+      "core/data_model.py",
+      "core/reference.py",
+      "core/selection_model.py",
+      "core/validation.py"
+    ],
+    "from_dict": [
+      "core/data_model.py",
+      "core/data_registry.py",
+      "core/reference.py",
+      "core/selection_model.py"
+    ],
+    "__post_init__": [
+      "core/data_registry.py",
+      "core/selection_model.py",
+      "core/validation.py"
+    ],
+    "depth_to_xyz": [
+      "core/geometry.py",
+      "core/spatial_model.py"
+    ],
+    "create_section_line_layer": [
+      "core/layers.py",
+      "ui/main_dock.py"
+    ],
+    "interval_segments": [
+      "core/mesh_builder.py",
+      "core/scene3d/geometry.py"
+    ],
+    "collect_element_values": [
+      "core/multi_assay.py",
+      "core/threshold_rule.py"
+    ],
+    "update_section": [
+      "core/project.py",
+      "ui/section_dock.py"
+    ],
+    "set_drillholes": [
+      "core/spatial_model.py",
+      "ui/section_dock.py",
+      "ui/view_3d_canvas.py"
+    ],
+    "run": [
+      "tools/bench_scene3d.py",
+      "ui/main_dock.py",
+      "ui/step3_geometry.py",
+      "ui/view_3d_async.py",
+      "ui/view_3d_v2.py"
+    ],
+    "mk": [
+      "tools/test_default_scale.py",
+      "tools/test_window_room.py"
+    ],
+    "_build": [
+      "ui/about_dialog.py",
+      "ui/csv_editor.py",
+      "ui/domain_structure_dialog.py",
+      "ui/lithology_structure_dialog.py",
+      "ui/main_dock.py",
+      "ui/reference_dialog.py",
+      "ui/section_dock.py",
+      "ui/step1_config.py",
+      "ui/step2_import.py",
+      "ui/step3_geometry.py",
+      "ui/step4_section.py",
+      "ui/stepper.py",
+      "ui/view_3d.py",
+      "ui/visualization_dock.py"
+    ],
+    "_on_item_changed": [
+      "ui/csv_editor.py",
+      "ui/section_holes.py"
+    ],
+    "_add_row": [
+      "ui/csv_editor.py",
+      "ui/step2_import.py"
+    ],
+    "_undo": [
+      "ui/csv_editor.py",
+      "ui/section_dock.py"
+    ],
+    "_redo": [
+      "ui/csv_editor.py",
+      "ui/section_dock.py"
+    ],
+    "_save": [
+      "ui/csv_editor.py",
+      "ui/display_profiles_dialog.py"
+    ],
+    "closeEvent": [
+      "ui/csv_editor.py",
+      "ui/view_3d_canvas.py"
+    ],
+    "_load": [
+      "ui/domain_structure_dialog.py",
+      "ui/lithology_structure_dialog.py",
+      "ui/view_3d_imagery_viewer.py"
+    ],
+    "retranslate": [
+      "ui/main_dock.py",
+      "ui/visualization_dock.py"
+    ],
+    "qgis_raster_layers": [
+      "ui/raster_surface.py",
+      "ui/section_surface.py"
+    ],
+    "_push": [
+      "ui/raster_surface.py",
+      "ui/section_surface.py"
+    ],
+    "reject": [
+      "ui/reference_dialog.py",
+      "ui/structure_analysis_dialog.py"
+    ],
+    "_render": [
+      "ui/section_dock.py",
+      "ui/step2_import.py"
+    ],
+    "_draw_grid": [
+      "ui/section_dock.py",
+      "ui/structure_analysis_dialog.py"
+    ],
+    "_interval_codes": [
+      "ui/section_dock.py",
+      "ui/view_3d_canvas.py"
+    ],
+    "mousePressEvent": [
+      "ui/section_dock.py",
+      "ui/structure_analysis_dialog.py"
+    ],
+    "mouseMoveEvent": [
+      "ui/section_dock.py",
+      "ui/section_export.py",
+      "ui/structure_analysis_dialog.py",
+      "ui/view_3d_v2.py"
+    ],
+    "reset_after_project_close": [
+      "ui/section_dock.py",
+      "ui/view_3d.py",
+      "ui/view_3d_v2.py"
+    ],
+    "_browse": [
+      "ui/section_export.py",
+      "ui/section_export_scaled.py",
+      "ui/step2_import.py"
+    ],
+    "create_legend_widgets": [
+      "ui/section_geotech.py",
+      "ui/section_imagery.py",
+      "ui/section_structure.py"
+    ],
+    "_legend_label": [
+      "ui/coupe_socle.py",
+      "ui/section_imagery.py",
+      "ui/section_structure.py"
+    ],
+    "update_legend_visibility": [
+      "ui/section_imagery.py",
+      "ui/section_structure.py"
+    ],
+    "reset": [
+      "ui/step2_import.py",
+      "ui/step3_geometry.py",
+      "ui/step4_section.py"
+    ],
+    "paintEvent": [
+      "ui/stepper.py",
+      "ui/structure_analysis_dialog.py",
+      "ui/view_3d_canvas.py",
+      "ui/view_3d_v2.py"
+    ],
+    "paint": [
+      "ui/coupe_socle.py",
+      "ui/styles_qt.py"
+    ]
+  }
+}
