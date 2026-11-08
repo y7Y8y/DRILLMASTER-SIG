@@ -86,11 +86,14 @@ def _decode(octets, nom):
         except UnicodeDecodeError:
             continue
         if reparation:
+            # R-17 : on ne montre jamais le nom d'un encodage. L'utilisateur
+            # n'a pas à savoir ce qu'est « utf-8-sig » ; il doit savoir que
+            # ses accents étaient abîmés et qu'ils sont rétablis.
             messages.append(avertissement(
-                "Le fichier n'était pas en UTF-8",
-                "les accents ont été rétablis à la lecture ; le fichier "
-                "d'origine n'a pas été modifié",
-                (nom,), ("réenregistrer le fichier en UTF-8",),
+                "Les accents du fichier étaient abîmés",
+                "ils ont été rétablis à la lecture ; le fichier d'origine "
+                "n'a pas été modifié",
+                (nom,), ("réenregistrer le fichier avec ses accents",),
                 f"{nom}"))
         return texte, codec, messages
     raise ValueError("fichier illisible")
@@ -265,8 +268,7 @@ def lit_collets(chemin, texte=None) -> Lecture:
 
     lec.messages.append(information(
         f"{len(lec.colliers)} forages lus",
-        f"lecture terminée en {codec}, séparateur « {sep} », "
-        f"aucun fichier modifié", nom))
+        f"lecture terminée, séparateur « {sep} », aucun fichier modifié", nom))
     return lec
 
 

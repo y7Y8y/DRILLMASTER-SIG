@@ -115,7 +115,7 @@ class Cas7_Encodage(unittest.TestCase):
             f.write_bytes(octets)
             lec = lit_collets(f)
         self.assertEqual(len(lec.colliers), 1)
-        self.assertTrue(any("UTF-8" in m.titre for m in lec.messages))
+        self.assertTrue(any("accents" in m.titre.lower() for m in lec.messages))
 
 
 class Cas8_ForagesInclines(unittest.TestCase):

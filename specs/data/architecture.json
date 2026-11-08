@@ -1,6 +1,6 @@
 {
-  "modules": 100,
-  "modules_noyau": 57,
+  "modules": 101,
+  "modules_noyau": 58,
   "fuites_noyau": [],
   "calculs_dans_les_vues": 77,
   "fichiers_de_vue_avec_calcul": {
@@ -17,6 +17,7 @@
     "core.benchmark",
     "core.scene3d.synthetic",
     "core.ui_audit",
+    "core.vocabulaire",
     "ui.palette_jetons",
     "ui.view_3d"
   ]

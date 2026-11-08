@@ -6101,7 +6101,7 @@ class SectionWidget(QWidget):
         self.chk_labels.stateChanged.connect(self._on_section_style_change)
         form.addRow(self.chk_labels)
 
-        self.chk_collar_info = QCheckBox(self.tr("Afficher azimut / dip"))
+        self.chk_collar_info = QCheckBox(self.tr("Afficher azimut / pendage"))
         self.chk_collar_info.setChecked(True)
         self.chk_collar_info.stateChanged.connect(self._on_section_style_change)
         form.addRow(self.chk_collar_info)

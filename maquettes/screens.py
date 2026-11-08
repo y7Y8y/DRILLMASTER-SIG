@@ -206,7 +206,8 @@ def projet(path, dark=False):
     c = C(W, H, T)
     c.app_bar("Projet", dark_btn=dark)
     c.page_title(24, 82, "Projet Issia",
-                 "Créé le 12/09/2026 · modifié il y a 2 h · 64 forages · UTM 29N (EPSG:32629)")
+                 "Créé le 12/09/2026 · modifié il y a 2 h · 64 forages · "
+                 "système de coordonnées UTM 29N")
 
     y = 136
     # ── identité + référentiel
@@ -219,11 +220,11 @@ def projet(path, dark=False):
           size=9.5, fill=t.ink_3)
 
     c.panel(804, y, W - 828, 236, "Référentiel spatial")
-    c.field(824, y + 66, 344, "SCR du projet", "EPSG:32629 — UTM 29N")
+    c.field(824, y + 66, 344, "Système de coordonnées", "UTM 29N (mètres)")
     c.field(1188, y + 66, 344, "Unités de profondeur", "Mètres (m)")
     c.txt(824, y + 140, "MNT source", size=9.4, fill=t.ink_3, bold=True)
     c.r(824, y + 149, 708, 30, fill=t.surface_2, stroke=t.border, rx=6)
-    c.txt(835, y + 161, "Copernicus DEM 30 m — EPSG:4326 reprojeté à la volée",
+    c.txt(835, y + 161, "Copernicus DEM 30 m — converti automatiquement",
           size=10.3, fill=t.ink)
     c.chip(824, y + 192, "Conversion vérifiée", "ok")
 

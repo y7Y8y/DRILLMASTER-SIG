@@ -35,10 +35,17 @@ class Lexique:
 
     # ── garde-fou ───────────────────────────────────────────────────
     def verifie(self, texte):
-        """À appeler sur toute chaîne destinée à l'écran."""
+        """À appeler sur toute chaîne destinée à l'écran.
+
+        La comparaison se fait sur des **mots entiers** : chercher « cache »
+        dans le texte refusait « caché », et « sig » refusait « signe ». Un
+        garde-fou qui se trompe est pire que pas de garde-fou — c'est
+        exactement le reproche que R-47 adresse aux agents.
+        """
+        import re
         bas = str(texte).lower()
         for mot in self.interdits:
-            if mot in bas:
+            if re.search(rf"\b{re.escape(mot)}\b", bas):
                 raise MotInterdit(
                     f"« {texte} » contient « {mot} », banni de l'interface (R-17)")
         return texte

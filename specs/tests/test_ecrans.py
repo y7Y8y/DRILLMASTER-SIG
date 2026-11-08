@@ -55,7 +55,7 @@ class Cas18_Import(unittest.TestCase):
             chemin.write_bytes(brut)
             lec = lit_collets(chemin)
         self.assertEqual(len(lec.colliers), 1)
-        self.assertTrue(any("UTF-8" in m.titre for m in lec.messages))
+        self.assertTrue(any("accents" in m.titre.lower() for m in lec.messages))
 
     def test_colonnes_montrees_avec_exemple_et_role(self):
         lec = lit_collets("c.csv", texte=texte("A;1;2;3;10;2024-03-11"))

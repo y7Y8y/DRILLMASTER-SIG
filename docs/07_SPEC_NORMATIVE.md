@@ -742,3 +742,70 @@ mort oublié — et si l'un le devient, le test s'en aperçoit.
 |---|---|
 | 77 calculs dans les vues | les sortir est un travail par fichier (chantier 3), pas un déplacement en masse : chaque calcul doit être comparé à son équivalent du noyau |
 | `ui/section_structure` (11) | la géométrie des marqueurs a un équivalent partiel côté noyau : à rapprocher |
+
+## 21. Chantier 10 — un mot par chose
+
+### Ce que la mesure a trouvé
+
+`tools/audit_vocabulaire.py` lit les **textes réellement affichés** (chaînes
+passées à `setText`, `setToolTip`, `tr`, aux boîtes de message) — pas les
+identifiants. Résultat sur **1 857 textes** :
+
+| Objet | Façons de le dire à l'écran |
+|---|---|
+| forage | `forage` 78 · `trou` 11 (autre sens) · `hole` 3 |
+| teneur | `teneur` 27 · `analyse` 8 (autre sens) · `assay` 1 |
+| coupe | `coupe` 133 · `section` 24 (autre sens) · `profil` 7 (autre sens) |
+| collet | `collet` 43 · `collar` 1 |
+| pendage | `dip` 9 · `pendage` 4 |
+| piste | `piste` 30 · `voie` 7 |
+
+**Le lexique du dépôt n'était lu par aucun fichier du plugin.** Le chiffre
+était déjà connu ; ce que la mesure ajoute, c'est la nuance : une bonne
+partie des « doublons » sont des mots qui ont un **autre sens** (`profil
+d'affichage`, `trou de forage`, `analyse` pour les valeurs). Les supprimer
+aurait été une faute. L'outil les compte à part — 50 occurrences.
+
+### Trois défauts réels trouvés en chemin
+
+| Ce que l'utilisateur voyait | Pourquoi c'est grave |
+|---|---|
+| `lecture terminée en utf-8-sig` | un nom d'encodage à l'écran |
+| `Le fichier n'était pas en UTF-8` | idem, présenté comme un reproche |
+| `Afficher azimut / dip` | un mot anglais dans une phrase française |
+
+Corrigés : « lecture terminée », « Les accents du fichier étaient abîmés »,
+« Afficher azimut / pendage ». Les maquettes qui montraient `EPSG:32629`
+disent maintenant « UTM 29N (mètres) ».
+
+### Un garde-fou qui se trompait
+
+`lexique.verifie()` cherchait les mots bannis **en sous-chaîne** : « cache »
+refusait « cach **é** », et le mot banni « sig » refusait « **sig** ne ».
+Un garde-fou qui se trompe est pire que pas de garde-fou (R-47). Corrigé :
+la comparaison se fait sur des mots entiers.
+
+Et le fichier des mots bannis ne contenait ni `EPSG`, ni `CRS`, ni `None`
+alors que le cahier des charges les refuse explicitement depuis le début :
+ajoutés. En revanche `csv` et `utf-8` ont été **retirés** — ce sont des
+formats que le géologue connaît, pas du vocabulaire de développeur.
+
+### Les règles
+
+**R-60 · Un mot par chose.** Le mot se choisit une fois, se documente, et
+un test vérifie qu'aucune variante ne revient. Le critère : le mot que le
+géologue emploie quand il parle à un confrère.
+
+**R-61 · Un lexique que personne ne lit n'existe pas.** `specs/data/lexique.json`
+est la source ; le plugin en embarque une copie (`DrillMaster/core/lexique.json`)
+et `tools/synchronise_lexique.py` refuse la dérive. Mesure avant : **0**
+fichier du plugin le lisait. Après : **1**, et la copie est comparée au
+fichier source par un test.
+
+### Ce qui reste, nommé
+
+| Reste | Pourquoi ce n'est pas fait ici |
+|---|---|
+| 9 `dip` dans les textes affichés | chaque cas demande de lire la phrase : « dip » seul dans une infobulle n'est pas « pendage » partout |
+| 24 `section` | c'est un nom de classe passé à l'affichage : la correction est un nettoyage d'appels, pas un remplacement de mot |
+| `core.vocabulaire` sans appelant d'écran | il attend le premier écran réécrit ; son absence d'appelant est nommée dans le test d'architecture |

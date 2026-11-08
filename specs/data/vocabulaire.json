@@ -1,0 +1,33 @@
+{
+  "textes_affiches": 1857,
+  "fichiers_lisant_le_lexique": 1,
+  "couples": {
+    "forage": {
+      "forage": 78,
+      "trou": 11,
+      "hole": 3
+    },
+    "teneur": {
+      "teneur": 27,
+      "analyse": 8,
+      "assay": 1
+    },
+    "coupe": {
+      "section": 24,
+      "coupe": 133,
+      "profil": 7
+    },
+    "collet": {
+      "collet": 43,
+      "collar": 1
+    },
+    "pendage": {
+      "pendage": 4,
+      "dip": 9
+    },
+    "piste": {
+      "piste": 30,
+      "voie": 7
+    }
+  }
+}

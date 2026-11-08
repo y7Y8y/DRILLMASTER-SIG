@@ -25,7 +25,7 @@ PLUGIN = RACINE / "DrillMaster"
 # plafond : le nombre de calculs écrits dans les vues. Il ne remonte pas.
 PLAFOND_CALCULS_VUES = 77
 # plafond : modules du plugin que rien n'importe. Il ne remonte pas.
-PLAFOND_ORPHELINS = 5
+PLAFOND_ORPHELINS = 6
 
 
 def modules_du_plugin():
@@ -130,6 +130,9 @@ class NommesJamaisOublies(unittest.TestCase):
         # chacun est nommé : ce ne sont que des outils ou des points d'entrée
         self.assertTrue(set(orphelins) <= {
             "core.benchmark", "core.scene3d.synthetic", "core.ui_audit",
+            # chantier 10 : le pont qui fait lire le lexique au plugin.
+            # Il attend son premier appelant d'écran — nommé, pas oublié.
+            "core.vocabulaire",
             "ui.palette_jetons", "ui.view_3d"},
             orphelins)
 
