@@ -139,17 +139,27 @@ existe déjà (`specs/data/lexique.json`).
 
 ## Le détail des chantiers
 
-### Chantier 1 — Le socle visuel (1 passage, mécanique)
+### Chantier 1 — Le socle visuel — 🟡 **le pont est livré, la conversion continue**
 
-Créer `theme.json` dans le plugin et remplacer les 655 couleurs littérales et
-les 320 feuilles de style par des rôles. **Aucune décision de goût** : la charte
-`maquettes/23_charte.png` a déjà tout fixé.
+`theme.json` existait mais **rien ne le lisait**. Le plugin avait sa propre
+palette (`styles_qt.COLORS`, 17 teintes terreuses) : **deux vérités**. La DA a
+donc été câblée au plugin, et pas seulement documentée.
 
-- Couleur : 8 jetons de chrome + 1 accent + 5 états + couleurs de données.
-- Typographie : 6 tailles (R-33).
-- Espace : grille de 4 px (R-34).
-- Boutons : 3 rôles (R-35).
-- **Preuve** : `spec_check` refuse un littéral `#RRGGBB` dans `DrillMaster/ui/`.
+| Livré | Preuve |
+|---|---|
+| `tools/genere_palette.py` — génère la copie Qt du thème | sort en 1 si le module a dérivé |
+| `DrillMaster/ui/palette_jetons.py` — 18 rôles × 2 modes, `couleur()`, `paire()` | seul foyer de chrome du plugin |
+| `tools/audit_couleurs.py` — mesure les trois catégories | `specs/data/audit_couleurs.json` |
+| `specs/tests/test_palette.py` — 7 tests | dérive, couverture, rôle inconnu, unicité |
+| `maquettes/26_socle.png` — chaîne de vérité + correspondance rôle par rôle | relue |
+| R-50, R-51 (docs/07 §16) | — |
+
+**Ce qui reste, chiffré** : 44 déclarations dans `styles_qt.COLORS` (304 usages
+à repointer en façade) et **417 couleurs dans 30 feuilles de style**. Une
+migration automatique a été tentée trois fois et **échoue** : une couleur au
+milieu d'une feuille de style exige que la chaîne devienne une f-string ; un
+`re.sub` produit du code invalide. **Décision : fichier par fichier, avec
+compilation vérifiée après chacun.** Rien n'est maquillé.
 
 ### Chantier 2 — Un réglage, un propriétaire — ✅ **livré (cœur)**
 

@@ -456,3 +456,56 @@ elle exige un nom, un motif et une confirmation écrite.
 | Gestes du plugin réécrits | **10 boutons** en 3 barres (`core/gestes_plugin.py`) |
 | Démonstration | `python3 tools/demo_gestes.py` |
 | Planche | `maquettes/25_gestes.png` |
+
+## 16. Chantier 1 livré (socle) — une couleur se nomme par son rôle
+
+### Le défaut, mesuré avant d'être corrigé
+
+Le plugin portait **deux palettes vivantes** qui se contredisaient :
+
+| Foyer | Contenu | Problème |
+|---|---|---|
+| `specs/data/theme.json` | 18 rôles neutres × 2 modes | la DA décidée, jamais lue par Qt |
+| `DrillMaster/ui/styles_qt.py` | 17 teintes « géologiques » | une deuxième vérité, éditée à la main |
+| 30 feuilles de style | **417 couleurs littérales** | changer le fond obligeait à corriger 30 fichiers |
+
+Deux teintes se ressemblaient jusqu'à l'ambiguïté : l'ancien accent teal du
+chrome et le teal d'une lithologie. Une couleur d'interface **ne doit pas**
+pouvoir se confondre avec une couleur de donnée.
+
+### Ce qui est livré
+
+| Pièce | Rôle | Preuve |
+|---|---|---|
+| `tools/genere_palette.py` | génère la copie Qt depuis le thème | sort en 1 si dérive |
+| `DrillMaster/ui/palette_jetons.py` | **seul** foyer de chrome du plugin | 18 rôles × 2 modes, `couleur()`, `paire()` |
+| `tools/audit_couleurs.py` | mesure les trois catégories, à chaque passage | `specs/data/audit_couleurs.json` |
+| `specs/tests/test_palette.py` | 7 tests : dérive, couverture, rôle inconnu, unicité du foyer | verts |
+| `maquettes/26_socle.py` + `.png` | la chaîne de vérité et la correspondance rôle par rôle | relue |
+
+### La règle qui en découle
+
+**R-50 · Une couleur se nomme par son rôle, jamais par sa teinte.** Le code
+écrit `couleur("border")`, pas `"#E4E7EC"`. Une teinte n'existe qu'à un seul
+endroit — `theme.json` — et sa copie Qt est **générée**, donc jamais éditée.
+Un rôle inconnu lève au lieu de rendre du vide : une couleur qui disparaît
+silencieusement est un défaut, pas un cas par défaut.
+
+**R-51 · Une couleur de chrome ne peut pas ressembler à une couleur de
+donnée.** Le chrome travaille en valeur (noir, gris, blanc) ; la couleur est
+un canal réservé aux données et aux cinq états. La correspondance de la
+planche 26 mesure l'écart en Lab, rôle par rôle.
+
+### Ce qui reste, chiffré et non maquillé
+
+| Reste | Mesure | Pourquoi ce n'est pas fait d'un coup |
+|---|---|---|
+| jetons de `styles_qt.COLORS` | **44** déclarations | la table est le point d'entrée de 304 usages ; elle sera **réécrite en façade** sur `palette_jetons`, pas supprimée |
+| couleurs dans les feuilles de style | **417** dans 30 fichiers | une couleur au milieu d'une feuille de style ne se remplace pas par un littéral : la chaîne doit devenir une f-string |
+
+Une migration automatique a été tentée **trois fois** (`tools/migre_couleurs.py`,
+conservé comme trace) : elle casse le code dès qu'une couleur est au milieu
+d'un texte (`"QLabel { color: #5D6D7E; ..."`), et un `re.sub` global produit
+`"TOKENS["nom"]"` — du code invalide. **Décision : la conversion se fait
+fichier par fichier, avec compilation vérifiée après chacun.** L'outil de
+mesure reste, lui, définitif.
