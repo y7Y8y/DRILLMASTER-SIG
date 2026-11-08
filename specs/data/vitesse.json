@@ -1,19 +1,20 @@
 {
   "coupe": {
-    "median_ms": 1.71,
+    "median_ms": 1.57,
     "min_ms": 1.52,
-    "max_ms": 2.24,
+    "max_ms": 2.11,
     "forages": 64,
     "intercepts": 294,
     "analyses": 3200
   },
   "budget_frame_ms": 16.0,
   "boucles_imbriquees": {
+    "coupe_contours.py": 3,
     "csv_editor.py": 3,
     "main_dock.py": 2,
     "raster_surface.py": 1,
     "reference_dialog.py": 2,
-    "section_dock.py": 43,
+    "section_dock.py": 40,
     "section_export.py": 4,
     "section_export_scaled.py": 1,
     "section_geotech.py": 2,

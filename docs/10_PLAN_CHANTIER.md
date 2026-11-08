@@ -205,20 +205,22 @@ est corrigé. Preuve : `python3 tools/demo_gestes.py`.
   « annuler » après coup.
 - Tout bouton est relié, ou il n'existe pas ; un bouton désactivé dit pourquoi.
 
-### Chantier 6 — Les rangements — 🟡 **tranche 1 livrée, le cliquet est posé**
+### Chantier 6 — Les rangements — 🟡 **tranches 1 à 3 livrées, le cliquet est posé**
 
-`section_dock.py` pesait **11 529 lignes**. Il en fait **10 515** : le socle
-de la coupe (couleurs d'interaction, motifs, encres, items graphiques) est
-sorti dans `ui/coupe_socle.py`, et les **801 lignes de journal de versions**
-ont quitté la docstring pour `docs/HISTORIQUE_section_dock.md`. Aucun appelant
-n'a changé : tout est ré-exporté.
+`section_dock.py` pesait **11 529 lignes**. Il en fait **10 247** (−11,1 %) :
+le socle de la coupe (couleurs d'interaction, motifs, encres, items
+graphiques) est sorti dans `ui/coupe_socle.py`, la géométrie du dessin de
+coupe dans `ui/coupe_contours.py`, et les **801 lignes de journal de
+versions** ont quitté la docstring pour `docs/HISTORIQUE_section_dock.md`.
+Aucun appelant n'a changé : tout est ré-exporté ou rattaché à la classe.
 
 | Livré | Preuve |
 |---|---|
 | `ui/coupe_socle.py` (288 lignes, 16 noms) | `test_les_noms_vivent_dans_le_socle` |
 | `docs/HISTORIQUE_section_dock.md` | journal intégral, hors du code |
 | `tools/audit_rangement.py` | `specs/data/rangement.json`, relancé à chaque tranche |
-| `specs/tests/test_rangement.py` — 7 tests | cliquets : 10 560 lignes max, 1 seul fichier géant |
+| `ui/coupe_contours.py` (tranches 2 et 3, 5 fonctions) | 10 515 → **10 247** lignes |
+| `specs/tests/test_rangement.py` — 15 tests | cliquets (10 290 max, 1 seul géant) + 8 tests qui **exécutent** la géométrie déplacée |
 | `maquettes/27_rangements.png` | relue |
 | R-52, R-53 (docs/07 §17) | — |
 

@@ -1,14 +1,15 @@
 {
-  "modules": 101,
+  "modules": 102,
   "modules_noyau": 58,
   "fuites_noyau": [],
   "calculs_dans_les_vues": 77,
   "fichiers_de_vue_avec_calcul": {
     "ui.view_3d_renderer": 28,
-    "ui.section_dock": 21,
+    "ui.section_dock": 19,
     "ui.section_structure": 11,
     "ui.view_3d_overlays": 9,
     "ui.view_3d_interaction": 3,
+    "ui.coupe_contours": 2,
     "ui.section_export": 2,
     "ui.structure_analysis_dialog": 2,
     "ui.section_holes": 1

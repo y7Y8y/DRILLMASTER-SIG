@@ -1,6 +1,6 @@
 {
-  "fichiers": 107,
-  "lignes": 56745,
+  "fichiers": 102,
+  "lignes": 55769,
   "gros_fichiers": [
     "ui/section_dock.py",
     "ui/step2_import.py",
@@ -12,11 +12,11 @@
   "critiques": [
     "ui/section_dock.py"
   ],
-  "lignes_de_journal": 996,
+  "lignes_de_journal": 995,
   "plus_gros": [
     {
       "fichier": "ui/section_dock.py",
-      "lignes": 11293,
+      "lignes": 10247,
       "commentaires_de_version": 250
     },
     {
@@ -138,17 +138,6 @@
       "ui/section_dock.py",
       "ui/view_3d_canvas.py"
     ],
-    "run": [
-      "tools/bench_scene3d.py",
-      "ui/main_dock.py",
-      "ui/step3_geometry.py",
-      "ui/view_3d_async.py",
-      "ui/view_3d_v2.py"
-    ],
-    "mk": [
-      "tools/test_default_scale.py",
-      "tools/test_window_room.py"
-    ],
     "_build": [
       "ui/about_dialog.py",
       "ui/csv_editor.py",
@@ -193,6 +182,12 @@
       "ui/domain_structure_dialog.py",
       "ui/lithology_structure_dialog.py",
       "ui/view_3d_imagery_viewer.py"
+    ],
+    "run": [
+      "ui/main_dock.py",
+      "ui/step3_geometry.py",
+      "ui/view_3d_async.py",
+      "ui/view_3d_v2.py"
     ],
     "retranslate": [
       "ui/main_dock.py",
