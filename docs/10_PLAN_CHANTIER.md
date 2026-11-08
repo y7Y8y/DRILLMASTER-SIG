@@ -219,7 +219,7 @@ changé : tout est ré-exporté ou rattaché à la classe.
 |---|---|---|
 | 1 — socle et journal | `ui/coupe_socle.py`, `docs/HISTORIQUE_section_dock.md` | 11 529 → 10 515 |
 | 2 et 3 — contours, survol, traits de motif | `ui/coupe_contours.py` (5 fonctions) | 10 515 → 10 247 |
-| 4 — rose de localisation | `ui/coupe_rose.py` (1 fonction, 95 lignes) | 10 247 → **10 165** |
+| 4 — rose de localisation | `ui/coupe_rose.py` (136 lignes, 1 fonction) | 10 247 → **10 165** (−0,8 %) |
 
 | Livré | Preuve |
 |---|---|
