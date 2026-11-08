@@ -681,3 +681,64 @@ touche imprimée à côté de son libellé, il n'a pas de raccourci.
 | 4 raccourcis muets | il faut les **afficher** sur les boutons (travail d'interface), pas les retirer |
 | 3 réglages morts | la vue 3D doit relire ce qu'elle écrit — c'est du code de la vue, pas de la navigation |
 | la zone « menu contextuel » est vide au registre | le plugin a des menus contextuels (`section_dock`, `main_dock`) : leur contenu doit entrer au registre |
+
+## 20. Chantier 9 — l'architecture : un pont à sens unique
+
+### Ce que la mesure a trouvé — et les trois erreurs de mon propre outil
+
+`tools/audit_architecture.py` résout les imports comme Python le fait. Il a
+d'abord annoncé **0 module du noyau** et **99 orphelins** : trois fautes de
+résolution, toutes corrigées (imports relatifs `..` comptés dans le mauvais
+sens, séparateurs de chemin, noms d'objets importés confondus avec des
+modules). Après correction :
+
+| Mesure | Résultat |
+|---|---|
+| modules du noyau | **57** |
+| fuites du noyau vers l'interface | **0** |
+| modules du noyau qui touchent à Qt | **5** — dessin et traduction, permis et mesuré |
+| calculs écrits dans les vues | **77**, dans 8 fichiers |
+| modules que rien n'importe | **5** — trois outils, deux points d'entrée |
+
+**R-40 est donc tenu** : aucun module de calcul n'importe un widget. Ce qui
+n'existe pas n'est pas un défaut — et il ne faut pas inventer un chantier
+pour une fuite qui n'a pas lieu.
+
+### Là où le calcul est encore dans la vue
+
+| Fichier | Calculs |
+|---|---|
+| `ui/view_3d_renderer` | 28 |
+| `ui/section_dock` | 21 |
+| `ui/section_structure` | 11 |
+| `ui/view_3d_overlays` | 9 |
+| `ui/view_3d_interaction` | 3 |
+| `ui/section_export`, `ui/structure_analysis_dialog` | 2 chacun |
+| `ui/section_holes` | 1 |
+
+Ce ne sont pas des erreurs : c'est de la géométrie d'écran (normales,
+longueurs, ombrage) écrite à l'endroit où elle s'affiche. Le risque est
+connu et chiffré : **la coupe et la 3D peuvent calculer la même chose
+différemment**. Le noyau sait déjà faire les trajectoires
+(`drillmaster_v3/core/geometrie/trajectoire.py`, trois méthodes, testé).
+
+### Les règles
+
+**R-40 · Le noyau ne connaît pas l'interface.** Aucun import de widget dans
+les 57 modules de calcul. Vérifié par `test_aucun_module_du_noyau_n_importe_un_widget`.
+
+**R-41 · Une vue ne calcule pas.** Le plafond est posé à **77** : il ne peut
+que diminuer. Un calcul ajouté dans une vue fait échouer le test.
+
+**R-59 · Ce que rien ne branche est nommé, jamais oublié.** Les 5 modules
+sans appelant sont listés dans le test : trois outils (`core.benchmark`,
+`core.scene3d.synthetic`, `core.ui_audit`) et deux points d'entrée
+(`ui.view_3d`, `ui.palette_jetons`, lu par le thème). Aucun n'est du code
+mort oublié — et si l'un le devient, le test s'en aperçoit.
+
+### Ce qui reste, nommé
+
+| Reste | Pourquoi ce n'est pas fait ici |
+|---|---|
+| 77 calculs dans les vues | les sortir est un travail par fichier (chantier 3), pas un déplacement en masse : chaque calcul doit être comparé à son équivalent du noyau |
+| `ui/section_structure` (11) | la géométrie des marqueurs a un équivalent partiel côté noyau : à rapprocher |

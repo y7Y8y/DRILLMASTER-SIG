@@ -1,0 +1,23 @@
+{
+  "modules": 100,
+  "modules_noyau": 57,
+  "fuites_noyau": [],
+  "calculs_dans_les_vues": 77,
+  "fichiers_de_vue_avec_calcul": {
+    "ui.view_3d_renderer": 28,
+    "ui.section_dock": 21,
+    "ui.section_structure": 11,
+    "ui.view_3d_overlays": 9,
+    "ui.view_3d_interaction": 3,
+    "ui.section_export": 2,
+    "ui.structure_analysis_dialog": 2,
+    "ui.section_holes": 1
+  },
+  "modules_jamais_importes": [
+    "core.benchmark",
+    "core.scene3d.synthetic",
+    "core.ui_audit",
+    "ui.palette_jetons",
+    "ui.view_3d"
+  ]
+}
