@@ -617,3 +617,67 @@ son état « à faire ». Un écran ne montre jamais une promesse que rien ne ti
 | couleurs et motifs de la coupe peints par le noyau | le rendu vit encore dans l'ancien module |
 | export branché sur le noyau | la promesse « ce que vous voyez sera l'export » n'est pas tenue |
 | forages écartés dessinés en pointillés | la donnée existe (R-54), le dessin reste à faire |
+
+## 19. Chantier 8 — la navigation : une action, un chemin
+
+### Ce que la mesure a trouvé
+
+`tools/audit_navigation.py` lit le plugin par arbre et compte ce qu'un
+utilisateur peut atteindre :
+
+| Mesure | Résultat |
+|---|---|
+| écrans | **27** (11 fenêtres, 16 panneaux) |
+| fenêtres sans porte | **0** — chacune est ouverte quelque part |
+| réglages mémorisés | 8 lus, 11 écrits · **0 fantôme** |
+| réglages morts | **3** — écrits à la fermeture, jamais relus |
+| raccourcis clavier | **6**, dont **4 muets** |
+
+**Deux constats de la première version de l'outil étaient faux**, et c'est ce
+qui a coûté le plus de temps : il annonçait « 11 dialogues jamais ouverts »
+(il ne comptait que `exec_`/`show`, pas l'instanciation) et « 3 valeurs
+fantômes » (il cherchait `setValue(` en début de ligne, ce qui rate un appel
+écrit sur deux lignes). Corrigé en analyse par arbre. **Un constat faux est
+pire qu'aucun constat** — R-47 s'applique aussi aux outils, pas seulement
+aux agents.
+
+### Les quatre touches que personne ne voit
+
+| Touche | Où | Effet |
+|---|---|---|
+| `Undo` | `section_dock.py:7890` | annuler |
+| `Redo` | `section_dock.py:7892` | rétablir |
+| `Ctrl+Y` | `section_dock.py:7894` | rétablir (bis) |
+| `Ctrl+E` | `section_dock.py:7896` | exporter |
+
+Poseés par `QShortcut` sur un widget, donc **jamais affichés** : celui qui
+les connaît va deux fois plus vite, l'autre ne saura jamais qu'elles
+existent. `setShortcut()` (utilisé par l'éditeur de fichiers) affiche sa
+touche d'office — c'est la bonne façon.
+
+### Les trois réglages morts
+
+`DrillMaster/view3d/bg`, `DrillMaster/view3d/detail`, `DrillMaster/view3d_enabled`
+sont écrits à la fermeture. Aucun n'est relu : l'utilisateur règle, puis le
+réglage disparaît. Ce sont des promesses que l'interface fait et ne tient pas.
+
+### Les règles
+
+**R-56 · Une action a exactement un chemin.** Deux entrées pour la même
+chose dans la même zone sont refusées à la construction du registre.
+
+**R-57 · Ce qui n'est pas atteignable n'est pas écrit.** Un écran qu'aucun
+geste n'ouvre est du code mort ; un geste qu'aucun écran ne déclare est une
+trappe. Les deux sont mesurés, jamais supposés.
+
+**R-58 · Un raccourci n'existe que s'il est écrit sur le bouton.** Une touche
+affichée nulle part est un pouvoir invisible. Tant qu'un geste n'a pas sa
+touche imprimée à côté de son libellé, il n'a pas de raccourci.
+
+### Ce qui reste, nommé
+
+| Reste | Pourquoi ce n'est pas fait ici |
+|---|---|
+| 4 raccourcis muets | il faut les **afficher** sur les boutons (travail d'interface), pas les retirer |
+| 3 réglages morts | la vue 3D doit relire ce qu'elle écrit — c'est du code de la vue, pas de la navigation |
+| la zone « menu contextuel » est vide au registre | le plugin a des menus contextuels (`section_dock`, `main_dock`) : leur contenu doit entrer au registre |

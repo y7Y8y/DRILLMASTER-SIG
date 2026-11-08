@@ -1,0 +1,60 @@
+{
+  "ecrans": {
+    "QDialog": 11,
+    "QWidget": 16
+  },
+  "dialogues_jamais_ouverts": [],
+  "reglages_lus": 8,
+  "reglages_ecrits": 11,
+  "fantomes": [],
+  "morts": [
+    "DrillMaster/view3d/bg",
+    "DrillMaster/view3d/detail",
+    "DrillMaster/view3d_enabled"
+  ],
+  "raccourcis": [
+    {
+      "fichier": "ui/csv_editor.py",
+      "ligne": 124,
+      "genre": "attaché au bouton",
+      "touche": "Save",
+      "affiche": true
+    },
+    {
+      "fichier": "ui/csv_editor.py",
+      "ligne": 143,
+      "genre": "attaché au bouton",
+      "touche": "QKeySequence(shortcut",
+      "affiche": true
+    },
+    {
+      "fichier": "ui/section_dock.py",
+      "ligne": 7890,
+      "genre": "posé sur un widget",
+      "touche": "Undo",
+      "affiche": false
+    },
+    {
+      "fichier": "ui/section_dock.py",
+      "ligne": 7892,
+      "genre": "posé sur un widget",
+      "touche": "Redo",
+      "affiche": false
+    },
+    {
+      "fichier": "ui/section_dock.py",
+      "ligne": 7894,
+      "genre": "posé sur un widget",
+      "touche": "Ctrl+Y",
+      "affiche": false
+    },
+    {
+      "fichier": "ui/section_dock.py",
+      "ligne": 7896,
+      "genre": "posé sur un widget",
+      "touche": "Ctrl+E",
+      "affiche": false
+    }
+  ],
+  "raccourcis_muets": 4
+}
