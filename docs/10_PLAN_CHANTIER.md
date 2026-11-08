@@ -226,11 +226,26 @@ n'a changé : tout est ré-exporté.
 commentaire d'historique encore dans le code · 39 noms partagés entre
 fichiers. Prochain candidat mesuré : `ui/step2_import.py` (2 860 lignes).
 
-### Chantier 7 — Les écrans neufs
+### Chantier 7 — Les écrans neufs — 🟡 **confrontés au code, 23 promesses sur 28**
 
-Ceux déjà maquettés, qui n'existent pas encore dans le plugin :
-**Import** (`18`), **Blocage** (`19`), **Coupe finie** (`20`),
-**Exclusions** (`21`).
+Les planches `18` à `21` sont devenues un **registre** : chaque phrase
+montrée est une promesse avec sa preuve ou son état « à faire »
+(`drillmaster_v3/core/ecrans/promesses.py`). Mesure : **4 écrans · 28
+promesses · 23 tenues · 5 à faire**.
+
+| Livré | Preuve |
+|---|---|
+| `Lecture.colonnes` — nom, exemple, rôle ; une colonne incertaine est dite telle | `test_colonnes_montrees_avec_exemple_et_role` |
+| `lecture.verifie()` — les 5 contrôles avant toute décision | `test_cinq_controles_sont_calcules` |
+| `projet.decisions` — qui, quand, pourquoi ; réintégrer n'efface rien | 3 tests |
+| `projet.forages_ecartes()` — R-54, écarté ≠ caché | `test_le_forage_ecarte_reste_disponible_au_dessin` |
+| `tools/confronte_ecrans.py` | la liste, relancée à chaque passage |
+| `specs/tests/test_ecrans.py` — 18 tests sur des fichiers réels | verts |
+| `maquettes/28_ecrans.png` | relue |
+| R-54, R-55 (docs/07 §18) | — |
+
+**Reste, nommé** : 11 types de données sans lecteur · Excel, LAS, Shapefile ·
+rendu de la coupe par le noyau · export branché · écartés en pointillés.
 
 ## Ce qui n'est pas dans ce plan, et pourquoi
 

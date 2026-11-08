@@ -560,3 +560,60 @@ l'endroit où l'on lit, jamais ce qui s'exécute.
 d'historique encore dans le code · **39 noms** de fonctions présents dans
 plusieurs fichiers (invitation à regarder, pas une duplication prouvée).
 Le prochain candidat mesuré est `ui/step2_import.py` (2 860 lignes).
+
+## 18. Chantier 7 — les écrans neufs confrontés au code
+
+### La méthode : un registre, pas une planche
+
+Les planches `18` à `21` montraient quatre écrans qui n'existaient pas encore.
+La tentation était de les déclarer « faits » parce qu'ils sont beaux. On a
+fait l'inverse : chaque phrase montrée à l'utilisateur est devenue une **entrée
+de registre** (`drillmaster_v3/core/ecrans/promesses.py`), avec trois états
+seulement — jamais deux :
+
+| État | Sens | Ce qu'il exige |
+|---|---|---|
+| **tenu** | le comportement existe | un cas réel en face, nommé |
+| **bloqué** | le comportement est refusé exprès | la raison, en clair |
+| **à faire** | la maquette promet, le code ne sait pas | le travail numéroté |
+
+### La confrontation, chiffrée
+
+**4 écrans · 28 promesses · 23 tenues · 5 à faire.**
+
+Trois promesses qui n'étaient que des images sont devenues du code, parce
+qu'elles ne demandaient aucune décision de produit :
+
+| Promesse | Ce qui a été écrit |
+|---|---|
+| « les colonnes du fichier, une par une, avec un exemple » | `Lecture.colonnes` · `Colonne(nom, exemple, rôle)` — une colonne non reconnue est dite « à confirmer », jamais devinée |
+| « qui décide » est gardé avec la décision | `projet.exclut(..., par=…)` et `projet.decisions` : action, forage, motif, auteur, date |
+| « 5 contrôles avant de vous demander de décider » | `lecture.verifie()` : identifiants, coordonnées, profondeurs, analyses, dates — chacun avec son compte réel, et « rien à vérifier » quand c'est le cas |
+
+Et une promesse fausse a été **corrigée dans la maquette** : `18_import.png`
+annonçait « CSM, TXT, Excel, LAS, Shapefile — 12 formats reconnus ». La
+lecture ne sait lire que du texte séparé. La planche dit désormais ce qui est
+vrai (tableur, décimale et accents compris) et ce qui reste à écrire (Excel,
+LAS, Shapefile).
+
+### La règle qui en découle
+
+**R-54 · « Écarté » veut dire absent des calculs, pas caché de l'écran.** Un
+forage exclu reste disponible au dessin, en pointillés, avec son motif
+(`projet.forages_ecartes()`). Une exclusion qui disparaît fait croire que le
+forage n'a jamais existé — et c'est exactement ainsi qu'on perd la confiance
+dans une coupe.
+
+**R-55 · Une maquette promet, un cas réel prouve.** Aucune phrase affichée à
+l'utilisateur ne peut exister sans une entrée de registre avec sa preuve, ou
+son état « à faire ». Un écran ne montre jamais une promesse que rien ne tient.
+
+### Ce qui reste, nommé
+
+| Reste | Pourquoi ce n'est pas fait |
+|---|---|
+| 11 types de données sans lecteur | un lecteur par type : analyses, lithologie, altérations… |
+| Excel, LAS, Shapefile | trois formats, trois lecteurs |
+| couleurs et motifs de la coupe peints par le noyau | le rendu vit encore dans l'ancien module |
+| export branché sur le noyau | la promesse « ce que vous voyez sera l'export » n'est pas tenue |
+| forages écartés dessinés en pointillés | la donnée existe (R-54), le dessin reste à faire |

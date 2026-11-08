@@ -24,6 +24,7 @@ ALIAS = {
     "z": ("z", "elev", "elevation", "altitude", "rl", "zcoord"),
     "profondeur": ("profondeur", "depth", "prof", "profondeur_m", "eoh",
                    "final_depth", "to"),
+    "date": ("date", "date_fin", "fin", "end_date", "datefin"),
 }
 
 
@@ -42,12 +43,26 @@ class Forage:
     ligne_source: int = 0
 
 
+@dataclass(frozen=True)
+class Colonne:
+    """Une colonne du fichier, telle qu'elle sera montrée avant l'import."""
+    nom: str
+    exemple: str
+    role: str = ""              # « identifiant », « longitude »… vide = à confirmer
+
+    @property
+    def reconnue(self):
+        return bool(self.role)
+
+
 @dataclass
 class Lecture:
     """Résultat d'une lecture : des données ET des messages. Jamais l'un sans l'autre."""
     colliers: list = field(default_factory=list)
     messages: list = field(default_factory=list)
     journal: dict = field(default_factory=dict)
+    colonnes: list = field(default_factory=list)
+    verifications: object = None
 
     @property
     def bloquant(self):
@@ -84,6 +99,19 @@ def _decode(octets, nom):
 def _detecte_separateur(entete):
     compte = {sep: entete.count(sep) for sep in (";", "\t", ",")}
     return max(compte, key=compte.get) if max(compte.values()) else ","
+
+
+def _colonne_nombre(valeur, decimal_virgule=None):
+    """Cette colonne contient-elle des nombres ? On regarde 20 valeurs, pas 1."""
+    essais = [v for v in valeur if (v or "").strip()][:20]
+    if not essais:
+        return False
+    return all(_nombre(v, decimal_virgule) is not None for v in essais)
+
+
+def _colonnes_hostiles(entetes):
+    """Les noms de colonnes qui contiennent le séparateur : on le dit, on ne devine pas."""
+    return [e for e in entetes if any(sep in (e or "") for sep in (";", "\t"))]
 
 
 def _nombre(brut, decimal_virgule=False):
@@ -152,6 +180,19 @@ def lit_collets(chemin, texte=None) -> Lecture:
             if cle in alias and cible not in index:
                 index[cible] = no
 
+    # ce que l'écran d'import montre : chaque colonne, son exemple, son rôle.
+    # Une colonne non reconnue n'est pas devinée : elle est dite « à confirmer ».
+    SENS = {"id": "identifiant du forage", "x": "position est",
+            "y": "position nord", "z": "altitude du collet",
+            "profondeur": "profondeur finale", "date": "date de fin"}
+    role_de = {no: SENS[c] for c, no in index.items()}
+    premiere = next(lecteur, None) or []
+    lec.colonnes = [
+        Colonne(nom=(brut or "").strip(),
+                exemple=(premiere[no].strip() if no < len(premiere) else ""),
+                role=role_de.get(no, ""))
+        for no, brut in enumerate(entetes)]
+
     manquantes = [c for c in ("id", "x", "y") if c not in index]
     if manquantes:
         lec.messages.append(blocage(
@@ -164,7 +205,9 @@ def lit_collets(chemin, texte=None) -> Lecture:
 
     decimal_virgule = sep != ","
     vus = defaultdict(list)
-    for no, ligne in enumerate(lecteur, start=2):
+    debut = 2 if premiere else 3
+    lignes_donnees = [premiere] + list(lecteur) if premiere else list(lecteur)
+    for no, ligne in enumerate(lignes_donnees, start=2):
         if len(ligne) <= max(index.values()):
             continue
         try:
@@ -209,6 +252,11 @@ def lit_collets(chemin, texte=None) -> Lecture:
                  "exclure un des deux forages"),
                 f"{nom} · {', '.join(lignes_)}"))
 
+    # les cinq contrôles faits AVANT de demander une décision (écran 19)
+    lec.verifications = verifie(
+        entetes, lignes_donnees, index,
+        {i for i, lst in vus.items() if len(lst) > 1})
+
     if not lec.colliers:
         lec.messages.append(blocage(
             "Aucun forage lisible",
@@ -220,3 +268,122 @@ def lit_collets(chemin, texte=None) -> Lecture:
         f"lecture terminée en {codec}, séparateur « {sep} », "
         f"aucun fichier modifié", nom))
     return lec
+
+
+# ── les contrôles faits AVANT de demander une décision (écran 19) ─────
+# Une décision ne porte que sur ce qui reste. Ces cinq contrôles sont
+# calculés, pas racontés : l'écran montre leur résultat, pas une promesse.
+CONTROLES = (
+    "identifiants", "coordonnees", "profondeurs", "analyses", "dates",
+)
+
+
+@dataclass(frozen=True)
+class Controle:
+    cle: str
+    libelle: str
+    reussi: int = 0
+    total: int = 0
+
+    @property
+    def etat(self):
+        if self.total == 0:
+            return "info"          # rien à vérifier : on le dit
+        if self.reussi == self.total:
+            return "ok"
+        return "blocage" if self.reussi == 0 else "avertissement"
+
+    def phrase(self):
+        return f"{self.reussi} sur {self.total}"
+
+
+@dataclass
+class Verifications:
+    """Le résultat des cinq contrôles, avec le cas où l'on ne sait pas."""
+    lignes: int = 0
+    colonnes: tuple = ()
+    colonnes_reconnues: int = 0
+    controles: tuple = ()
+
+    def avant_de_demander(self):
+        """Ce qui bloque encore, en clair : le reste est vérifié, donc pas à décider."""
+        return tuple(c.libelle for c in self.controles
+                     if c.etat in ("blocage", "avertissement"))
+
+
+def verifie(entetes, lignes, index, doublons, analyses=None) -> Verifications:
+    """Les cinq contrôles de l'écran 19, calculés sur les lignes réellement lues.
+
+    ``lignes``   : liste de listes (les valeurs brutes du fichier)
+    ``index``    : rôle → numéro de colonne
+    ``doublons`` : identifiants vus plusieurs fois
+    ``analyses`` : liste de (identifiant de forage, valeur) ou None
+    """
+    def val(ligne, role):
+        no = index.get(role)
+        if no is None or no >= len(ligne):
+            return ""
+        return ligne[no]
+
+    ids = [val(l, "id").strip() for l in lignes]
+    connus = {i for i in ids if i}
+
+    ctrl = []
+    # 1 · identifiants uniques
+    ctrl.append(Controle(
+        "identifiants", "Identifiants uniques",
+        len(connus), len(lignes)))
+
+    # 2 · coordonnées lisibles et dans une emprise plausible
+    lisibles = 0
+    for l in lignes:
+        x = _nombre(val(l, "x"))
+        y = _nombre(val(l, "y"))
+        if x is None or y is None:
+            continue
+        if abs(x) > 1e7 or abs(y) > 1e7:      # hors de toute emprise terrestre
+            continue
+        lisibles += 1
+    ctrl.append(Controle("coordonnees", "Coordonnées dans une emprise plausible",
+                         lisibles, len(lignes)))
+
+    # 3 · profondeurs cohérentes avec les coordonnées
+    if "profondeur" in index:
+        ok = sum(1 for l in lignes
+                 if (_nombre(val(l, "profondeur")) or 0) > 0
+                 and _nombre(val(l, "x")) is not None)
+        ctrl.append(Controle("profondeurs",
+                             "Profondeurs renseignées pour chaque forage",
+                             ok, len(lignes)))
+    else:
+        ctrl.append(Controle("profondeurs",
+                             "Profondeurs renseignées pour chaque forage",
+                             0, 0))
+
+    # 4 · chaque analyse est rattachée à un forage connu
+    if analyses:
+        rattachees = sum(1 for ident, _ in analyses if ident in connus)
+        ctrl.append(Controle("analyses",
+                             "Analyses rattachées à un forage connu",
+                             rattachees, len(analyses)))
+    else:
+        ctrl.append(Controle("analyses",
+                             "Analyses rattachées à un forage connu", 0, 0))
+
+    # 5 · dates plausibles (année entre 1900 et aujourd'hui + 1)
+    no_date = index.get("date")
+    if no_date is None:
+        ctrl.append(Controle("dates", "Dates de fin plausibles", 0, 0))
+    else:
+        bonnes = 0
+        for l in lignes:
+            brut = val(l, "date").strip()
+            annee = brut[:4]
+            if len(annee) == 4 and annee.isdigit() and 1900 <= int(annee) <= 2100:
+                bonnes += 1
+        ctrl.append(Controle("dates", "Dates de fin plausibles", bonnes, len(lignes)))
+
+    reconnues = sum(1 for role in index)
+    return Verifications(lignes=len(lignes), colonnes=tuple(entetes),
+                         colonnes_reconnues=reconnues,
+                         controles=tuple(ctrl))
