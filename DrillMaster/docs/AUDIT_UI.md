@@ -91,13 +91,14 @@ Incohérences internes du système lui-même (corrigées en Lot DA-0) :
   `make_xy_pair`) qui suppriment le boilerplate répété (~8 lignes/option,
   55× `setStyleSheet(INPUT_STYLE)` dans section_dock seul). Groupe
   « Collets » migré comme référence ; les 23 autres groupes suivront.
-- **Lot IA-1 (tranche 1, v2.9.397)** : migration des groupes mécaniques du
-  panneau de coupe vers les fabriques DA-1 — Trajectoire, Profondeurs,
-  Lithologie, Pistes codées (alteration/minéralisation via le constructeur
-  partagé), en plus de Collets. Récurrence des catégories en place : « Côté »
-  et « Opacité » se présentent désormais à l'identique dans tous les groupes
-  migrés. Reste : Display/Sections/Géométrie/Grille/Cadre/Topographie/Légende/
-  Teneurs/Seuils (logique métier plus dense), puis onglets sémantiques.
+- **Lot IA-1 (tranches 1-2, v2.9.397/398)** : migration des groupes du
+  panneau de coupe vers les fabriques DA-1 — Collets, Trajectoire,
+  Profondeurs, Lithologie, Pistes codées, Coupe active, Géométrie (buffer),
+  Grille avancée, Cadre/axes/orientation/échelle, Topographie. Bilan :
+  `setStyleSheet(INPUT_STYLE)` inline 55 → 19, spinboxes directs 30 → 6
+  (restes : Teneurs/Seuils, logique dense — tranche 3). Récurrence des
+  catégories en place : « Côté », « Opacité », « Taille » à l'identique
+  partout. Nouvelle fabrique : `make_line_edit` (cartouches).
 - **Lot TRUST-1** (cap professionnel) : auditabilité — chaque export embarque
   ses paramètres complets (étendre `_export_meta_dict`), chaque valeur
   affichée traçable jusqu'au CSV source, journal de session rejouable.

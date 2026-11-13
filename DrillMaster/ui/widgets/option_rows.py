@@ -12,7 +12,8 @@ Les groupes deviennent déclaratifs : 1 ligne par option.
 from __future__ import annotations
 
 from qgis.PyQt.QtWidgets import (
-    QCheckBox, QComboBox, QDoubleSpinBox, QHBoxLayout, QSpinBox, QWidget)
+    QCheckBox, QComboBox, QDoubleSpinBox, QHBoxLayout, QLineEdit, QSpinBox,
+    QWidget)
 
 from ..styles_qt import INPUT_STYLE
 
@@ -62,6 +63,22 @@ def make_check(parent, text, *, checked=False, on_change=None):
     w.setChecked(checked)
     if on_change is not None:
         w.stateChanged.connect(on_change)
+    return w
+
+
+def make_line_edit(parent, *, max_length=None, placeholder="", text="",
+                   on_edit_finished=None, on_text_edited=None):
+    """Champ texte normalisé (cartouches, commentaires)."""
+    w = QLineEdit(text, parent)
+    if max_length is not None:
+        w.setMaxLength(max_length)
+    if placeholder:
+        w.setPlaceholderText(placeholder)
+    w.setStyleSheet(INPUT_STYLE)
+    if on_edit_finished is not None:
+        w.editingFinished.connect(on_edit_finished)
+    if on_text_edited is not None:
+        w.textEdited.connect(on_text_edited)
     return w
 
 

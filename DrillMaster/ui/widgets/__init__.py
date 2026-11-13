@@ -12,12 +12,14 @@ QSpinBox + setStyleSheet(INPUT_STYLE) copié-collé.
 """
 
 from .collapsible_group import CollapsibleGroup
-from .option_rows import make_spin, make_combo, make_check, make_xy_pair
+from .option_rows import (
+    make_check, make_combo, make_line_edit, make_spin, make_xy_pair)
 
 __all__ = [
     "CollapsibleGroup",
     "make_spin",
     "make_combo",
     "make_check",
+    "make_line_edit",
     "make_xy_pair",
 ]

@@ -853,7 +853,9 @@ from ..core.data_model import DrillHole
 from .styles_qt import (
     COLORS, BUTTON_SECONDARY, INPUT_STYLE, TABLE_STYLE, TOOLTIP_STYLE,
     suppress_button_focus_rects, make_collapsible_help)
-from .widgets import CollapsibleGroup, make_check, make_combo, make_spin, make_xy_pair
+from .widgets import (
+    CollapsibleGroup, make_check, make_combo, make_line_edit, make_spin,
+    make_xy_pair)
 
 
 
@@ -6931,11 +6933,10 @@ class SectionWidget(QWidget):
         frame = self._group_frame()
         layout = QVBoxLayout(frame)
         layout.setContentsMargins(6, 6, 6, 8)
-        self.section_combo = QComboBox()
-        self.section_combo.setStyleSheet(INPUT_STYLE)
-        self.section_combo.setToolTip(self.tr("Coupe affichée · gestion = Assistant étape 4"))
-        self.section_combo.currentIndexChanged.connect(
-            self._on_section_combo_changed)
+        self.section_combo = make_combo(
+            self, [], on_change=self._on_section_combo_changed)
+        self.section_combo.setToolTip(
+            self.tr("Coupe affichée · gestion = Assistant étape 4"))
         layout.addWidget(self.section_combo)
         note = QLabel(self.tr("Renommer et supprimer dans Contrôle → Coupes"))
         note.setObjectName("label_hint")
@@ -6991,16 +6992,14 @@ class SectionWidget(QWidget):
         form.setContentsMargins(6, 6, 6, 8)
         form.setSpacing(6)
 
-        self.buffer_spin = QDoubleSpinBox()
-        self.buffer_spin.setRange(1, 5000)
-        self.buffer_spin.setValue(50.0)
-        self.buffer_spin.setSuffix(" m")
+        self.buffer_spin = make_spin(
+            self, lo=1, hi=5000, value=50.0, decimals=1,
+            suffix=" m", on_change=self._on_geometry_change)
         self.buffer_spin.setKeyboardTracking(True)
         self.buffer_spin.setAccelerated(True)
-        self.buffer_spin.setStyleSheet(INPUT_STYLE)
         # v2.9.178 — explicite mais COURT (question : « buffer de quoi ? »)
-        self.buffer_spin.setToolTip(self.tr("Corridor du trait de coupe · forages < N m · maj auto"))
-        self.buffer_spin.valueChanged.connect(self._on_geometry_change)
+        self.buffer_spin.setToolTip(
+            self.tr("Corridor du trait de coupe · forages < N m · maj auto"))
         self.buffer_spin.lineEdit().textEdited.connect(
             self._on_buffer_text_edited)
         self.buffer_spin.editingFinished.connect(self._apply_geometry_change)
@@ -7016,21 +7015,19 @@ class SectionWidget(QWidget):
         form.addRow("", build_hole_filter_row(self))
 
 
-        self.buffer_mode_combo = QComboBox()
-        self.buffer_mode_combo.addItem(
-            self.tr("Distance du collet (recommandé)"), "collar")
-        self.buffer_mode_combo.addItem(
-            self.tr("Intersection de la trajectoire"), "trajectory")
-        self.buffer_mode_combo.setStyleSheet(INPUT_STYLE)
-        self.buffer_mode_combo.setToolTip(self.tr("Collet · distance au collet\nTrajectoire · corridor du trou"))
-        self.buffer_mode_combo.currentIndexChanged.connect(
-            self._on_geometry_change)
+        self.buffer_mode_combo = make_combo(
+            self, [
+                (self.tr("Distance du collet (recommandé)"), "collar"),
+                (self.tr("Intersection de la trajectoire"), "trajectory"),
+            ], on_change=self._on_geometry_change)
+        self.buffer_mode_combo.setToolTip(
+            self.tr("Collet · distance au collet\nTrajectoire · corridor du trou"))
         form.addRow(self.tr("Mode de sélection"), self.buffer_mode_combo)
-        self.chk_buffer_map = QCheckBox(self.tr("Afficher le corridor sur la carte"))
         # v2.7.8 — OFF par défaut : le tracé d'une coupe ne doit rien
         # afficher de surprenant sur la carte QGIS.
-        self.chk_buffer_map.setChecked(False)
-        self.chk_buffer_map.stateChanged.connect(self._on_geometry_change)
+        self.chk_buffer_map = make_check(
+            self, self.tr("Afficher le corridor sur la carte"),
+            checked=False, on_change=self._on_geometry_change)
         form.addRow(self.chk_buffer_map)
         self.buffer_diagnostics = QLabel(self.tr("Aucune coupe active."))
         self.buffer_diagnostics.setWordWrap(True)
@@ -7755,27 +7752,19 @@ class SectionWidget(QWidget):
 
         self.grid_color_btn = self._create_color_button("#D5DBDB")
         form.addRow(self.tr("Couleur grille"), self.grid_color_btn)
-        self.grid_width_spin = QDoubleSpinBox()
-        self.grid_width_spin.setRange(0.2, 3.0)
-        self.grid_width_spin.setSingleStep(0.1)
-        self.grid_width_spin.setValue(0.7)
-        self.grid_width_spin.setSuffix(" px")
-        self.grid_width_spin.setStyleSheet(INPUT_STYLE)
-        self.grid_width_spin.valueChanged.connect(self._on_section_style_change)
+        oc = self._on_section_style_change
+        self.grid_width_spin = make_spin(
+            self, lo=0.2, hi=3.0, value=0.7, decimals=1, step=0.1,
+            suffix=" px", on_change=oc)
         form.addRow(self.tr("Épaisseur grille"), self.grid_width_spin)
-        self.grid_style_combo = QComboBox()
-        self.grid_style_combo.addItem(self.tr("Continu"), "solid")
-        self.grid_style_combo.addItem(self.tr("Tirets"), "dash")
-        self.grid_style_combo.addItem(self.tr("Pointillé"), "dot")
-        self.grid_style_combo.setStyleSheet(INPUT_STYLE)
-        self.grid_style_combo.currentIndexChanged.connect(self._on_section_style_change)
+        self.grid_style_combo = make_combo(
+            self, [
+                (self.tr("Continu"), "solid"), (self.tr("Tirets"), "dash"),
+                (self.tr("Pointillé"), "dot"),
+            ], on_change=oc)
         form.addRow(self.tr("Style grille"), self.grid_style_combo)
-        self.grid_opacity_spin = QSpinBox()
-        self.grid_opacity_spin.setRange(10, 100)
-        self.grid_opacity_spin.setValue(70)
-        self.grid_opacity_spin.setSuffix(" %")
-        self.grid_opacity_spin.setStyleSheet(INPUT_STYLE)
-        self.grid_opacity_spin.valueChanged.connect(self._on_section_style_change)
+        self.grid_opacity_spin = make_spin(
+            self, lo=10, hi=100, value=70, suffix=" %", on_change=oc)
         form.addRow(self.tr("Opacité grille"), self.grid_opacity_spin)
 
         self.elevation_step_spin = self._automatic_step_spin()
@@ -7784,37 +7773,25 @@ class SectionWidget(QWidget):
         form.addRow(self.tr("Pas d’élévation"), self.elevation_step_spin)
         form.addRow(self.tr("Pas de distance"), self.distance_step_spin)
 
-        self.axis_value_size_spin = QSpinBox()
-        self.axis_value_size_spin.setRange(6, 16)
-        self.axis_value_size_spin.setValue(7)
-        self.axis_value_size_spin.setSuffix(" pt")
-        self.axis_value_size_spin.setStyleSheet(INPUT_STYLE)
-        self.axis_value_size_spin.valueChanged.connect(self._on_section_style_change)
+        self.axis_value_size_spin = make_spin(
+            self, lo=6, hi=16, value=7, suffix=" pt", on_change=oc)
         form.addRow(self.tr("Taille valeurs"), self.axis_value_size_spin)
         self.axis_value_color_btn = self._create_color_button("#7F8C8D")
         form.addRow(self.tr("Couleur valeurs"), self.axis_value_color_btn)
-        self.axis_value_bold_chk = QCheckBox(self.tr("Valeurs en gras"))
-        self.axis_value_bold_chk.stateChanged.connect(self._on_section_style_change)
+        self.axis_value_bold_chk = make_check(
+            self, self.tr("Valeurs en gras"), on_change=oc)
         form.addRow(self.axis_value_bold_chk)
-        self.axis_decimals_spin = QSpinBox()
-        self.axis_decimals_spin.setRange(0, 3)
-        self.axis_decimals_spin.setValue(0)
-        self.axis_decimals_spin.setStyleSheet(INPUT_STYLE)
-        self.axis_decimals_spin.valueChanged.connect(self._on_section_style_change)
+        self.axis_decimals_spin = make_spin(
+            self, lo=0, hi=3, value=0, on_change=oc)
         form.addRow(self.tr("Décimales"), self.axis_decimals_spin)
 
-        self.axis_title_size_spin = QSpinBox()
-        self.axis_title_size_spin.setRange(7, 18)
-        self.axis_title_size_spin.setValue(8)
-        self.axis_title_size_spin.setSuffix(" pt")
-        self.axis_title_size_spin.setStyleSheet(INPUT_STYLE)
-        self.axis_title_size_spin.valueChanged.connect(self._on_section_style_change)
+        self.axis_title_size_spin = make_spin(
+            self, lo=7, hi=18, value=8, suffix=" pt", on_change=oc)
         form.addRow(self.tr("Taille titres"), self.axis_title_size_spin)
         self.axis_title_color_btn = self._create_color_button("#566573")
         form.addRow(self.tr("Couleur titres"), self.axis_title_color_btn)
-        self.axis_title_bold_chk = QCheckBox(self.tr("Titres en gras"))
-        self.axis_title_bold_chk.setChecked(True)
-        self.axis_title_bold_chk.stateChanged.connect(self._on_section_style_change)
+        self.axis_title_bold_chk = make_check(
+            self, self.tr("Titres en gras"), checked=True, on_change=oc)
         form.addRow(self.axis_title_bold_chk)
         return frame
 
@@ -7825,6 +7802,7 @@ class SectionWidget(QWidget):
         layout.setSpacing(6)
         form = QFormLayout()
         form.setSpacing(6)
+        oc = self._on_section_style_change
         form.addRow(self._panel_subtitle(self.tr("Proportions")))
 
         exag_row = QWidget()
@@ -7856,12 +7834,11 @@ class SectionWidget(QWidget):
         # 349 — l'exergue est une PROPRIÉTÉ DE COUPE : ses réglages
         # vivent ici, pas dans le dialogue d'export (déchargé).
         form.addRow(self._panel_subtitle(self.tr("Exergue légende")))
-        self.chk_legend_fade = QCheckBox(self.tr("Estomper les autres bandes"))
-        self.chk_legend_fade.setChecked(False)  # 350 : opt-in
+        self.chk_legend_fade = make_check(
+            self, self.tr("Estomper les autres bandes"),
+            checked=False, on_change=self._on_legend_fade_change)  # 350 : opt-in
         self.chk_legend_fade.setToolTip(self.tr(
             "Quand des codes sont en exergue : estompe les autres à 35 %"))
-        self.chk_legend_fade.stateChanged.connect(
-            self._on_legend_fade_change)
         form.addRow(self.chk_legend_fade)
         self.btn_legend_clear = QPushButton(self.tr("Effacer l'exergue"))
         self.btn_legend_clear.setToolTip(self.tr(
@@ -7871,31 +7848,29 @@ class SectionWidget(QWidget):
             self._on_legend_clear_clicked)
         form.addRow(self.btn_legend_clear)
         # 355 — confort visuel : débrayable, annoncé.
-        self.chk_comfort = QCheckBox(
-            self.tr("Réduire la densité visuelle (confort)"))
-        self.chk_comfort.setChecked(True)
+        self.chk_comfort = make_check(
+            self, self.tr("Réduire la densité visuelle (confort)"),
+            checked=True, on_change=self._on_comfort_change)
         self.chk_comfort.setToolTip(self.tr(
             "Masque traits de rappel et liserés, espace les chiffres "
             "de profondeur : reposant aux croisements"))
-        self.chk_comfort.stateChanged.connect(self._on_comfort_change)
         form.addRow(self.chk_comfort)
         form.addRow(self._panel_subtitle(self.tr("Grille et axes")))
 
-        self.chk_grid = QCheckBox(self.tr("Afficher la grille"))
-        self.chk_grid.setChecked(True)
-        self.chk_grid.stateChanged.connect(self._on_section_style_change)
+        self.chk_grid = make_check(
+            self, self.tr("Afficher la grille"), checked=True, on_change=oc)
         form.addRow(self.chk_grid)
-        self.chk_elevation_values = QCheckBox(self.tr("Afficher les valeurs d’élévation"))
-        self.chk_elevation_values.setChecked(True)
-        self.chk_elevation_values.stateChanged.connect(self._on_section_style_change)
+        self.chk_elevation_values = make_check(
+            self, self.tr("Afficher les valeurs d’élévation"),
+            checked=True, on_change=oc)
         form.addRow(self.chk_elevation_values)
-        self.chk_distance_values = QCheckBox(self.tr("Afficher les valeurs de distance"))
-        self.chk_distance_values.setChecked(True)
-        self.chk_distance_values.stateChanged.connect(self._on_section_style_change)
+        self.chk_distance_values = make_check(
+            self, self.tr("Afficher les valeurs de distance"),
+            checked=True, on_change=oc)
         form.addRow(self.chk_distance_values)
-        self.chk_axis_titles = QCheckBox(self.tr("Afficher les titres des axes"))
-        self.chk_axis_titles.setChecked(True)
-        self.chk_axis_titles.stateChanged.connect(self._on_section_style_change)
+        self.chk_axis_titles = make_check(
+            self, self.tr("Afficher les titres des axes"),
+            checked=True, on_change=oc)
         form.addRow(self.chk_axis_titles)
         layout.addLayout(form)
         layout.addWidget(CollapsibleGroup(
@@ -7905,66 +7880,55 @@ class SectionWidget(QWidget):
         orientation_form = QFormLayout()
         orientation_form.setSpacing(6)
         orientation_form.addRow(self._panel_subtitle(self.tr("Orientation")))
-        self.chk_orientation = QCheckBox(self.tr("Afficher la direction de la coupe"))
-        self.chk_orientation.setChecked(True)
-        self.chk_orientation.stateChanged.connect(self._on_section_style_change)
+        self.chk_orientation = make_check(
+            self, self.tr("Afficher la direction de la coupe"),
+            checked=True, on_change=oc)
         orientation_form.addRow(self.chk_orientation)
-        self.orientation_position = QComboBox()
-        self.orientation_position.addItem(self.tr("Automatique (bas gauche)"), "auto")
-        self.orientation_position.addItem(self.tr("Bas gauche"), "bottom_left")
-        self.orientation_position.addItem(self.tr("Bas droite"), "bottom_right")
-        self.orientation_position.setStyleSheet(INPUT_STYLE)
-        self.orientation_position.currentIndexChanged.connect(self._on_section_style_change)
+        self.orientation_position = make_combo(
+            self, [
+                (self.tr("Automatique (bas gauche)"), "auto"),
+                (self.tr("Bas gauche"), "bottom_left"),
+                (self.tr("Bas droite"), "bottom_right"),
+            ], on_change=oc)
         orientation_form.addRow(self.tr("Position direction"),
                                 self.orientation_position)
-        self.orientation_font_size = QSpinBox()
-        self.orientation_font_size.setRange(7, 16)
-        self.orientation_font_size.setValue(9)
-        self.orientation_font_size.setSuffix(" pt")
-        self.orientation_font_size.setStyleSheet(INPUT_STYLE)
-        self.orientation_font_size.valueChanged.connect(self._on_section_style_change)
+        self.orientation_font_size = make_spin(
+            self, lo=7, hi=16, value=9, suffix=" pt", on_change=oc)
         orientation_form.addRow(self.tr("Taille direction"),
                                 self.orientation_font_size)
         # v2.9.321 — commentaire libre dans le cartouche bas de carte
-        self.orientation_note = QLineEdit()
-        self.orientation_note.setMaxLength(140)
-        self.orientation_note.setPlaceholderText(self.tr(
-            "Ex. : ZRA-KAB — campagne Q1 2026"))
-        self.orientation_note.setStyleSheet(INPUT_STYLE)
-        self.orientation_note.editingFinished.connect(
-            self._on_section_style_change)
+        self.orientation_note = make_line_edit(
+            self, max_length=140,
+            placeholder=self.tr("Ex. : ZRA-KAB — campagne Q1 2026"),
+            on_edit_finished=oc)
         orientation_form.addRow(self.tr("Commentaire (cartouche)"),
                                 self.orientation_note)
         # 329 — auteur imprimé dans le cartouche d'infos de l'export.
-        self.orientation_author = QLineEdit()
-        self.orientation_author.setMaxLength(80)
-        self.orientation_author.setPlaceholderText(self.tr(
-            "Ex. : Y. Bonful"))
-        self.orientation_author.setStyleSheet(INPUT_STYLE)
-        self.orientation_author.editingFinished.connect(
-            self._on_section_style_change)
+        self.orientation_author = make_line_edit(
+            self, max_length=80,
+            placeholder=self.tr("Ex. : Y. Bonful"),
+            on_edit_finished=oc)
         orientation_form.addRow(self.tr("Auteur (cartouche)"),
                                 self.orientation_author)
         orientation_form.addRow(self._panel_subtitle(self.tr("Échelle")))
 
-        self.chk_scale_bar = QCheckBox(self.tr("Afficher l'échelle horizontale"))
-        self.chk_scale_bar.setChecked(True)
-        self.chk_scale_bar.stateChanged.connect(self._on_section_style_change)
+        self.chk_scale_bar = make_check(
+            self, self.tr("Afficher l'échelle horizontale"),
+            checked=True, on_change=oc)
         orientation_form.addRow(self.chk_scale_bar)
-        self.scale_position = QComboBox()
-        self.scale_position.addItem(self.tr("Automatique (bas droite)"), "auto")
-        self.scale_position.addItem(self.tr("Bas gauche"), "bottom_left")
-        self.scale_position.addItem(self.tr("Bas droite"), "bottom_right")
-        self.scale_position.setStyleSheet(INPUT_STYLE)
-        self.scale_position.currentIndexChanged.connect(self._on_section_style_change)
+        self.scale_position = make_combo(
+            self, [
+                (self.tr("Automatique (bas droite)"), "auto"),
+                (self.tr("Bas gauche"), "bottom_left"),
+                (self.tr("Bas droite"), "bottom_right"),
+            ], on_change=oc)
         orientation_form.addRow(self.tr("Position échelle"),
                                 self.scale_position)
-        self.scale_size = QComboBox()
-        self.scale_size.addItem(self.tr("Petite"), "small")
-        self.scale_size.addItem(self.tr("Moyenne"), "medium")
-        self.scale_size.addItem(self.tr("Grande"), "large")
-        self.scale_size.setStyleSheet(INPUT_STYLE)
-        self.scale_size.currentIndexChanged.connect(self._on_section_style_change)
+        self.scale_size = make_combo(
+            self, [
+                (self.tr("Petite"), "small"), (self.tr("Moyenne"), "medium"),
+                (self.tr("Grande"), "large"),
+            ], on_change=oc)
         orientation_form.addRow(self.tr("Taille échelle"), self.scale_size)
         layout.addLayout(orientation_form)
         return frame
@@ -7982,30 +7946,26 @@ class SectionWidget(QWidget):
         form.setContentsMargins(6, 6, 6, 8)
         form.setSpacing(6)
 
-        self.chk_surface = QCheckBox(self.tr("Afficher la ligne de sol"))
-        self.chk_surface.setChecked(True)
-        self.chk_surface.stateChanged.connect(self._on_section_style_change)
+        oc = self._on_section_style_change
+        self.chk_surface = make_check(
+            self, self.tr("Afficher la ligne de sol"),
+            checked=True, on_change=oc)
         form.addRow(self.chk_surface)
 
-        self.surface_combo = QComboBox()
-        self.surface_combo.addItem(self.tr("Automatique (MNT du projet)"), "auto")
-        self.surface_combo.addItem(self.tr("Aucun raster (CSV / collets)"), "none")
-        self.surface_combo.setStyleSheet(INPUT_STYLE)
+        self.surface_combo = make_combo(
+            self, [
+                (self.tr("Automatique (MNT du projet)"), "auto"),
+                (self.tr("Aucun raster (CSV / collets)"), "none"),
+            ], on_change=self._on_surface_source_change)
         # TT-17 : bulle courte — la cascade reste « Auto · … »
         self.surface_combo.setToolTip(self.tr("Auto · MNT → CSV → collets"))
-        self.surface_combo.currentIndexChanged.connect(
-            self._on_surface_source_change)
         form.addRow(self.tr("Source MNT"), self.surface_combo)
 
-        self.surface_qc_threshold = QDoubleSpinBox()
-        self.surface_qc_threshold.setRange(0.5, 20.0)
-        self.surface_qc_threshold.setSingleStep(0.5)
-        self.surface_qc_threshold.setValue(2.0)
-        self.surface_qc_threshold.setSuffix(" m")
-        self.surface_qc_threshold.setStyleSheet(INPUT_STYLE)
-        self.surface_qc_threshold.setToolTip(self.tr("Seuil QC MNT ↔ collets (m)"))
-        self.surface_qc_threshold.valueChanged.connect(
-            self._on_surface_qc_change)
+        self.surface_qc_threshold = make_spin(
+            self, lo=0.5, hi=20.0, value=2.0, decimals=1, step=0.5,
+            suffix=" m", on_change=self._on_surface_qc_change)
+        self.surface_qc_threshold.setToolTip(
+            self.tr("Seuil QC MNT ↔ collets (m)"))
         form.addRow(self.tr("Seuil écart MNT ↔ collets"),
                     self.surface_qc_threshold)
 
