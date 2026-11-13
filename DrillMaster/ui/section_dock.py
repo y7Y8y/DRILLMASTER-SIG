@@ -853,6 +853,7 @@ from ..core.data_model import DrillHole
 from .styles_qt import (
     COLORS, BUTTON_SECONDARY, INPUT_STYLE, TABLE_STYLE, TOOLTIP_STYLE,
     suppress_button_focus_rects, make_collapsible_help)
+from .widgets import CollapsibleGroup, make_check, make_combo, make_spin, make_xy_pair
 
 
 
@@ -988,70 +989,6 @@ def _legend_label(text: str) -> "QLabel":
 
 
 
-
-
-
-class CollapsibleGroup(QWidget):
-    """Accordion with visually distinct main (0) and nested (1) levels."""
-
-    def __init__(self, title, content, expanded=False, parent=None, level=0):
-        super().__init__(parent)
-        self.level = level
-        layout = QVBoxLayout(self)
-        layout.setContentsMargins(14 if level else 0, 2 if level else 0, 0, 2 if level else 0)
-        layout.setSpacing(0)
-        self.header = QToolButton()
-        self.header.setText(title)
-        self.header.setCheckable(True)
-        self.header.setChecked(expanded)
-        self.header.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
-        self.header.setArrowType(Qt.DownArrow if expanded else Qt.RightArrow)
-        # v2.7.12.14 — REVUE ÉCRAN (onglet Coupe 2D) : la politique
-        # horizontale de QToolButton est Fixed (taille sizeHint) — les
-        # titres « flottent » à moitié dans le panneau (barre bleue et
-        # fond tronqués). En Expanding, le titre fait toute la largeur :
-        # un vrai accordéon, lisible et cohérent partout (panneau coupes
-        # ET historique de l'étape 4).
-        self.header.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
-        if level == 0:
-            self.header.setStyleSheet(f"""
-                QToolButton {{
-                    background: #EAF0F4; color: {COLORS['primary']};
-                    border: none; border-left: 3px solid {COLORS['accent']};
-                    border-bottom: 1px solid {COLORS['border_dark']};
-                    padding: 8px 7px; font-size: 9pt; font-weight: bold;
-                    text-align: left;
-                }}
-            """)
-        else:
-            self.header.setStyleSheet(f"""
-                QToolButton {{
-                    background: #F7F9F9; color: {COLORS['text_medium']};
-                    border: 1px solid {COLORS['border']};
-                    padding: 5px 6px; font-size: 8pt; font-weight: normal;
-                    text-align: left;
-                }}
-            """)
-        self.content = content
-        self.content.setVisible(expanded)
-        self.header.toggled.connect(self._toggle)
-        layout.addWidget(self.header)
-        # v2.7.12.13 — le contenu absorbe l'espace restant : à l'étape 4
-        # (sans défilement) la table d'historique remplit l'étape ; dans
-        # les panneaux (sous QScrollArea) aucun effet, la hauteur reste
-        # la sizeHint.
-        layout.addWidget(self.content, 1)
-
-    def _toggle(self, expanded):
-        self.header.setArrowType(Qt.DownArrow if expanded else Qt.RightArrow)
-        self.content.setVisible(expanded)
-        # v2.7.12.14 — REVUE ÉCRAN (onglet Coupe 2D) : changer la
-        # visibilité change la sizeHint du groupe — sans
-        # updateGeometry(), Qt ne re-propage PAS la nouvelle taille :
-        # le panneau gardait la hauteur dépliée et chaque groupe replié
-        # réservait son espace fantôme (les grands vides entre les
-        # titres constatés à l'écran).
-        self.updateGeometry()
 
 
 
@@ -7105,83 +7042,58 @@ class SectionWidget(QWidget):
         return frame
 
     def _build_collars_group(self):
+        # v2.9.396 — DA-1 : fabriques réutilisables (ui/widgets), le
+        # boilerplate QSpinBox/setStyleSheet disparaît ; pattern de
+        # référence pour la migration des autres groupes.
         frame = self._group_frame()
         form = QFormLayout(frame)
         form.setContentsMargins(6, 6, 6, 8)
         form.setSpacing(6)
+        oc = self._on_section_style_change
 
-        self.chk_labels = QCheckBox(self.tr("Afficher les étiquettes"))
-        self.chk_labels.setChecked(True)
-        self.chk_labels.stateChanged.connect(self._on_section_style_change)
+        self.chk_labels = make_check(
+            self, self.tr("Afficher les étiquettes"),
+            checked=True, on_change=oc)
         form.addRow(self.chk_labels)
 
-        self.chk_collar_info = QCheckBox(self.tr("Afficher azimut / dip"))
-        self.chk_collar_info.setChecked(True)
-        self.chk_collar_info.stateChanged.connect(self._on_section_style_change)
+        self.chk_collar_info = make_check(
+            self, self.tr("Afficher azimut / dip"),
+            checked=True, on_change=oc)
         form.addRow(self.chk_collar_info)
 
-        self.collar_id_size = QSpinBox()
-        self.collar_id_size.setRange(6, 24)
-        self.collar_id_size.setValue(8)
-        self.collar_id_size.setStyleSheet(INPUT_STYLE)
-        self.collar_id_size.valueChanged.connect(self._on_section_style_change)
+        self.collar_id_size = make_spin(
+            self, lo=6, hi=24, value=8, on_change=oc)
         form.addRow(self.tr("Taille identifiant"), self.collar_id_size)
 
-        self.collar_info_size = QSpinBox()
-        self.collar_info_size.setRange(6, 20)
-        self.collar_info_size.setValue(7)
-        self.collar_info_size.setStyleSheet(INPUT_STYLE)
-        self.collar_info_size.valueChanged.connect(self._on_section_style_change)
+        self.collar_info_size = make_spin(
+            self, lo=6, hi=20, value=7, on_change=oc)
         form.addRow(self.tr("Taille az/dip"), self.collar_info_size)
 
-        positions = [
-            (self.tr("Automatique anti-collision"), "auto"),
-            (self.tr("Gauche"), "left"), (self.tr("Droite"), "right"),
-            (self.tr("Haut"), "top"), (self.tr("Bas"), "bottom"),
-        ]
-        self.collar_block_position = QComboBox()
-        for label, value in positions:
-            self.collar_block_position.addItem(label, value)
-        self.collar_block_position.setStyleSheet(INPUT_STYLE)
-        self.collar_block_position.currentIndexChanged.connect(
-            self._on_section_style_change)
+        self.collar_block_position = make_combo(
+            self, [
+                (self.tr("Automatique anti-collision"), "auto"),
+                (self.tr("Gauche"), "left"), (self.tr("Droite"), "right"),
+                (self.tr("Haut"), "top"), (self.tr("Bas"), "bottom"),
+            ], on_change=oc)
         form.addRow(self.tr("Position bloc ID + Az/Dip"),
                     self.collar_block_position)
 
-        def offset_pair():
-            widget = QWidget()
-            row = QHBoxLayout(widget)
-            row.setContentsMargins(0, 0, 0, 0)
-            x_spin, y_spin = QDoubleSpinBox(), QDoubleSpinBox()
-            for prefix, spin in (("X ", x_spin), ("Y ", y_spin)):
-                spin.setRange(-100, 100)
-                spin.setPrefix(prefix)
-                spin.setSuffix(" px")
-                spin.setStyleSheet(INPUT_STYLE)
-                spin.valueChanged.connect(self._on_section_style_change)
-                row.addWidget(spin)
-            return widget, x_spin, y_spin
-
-        id_offsets, self.collar_id_offset_x, self.collar_id_offset_y = offset_pair()
-        info_offsets, self.collar_info_offset_x, self.collar_info_offset_y = offset_pair()
+        id_offsets, self.collar_id_offset_x, self.collar_id_offset_y = \
+            make_xy_pair(self, on_change=oc)
+        info_offsets, self.collar_info_offset_x, self.collar_info_offset_y = \
+            make_xy_pair(self, on_change=oc)
         form.addRow(self.tr("Décalage identifiant"), id_offsets)
         form.addRow(self.tr("Décalage Az/Dip"), info_offsets)
 
-        self.collar_marker_size = QDoubleSpinBox()
-        self.collar_marker_size.setRange(2, 24)
-        self.collar_marker_size.setValue(6)
-        self.collar_marker_size.setSuffix(" px")
-        self.collar_marker_size.setStyleSheet(INPUT_STYLE)
-        self.collar_marker_size.valueChanged.connect(self._on_section_style_change)
+        self.collar_marker_size = make_spin(
+            self, lo=2.0, hi=24.0, value=6.0, decimals=1,
+            suffix=" px", on_change=oc)
         form.addRow(self.tr("Taille du symbole"), self.collar_marker_size)
-        self.shared_collar_tolerance = QDoubleSpinBox()
-        self.shared_collar_tolerance.setRange(0.0, 100.0)
-        self.shared_collar_tolerance.setDecimals(2)
-        self.shared_collar_tolerance.setValue(0.10)
-        self.shared_collar_tolerance.setStyleSheet(INPUT_STYLE)
-        self.shared_collar_tolerance.setToolTip(self.tr("Tolérance XYZ · collets partagés"))
-        self.shared_collar_tolerance.valueChanged.connect(
-            self._on_section_style_change)
+
+        self.shared_collar_tolerance = make_spin(
+            self, lo=0.0, hi=100.0, value=0.10, decimals=2, on_change=oc)
+        self.shared_collar_tolerance.setToolTip(
+            self.tr("Tolérance XYZ · collets partagés"))
         form.addRow(self.tr("Tolérance collet partagé"),
                     self.shared_collar_tolerance)
         return frame

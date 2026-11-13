@@ -82,14 +82,24 @@ Incohérences internes du système lui-même (corrigées en Lot DA-0) :
 
 ## Plan d'exécution proposé (lots)
 
-- **Lot DA-0 (fait)** : tokens centralisés (`ui/design_tokens.py`),
+- **Lot DA-0 (fait, v2.9.395)** : tokens centralisés (`ui/design_tokens.py`),
   `styles_qt.py` refacturé sur les tokens, états corrigés (survol/désactivé
   neutres), échelle typographique fermée, stepper aligné.
-- **Lot DA-1** : composants réutilisables (ligne d'option, groupe repliable
-  normalisé, barre de statut) dans un `ui/widgets/` commun.
+- **Lot DA-1 (v2.9.396)** : package `ui/widgets/` — `CollapsibleGroup`
+  extrait de `section_dock.py` (fonds d'en-tête passés aux tokens) et
+  fabriques de lignes d'option (`make_spin`, `make_combo`, `make_check`,
+  `make_xy_pair`) qui suppriment le boilerplate répété (~8 lignes/option,
+  55× `setStyleSheet(INPUT_STYLE)` dans section_dock seul). Groupe
+  « Collets » migré comme référence ; les 23 autres groupes suivront.
 - **Lot IA-1** : restructuration du panneau de coupe en onglets sémantiques ;
   récurrence des catégories (taille/espacement/couleur identiques d'un groupe
-  à l'autre).
+  à l'autre) — les fabriques DA-1 sont le prérequis mécanique.
+- **Lot TRUST-1** (cap professionnel) : auditabilité — chaque export embarque
+  ses paramètres complets (étendre `_export_meta_dict`), chaque valeur
+  affichée traçable jusqu'au CSV source, journal de session rejouable.
+- **Lot MOD-1** (plus tard, prérequis : IA-1) : modélisation implicite RBF
+  sur intervalles codés → iso-surfaces, pur numpy (QGIS embarque numpy, pas
+  scipy — zéro dépendance nouvelle), sur le cœur pur de `mesh_builder.py`.
 - **Lot 3D-1** : consolidation des générations `view_3d*`.
 - **Lot QA-1** : tests de non-régression visuelle (snapshots) + lint anti-dérive
   (interdire les hex hors `design_tokens.py`).
