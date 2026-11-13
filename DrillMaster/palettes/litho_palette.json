@@ -1,0 +1,332 @@
+[
+  {
+    "num": 1,
+    "name": "Felsique",
+    "cluster": "felsic_pink",
+    "hex": "#9B79E3",
+    "oklch": [
+      0.655,
+      0.155,
+      296.6
+    ]
+  },
+  {
+    "num": 2,
+    "name": "Intermédiaire",
+    "cluster": "blue",
+    "hex": "#00A2AB",
+    "oklch": [
+      0.64,
+      0.155,
+      200.3
+    ]
+  },
+  {
+    "num": 3,
+    "name": "Mafique",
+    "cluster": "green",
+    "hex": "#989700",
+    "oklch": [
+      0.655,
+      0.155,
+      109.6
+    ]
+  },
+  {
+    "num": 4,
+    "name": "Ultramafique",
+    "cluster": "green",
+    "hex": "#576E00",
+    "oklch": [
+      0.499,
+      0.264,
+      121.4
+    ]
+  },
+  {
+    "num": 5,
+    "name": "Volcanique felsique",
+    "cluster": "felsic_pink",
+    "hex": "#8A00D4",
+    "oklch": [
+      0.499,
+      0.264,
+      306.4
+    ]
+  },
+  {
+    "num": 6,
+    "name": "Volcanique intermédiaire",
+    "cluster": "blue",
+    "hex": "#007891",
+    "oklch": [
+      0.52,
+      0.217,
+      215.4
+    ]
+  },
+  {
+    "num": 7,
+    "name": "Volcanique mafique",
+    "cluster": "green",
+    "hex": "#738F5F",
+    "oklch": [
+      0.616,
+      0.077,
+      133.1
+    ]
+  },
+  {
+    "num": 8,
+    "name": "Pyroclastique",
+    "cluster": "yellow",
+    "hex": "#B37800",
+    "oklch": [
+      0.616,
+      0.155,
+      79.4
+    ]
+  },
+  {
+    "num": 9,
+    "name": "Sédimentaire détritique",
+    "cluster": "brown",
+    "hex": "#DF674F",
+    "oklch": [
+      0.655,
+      0.155,
+      33.2
+    ]
+  },
+  {
+    "num": 10,
+    "name": "Sédimentaire grossière",
+    "cluster": "brown",
+    "hex": "#B02D00",
+    "oklch": [
+      0.499,
+      0.264,
+      41.6
+    ]
+  },
+  {
+    "num": 11,
+    "name": "Carbonatée",
+    "cluster": "blue",
+    "hex": "#2A85AB",
+    "oklch": [
+      0.58,
+      0.101,
+      230.6
+    ]
+  },
+  {
+    "num": 12,
+    "name": "Chimique / évaporitique",
+    "cluster": "yellow",
+    "hex": "#906900",
+    "oklch": [
+      0.544,
+      0.155,
+      87.0
+    ]
+  },
+  {
+    "num": 13,
+    "name": "Métamorphique pélitique",
+    "cluster": "purple",
+    "hex": "#617DE1",
+    "oklch": [
+      0.616,
+      0.155,
+      270.0
+    ]
+  },
+  {
+    "num": 14,
+    "name": "Métamorphique felsique",
+    "cluster": "felsic_pink",
+    "hex": "#9877A5",
+    "oklch": [
+      0.616,
+      0.077,
+      316.1
+    ]
+  },
+  {
+    "num": 15,
+    "name": "Métamorphique mafique",
+    "cluster": "green",
+    "hex": "#008100",
+    "oklch": [
+      0.515,
+      0.209,
+      144.9
+    ]
+  },
+  {
+    "num": 16,
+    "name": "Métamorphique ultramafique",
+    "cluster": "green",
+    "hex": "#0BAC68",
+    "oklch": [
+      0.655,
+      0.155,
+      156.6
+    ]
+  },
+  {
+    "num": 17,
+    "name": "Quartzite",
+    "cluster": "blue",
+    "hex": "#1C92E3",
+    "oklch": [
+      0.64,
+      0.155,
+      245.7
+    ]
+  },
+  {
+    "num": 18,
+    "name": "Skarn / calco-silicatée",
+    "cluster": "green",
+    "hex": "#007856",
+    "oklch": [
+      0.499,
+      0.264,
+      168.4
+    ]
+  },
+  {
+    "num": 19,
+    "name": "Pegmatitique",
+    "cluster": "felsic_pink",
+    "hex": "#A026A6",
+    "oklch": [
+      0.515,
+      0.209,
+      325.9
+    ]
+  },
+  {
+    "num": 20,
+    "name": "Veine / veinule",
+    "cluster": "yellow",
+    "hex": "#A18200",
+    "oklch": [
+      0.616,
+      0.155,
+      94.6
+    ]
+  },
+  {
+    "num": 21,
+    "name": "Intrusive alcaline",
+    "cluster": "felsic_pink",
+    "hex": "#C968B5",
+    "oklch": [
+      0.655,
+      0.155,
+      335.6
+    ]
+  },
+  {
+    "num": 22,
+    "name": "Intrusive felsique spécialisé",
+    "cluster": "felsic_pink",
+    "hex": "#B3007F",
+    "oklch": [
+      0.499,
+      0.264,
+      345.4
+    ]
+  },
+  {
+    "num": 23,
+    "name": "Latérite / régolithe",
+    "cluster": "iron_red",
+    "hex": "#CB5786",
+    "oklch": [
+      0.616,
+      0.155,
+      357.0
+    ]
+  },
+  {
+    "num": 24,
+    "name": "Alluvion / colluvion",
+    "cluster": "brown",
+    "hex": "#AB775A",
+    "oklch": [
+      0.616,
+      0.077,
+      50.0
+    ]
+  },
+  {
+    "num": 25,
+    "name": "Éluvion",
+    "cluster": "brown",
+    "hex": "#A24C00",
+    "oklch": [
+      0.515,
+      0.209,
+      58.4
+    ]
+  },
+  {
+    "num": 26,
+    "name": "Formation de fer",
+    "cluster": "iron_red",
+    "hex": "#B63F5F",
+    "oklch": [
+      0.544,
+      0.155,
+      7.5
+    ]
+  },
+  {
+    "num": 27,
+    "name": "Roche riche en minerai",
+    "cluster": "iron_red",
+    "hex": "#D15761",
+    "oklch": [
+      0.616,
+      0.155,
+      18.0
+    ]
+  },
+  {
+    "num": 28,
+    "name": "Roche carbonée",
+    "cluster": "neutral_dark",
+    "hex": "#333333",
+    "oklch": [
+      0.32,
+      0.0,
+      0
+    ]
+  },
+  {
+    "num": 29,
+    "name": "Roche volcanoclastique",
+    "cluster": "brown",
+    "hex": "#CE7A00",
+    "oklch": [
+      0.655,
+      0.155,
+      66.8
+    ]
+  },
+  {
+    "num": 30,
+    "name": "Inconnue / autre",
+    "cluster": "neutral_light",
+    "hex": "#A4A4A4",
+    "oklch": [
+      0.72,
+      0.0,
+      0
+    ]
+  }
+]
