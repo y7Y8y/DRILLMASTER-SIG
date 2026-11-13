@@ -7103,18 +7103,15 @@ class SectionWidget(QWidget):
         form = QFormLayout(frame)
         form.setContentsMargins(6, 6, 6, 8)
         form.setSpacing(6)
-        self.chk_trajectory = QCheckBox(self.tr("Afficher la trajectoire"))
+        oc = self._on_section_style_change
+        self.chk_trajectory = make_check(
+            self, self.tr("Afficher la trajectoire"),
+            checked=True, on_change=oc)
         self.chk_trajectory.setToolTip(self.tr("Trace des forages"))
-        self.chk_trajectory.setChecked(True)
-        self.chk_trajectory.stateChanged.connect(self._on_section_style_change)
         form.addRow(self.chk_trajectory)
-        self.trajectory_width = QDoubleSpinBox()
-        self.trajectory_width.setRange(0.2, 8.0)
-        self.trajectory_width.setSingleStep(0.1)
-        self.trajectory_width.setValue(0.5)
-        self.trajectory_width.setSuffix(" px")
-        self.trajectory_width.setStyleSheet(INPUT_STYLE)
-        self.trajectory_width.valueChanged.connect(self._on_section_style_change)
+        self.trajectory_width = make_spin(
+            self, lo=0.2, hi=8.0, value=0.5, decimals=1, step=0.1,
+            suffix=" px", on_change=oc)
         form.addRow(self.tr("Épaisseur"), self.trajectory_width)
         self.trajectory_color_btn = self._create_color_button("#34495E")
         form.addRow(self.tr("Couleur"), self.trajectory_color_btn)
@@ -7131,73 +7128,54 @@ class SectionWidget(QWidget):
         form = QFormLayout(frame)
         form.setContentsMargins(6, 6, 6, 8)
         form.setSpacing(6)
+        oc = self._on_section_style_change
 
-        self.chk_depth = QCheckBox(self.tr("Afficher profondeurs"))
-        self.chk_depth.setChecked(True)
-        self.chk_depth.stateChanged.connect(self._on_section_style_change)
+        self.chk_depth = make_check(
+            self, self.tr("Afficher profondeurs"),
+            checked=True, on_change=oc)
         form.addRow(self.chk_depth)
 
-        self.depth_spin = QDoubleSpinBox()
         # v2.7.7 — 0 = pas automatique (1/2/5×10ⁿ, ~10-12 graduations).
-        self.depth_spin.setRange(0, 500)
-        self.depth_spin.setValue(10)
+        self.depth_spin = make_spin(
+            self, lo=0, hi=500, value=10, decimals=1,
+            suffix=" m", on_change=oc)
         self.depth_spin.setSpecialValueText("Auto")
-        self.depth_spin.setSuffix(" m")
-        self.depth_spin.setToolTip(self.tr("Pas graduations · Auto = 1/2/5×10ⁿ"))
-        self.depth_spin.setStyleSheet(INPUT_STYLE)
-        self.depth_spin.valueChanged.connect(self._on_section_style_change)
+        self.depth_spin.setToolTip(
+            self.tr("Pas graduations · Auto = 1/2/5×10ⁿ"))
         form.addRow(self.tr("Graduations tous les"), self.depth_spin)
 
-        self.depth_label_every = QSpinBox()
-        self.depth_label_every.setRange(1, 5)
-        self.depth_label_every.setValue(2)
-        self.depth_label_every.setSuffix(" graduations")
-        self.depth_label_every.setToolTip(self.tr("Étiquette toutes les N graduations"))
-        self.depth_label_every.setStyleSheet(INPUT_STYLE)
-        self.depth_label_every.valueChanged.connect(
-            self._on_section_style_change)
+        self.depth_label_every = make_spin(
+            self, lo=1, hi=5, value=2,
+            suffix=" graduations", on_change=oc)
+        self.depth_label_every.setToolTip(
+            self.tr("Étiquette toutes les N graduations"))
         form.addRow(self.tr("Étiquettes toutes les"), self.depth_label_every)
 
-        self.depth_font_size = QSpinBox()
-        self.depth_font_size.setRange(6, 20)
-        self.depth_font_size.setValue(6)
-        self.depth_font_size.setStyleSheet(INPUT_STYLE)
-        self.depth_font_size.valueChanged.connect(self._on_section_style_change)
+        self.depth_font_size = make_spin(
+            self, lo=6, hi=20, value=6, on_change=oc)
         form.addRow(self.tr("Taille du texte"), self.depth_font_size)
 
-        self.depth_tick_length = QDoubleSpinBox()
         # v2.7.8.2 — le barreau est centré sur la trace (convention) ;
         # ce réglage pilote le DÉBORD au-delà de la litho.
-        self.depth_tick_length.setRange(2, 14)
-        self.depth_tick_length.setValue(2)
-        self.depth_tick_length.setSuffix(" px")
+        self.depth_tick_length = make_spin(
+            self, lo=2, hi=14, value=2, decimals=1,
+            suffix=" px", on_change=oc)
         self.depth_tick_length.setToolTip(self.tr("Débord graduations (px)"))
-        self.depth_tick_length.setStyleSheet(INPUT_STYLE)
-        self.depth_tick_length.valueChanged.connect(self._on_section_style_change)
         form.addRow(self.tr("Débord des graduations"), self.depth_tick_length)
 
-        self.depth_opacity = QSpinBox()
-        self.depth_opacity.setRange(0, 100)
-        self.depth_opacity.setValue(80)
-        self.depth_opacity.setSuffix(" %")
+        self.depth_opacity = make_spin(
+            self, lo=0, hi=100, value=80, suffix=" %", on_change=oc)
         self.depth_opacity.setToolTip(self.tr("Opacité profondeur"))
-        self.depth_opacity.setStyleSheet(INPUT_STYLE)
-        self.depth_opacity.valueChanged.connect(self._on_section_style_change)
         form.addRow(self.tr("Opacité des graduations"), self.depth_opacity)
 
-        self.depth_tick_width = QDoubleSpinBox()
-        self.depth_tick_width.setRange(0.1, 5)
-        self.depth_tick_width.setSingleStep(0.1)
-        self.depth_tick_width.setValue(1.0)
-        self.depth_tick_width.setStyleSheet(INPUT_STYLE)
-        self.depth_tick_width.valueChanged.connect(self._on_section_style_change)
+        self.depth_tick_width = make_spin(
+            self, lo=0.1, hi=5, value=1.0, decimals=1, step=0.1, on_change=oc)
         form.addRow(self.tr("Épaisseur graduation"), self.depth_tick_width)
 
-        self.depth_side = QComboBox()
-        self.depth_side.addItem(self.tr("Gauche"), "left")
-        self.depth_side.addItem(self.tr("Droite"), "right")
-        self.depth_side.setStyleSheet(INPUT_STYLE)
-        self.depth_side.currentIndexChanged.connect(self._on_section_style_change)
+        self.depth_side = make_combo(
+            self, [
+                (self.tr("Gauche"), "left"), (self.tr("Droite"), "right"),
+            ], on_change=oc)
         form.addRow(self.tr("Côté"), self.depth_side)
         return frame
 
@@ -7206,29 +7184,23 @@ class SectionWidget(QWidget):
         layout = QVBoxLayout(frame)
         layout.setContentsMargins(6, 6, 6, 8)
         layout.setSpacing(6)
+        oc = self._on_section_style_change
 
-        self.chk_litho = QCheckBox(self.tr("Afficher la lithologie"))
+        self.chk_litho = make_check(
+            self, self.tr("Afficher la lithologie"),
+            checked=True, on_change=oc)
         self.chk_litho.setToolTip(self.tr(
             "Couleur + motif + veine/accessoire/barrette · grisée sans fichier"))
-        self.chk_litho.setChecked(True)
-        self.chk_litho.stateChanged.connect(self._on_section_style_change)
         layout.addWidget(self.chk_litho)
 
         form = QFormLayout()
-        self.litho_width = QDoubleSpinBox()
-        self.litho_width.setRange(2, 60)
-        self.litho_width.setValue(17)
-        self.litho_width.setSuffix(" px")
-        self.litho_width.setStyleSheet(INPUT_STYLE)
-        self.litho_width.valueChanged.connect(self._on_section_style_change)
+        self.litho_width = make_spin(
+            self, lo=2, hi=60, value=17, decimals=1,
+            suffix=" px", on_change=oc)
         form.addRow(self.tr("Largeur"), self.litho_width)
 
-        self.litho_opacity = QSpinBox()
-        self.litho_opacity.setRange(0, 100)
-        self.litho_opacity.setValue(100)
-        self.litho_opacity.setSuffix(" %")
-        self.litho_opacity.setStyleSheet(INPUT_STYLE)
-        self.litho_opacity.valueChanged.connect(self._on_section_style_change)
+        self.litho_opacity = make_spin(
+            self, lo=0, hi=100, value=100, suffix=" %", on_change=oc)
         form.addRow(self.tr("Opacité"), self.litho_opacity)
         layout.addLayout(form)
 
@@ -7254,37 +7226,29 @@ class SectionWidget(QWidget):
         layout = QVBoxLayout(frame)
         layout.setContentsMargins(6, 6, 6, 8)
         layout.setSpacing(6)
+        oc = self._on_section_style_change
 
-        show = QCheckBox(show_text)
-        show.setToolTip(self.tr("Référentiel + largeur/opacité · grisée sans fichier"))
-        show.setChecked(True)
-        show.stateChanged.connect(self._on_section_style_change)
+        show = make_check(self, show_text, checked=True, on_change=oc)
+        show.setToolTip(self.tr(
+            "Référentiel + largeur/opacité · grisée sans fichier"))
         layout.addWidget(show)
 
         form = QFormLayout()
-        side = QComboBox()
-        side.addItem(self.tr("Gauche"), "left")
-        side.addItem(self.tr("Droite"), "right")
-        side.setCurrentIndex(1)  # défaut : droite (AUDIT_V2.7.7.md)
-        side.setStyleSheet(INPUT_STYLE)
+        # défaut : droite (AUDIT_V2.7.7.md)
+        side = make_combo(
+            self, [
+                (self.tr("Gauche"), "left"), (self.tr("Droite"), "right"),
+            ], on_change=oc, current="right")
         side.setToolTip(self.tr("Côté de la piste"))
-        side.currentIndexChanged.connect(self._on_section_style_change)
         form.addRow(self.tr("Côté"), side)
-        width = QDoubleSpinBox()
-        width.setRange(2, 40)
-        width.setValue(default_width)
-        width.setSuffix(" px")
-        width.setStyleSheet(INPUT_STYLE)
-        width.valueChanged.connect(self._on_section_style_change)
         # v2.8.0 — pour les pistes codées, le réglage porte sur la
         # largeur de VOIE (la piste = nb voies observées × cette valeur).
+        width = make_spin(
+            self, lo=2, hi=40, value=default_width, decimals=1,
+            suffix=" px", on_change=oc)
         form.addRow(self.tr("Largeur de voie"), width)
-        opacity = QSpinBox()
-        opacity.setRange(0, 100)
-        opacity.setValue(80)
-        opacity.setSuffix(" %")
-        opacity.setStyleSheet(INPUT_STYLE)
-        opacity.valueChanged.connect(self._on_section_style_change)
+        opacity = make_spin(
+            self, lo=0, hi=100, value=80, suffix=" %", on_change=oc)
         form.addRow(self.tr("Opacité"), opacity)
         layout.addLayout(form)
 
