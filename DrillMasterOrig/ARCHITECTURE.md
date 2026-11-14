@@ -28,6 +28,14 @@ reprise ici).
 5. **Auditabilité** : tout export embarque ses paramètres complets ;
    toute valeur affichée est traçable au CSV source (TRUST-1).
 
+## Décision d'interface : pas de wizard
+
+Voir `docs/IA_AUDIT.md` — l'atelier à 3 zones (Données / Vues /
+Propriétés) remplace le wizard 5 étapes du v2. La trajectoire est un
+service réactif du cœur, pas une étape ; la catégorisation des données
+est structurelle (niveau trou / logs d'intervalle / teneurs / surfaces),
+pas géologique.
+
 ## Couches
 
 ```
