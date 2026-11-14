@@ -1,0 +1,16 @@
+[general]
+name=DrillMaster ORIG
+qgisMinimumVersion=3.28
+qgisMaximumVersion=3.99
+description=Refonte ORIG — modelisation et visualisation de forages (cœur pur, UI fine)
+about=Refonte de A à Z : conventions verrouillées, cœur pur Python testable, trajectoires en courbure minimale, UI minimaliste sur design tokens. Voir ARCHITECTURE.md.
+version=0.1.0
+author=Yann BONFUL
+tracker=https://github.com/y7Y8y/DRILLMASTER-SIG/issues
+repository=https://github.com/y7Y8y/DRILLMASTER-SIG
+category=Plugins
+icon=icon.png
+experimental=True
+deprecated=False
+hasProcessingProvider=False
+tags=mining,drillhole,collar,survey,lithology,3d,cross-section
