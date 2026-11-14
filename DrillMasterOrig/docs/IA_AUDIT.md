@@ -14,10 +14,22 @@ Décision d'architecture pour ORIG : **pas de wizard**.
    sauvegarde et à l'export, pas à regarder ses données. Le géologue arrive
    avec un CSV : il veut voir, pas administrer.
 3. **Catégorisation géologique (9 onglets plats) au lieu de structurelle.**
-   Les données ont 3 structures : niveau trou (collets, survey), logs
-   d'intervalle (litho, alté, miné, structures, géotech), teneurs (intervalle
-   + éléments, wide-format — cf. `detect_wide_component_columns`). Chaque
-   onglet re-valide ses intervalles à sa façon : origine des redondances.
+   La taxonomie correcte est à DEUX axes — support × nature :
+
+   | Domaine | Support | Nature |
+   |---|---|---|
+   | Collets | trou | géométrie |
+   | Survey | point (station) | géométrie |
+   | Litho, Alté, Miné | intervalle | codé (référentiel) |
+   | Géotech | intervalle | codé + quantitatif (RQD, recovery) |
+   | Teneurs | intervalle (support échantillon) | quantitatif (éléments, unités, QA/QC) |
+   | Structures | point (plan mesuré α/β) | géométrique orienté |
+
+   Le socle commun est l'enregistrement ancré en profondeur (trou existe,
+   from<to, recouvrements) ; les validateurs se spécialisent par NATURE —
+   codé → référentiel ; quantitatif → unités, limites de détection, QA/QC
+   (blancs, standards, doublons). Chaque onglet v2 re-valide ses intervalles
+   à sa façon : origine des redondances.
 4. **Blocages au mauvais endroit.** Seules les erreurs QC bloquantes
    (profondeurs dupliquées, trou sans collet…) doivent bloquer — affichées
    sur la donnée, pas comme une porte d'étape.
@@ -36,12 +48,13 @@ Décision d'architecture pour ORIG : **pas de wizard**.
 ```
 
 - **Rail Données** : glisser-déposer unique, détection auto
-  (`import_detect` adapté), groupage par STRUCTURE :
-  - *Forage* : collets + survey (niveau trou)
-  - *Logs d'intervalle* : litho, alté, miné, structures, géotech —
-    **une machine de validation d'intervalle partagée** (recouvrements,
-    trous inconnus, codes référentiel)
-  - *Teneurs* : la machine intervalle + la couche éléments (wide-format)
+  (`import_detect` adapté), groupage par SUPPORT puis NATURE :
+  - *Forage* : collets (trou) + survey (points station)
+  - *Logs codés* : litho, alté, miné, géotech — machine d'intervalle
+    partagée + validateur référentiel
+  - *Teneurs* : même support intervalle, nature quantitative propre —
+    éléments (wide-format), unités, QA/QC
+  - *Structures* : points orientés (α/β), pas des intervalles
   - *Surfaces* : MNT, imagerie
 - **Zone Vues** : la trajectoire se calcule seule en arrière-plan dès que
   collets+survey sont valides (le worker v2 `_TrajWorker334` prouve la
